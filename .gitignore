@@ -1,0 +1,10 @@
+# prevent sync of useful but unnecessary data
+.*~
+*.pyc
+*.pyo
+*.txt
+*.dat
+
+# prevent sync of large files if necessary
+*.tiff
+*.tif
