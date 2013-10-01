@@ -1,0 +1,24 @@
+Gnuplot stack of scripts used for DORIS online system log processing (.fio files)
+Compiled by Konstantin Glazyrin (lorcat at gmail.com) to be used with Gnuplot 4.6 + shell commands (Linux, Cygwin). Questions and suggestions are welcome.
+
+All code fragments come under Creative Commons Attribution-ShareAlike 3.0 Unported License. For the details of the license please see: http://creativecommons.org/licenses/by-sa/3.0/deed.en_US
+
+Files and Directories:
+./.gnuplot 		- file for initialization of our gnuplot stack scripts, key bindings, etc.
+			intended position : ~/.gnuplot
+./gnuplot 		- directory with main scripts (calculation, )
+			intended position : ~/gnuplot
+./deploy_gnuplot.sh	- file for deployment at the beamline or desired location
+./scan_examples 	- directory with examples of .fio scan files
+
+
+USAGE:
+1. Install correct version of the gnuplot.
+2. Use Linux or CygWin (gnuplot scripts take advantage of system command line)
+3. Move '.gnuplot' file to '~/.gnuplot' and 'gnuplot' folder to '~/gnuplot'
+4. Change current working directory to the directory with DORIS Online .fio files (at least 1 file by the name "hasylab*.fio should exist)
+5. start gnuplot and enjoy
+
+1.0 Use ./deploy_gnuplot.sh script to do the steps 1 to 3
+
+Help for the scripts is available trough F1 key binding in the gnuplot

@@ -1,0 +1,11 @@
+
+load "~/gnuplot/gnu_start"
+
+# change current number
+if(ch>minch) {ch=ch-1}
+
+fname="ls  -C1 *.fio| grep ".sprintf("%05i", num)
+fname=system(fname)
+
+load "~/gnuplot/gnu_plot" 
+

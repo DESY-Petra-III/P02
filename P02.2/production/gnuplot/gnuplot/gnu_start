@@ -1,0 +1,84 @@
+# data
+if(!exist("MAXY")) {MAXY=0}
+if(!exist("MINY")) {MINY=0}
+
+# functions - normal plot
+def(y) = y
+invabso(y) = (-y)
+abso(y) = abs(y)
+
+# gaussian
+gaussian(x, ga, gb, gc, gd)=ga*exp(-((x-gb)**2)/2/gc**2)+gd
+
+# derivative function
+if(!exist("y1")) { y1=0 }
+if(!exist("y2")) { y2=0 }
+d(y) = ($0 == 0) ? (y1 = y, 1/0) : (y2 = y1, y1 = y, y1-y2)
+# absolute value of derivative
+da(y) = ($0 == 0) ? (y1 = y, 1/0) : (y2 = y1, y1 = y, abs(y1-y2))
+# inverted value of derivative
+di(y) = ($0 == 0) ? (y1 = y, 1/0) : (y2 = y1, y1 = y, -(y1-y2))
+
+# flags for different functions
+	# switch between different absolute functions
+if(!exist("babsolute")) { babsolute = 0 }
+	# flags to distinguish between different modes
+if(!exist("BNORM")) { BNORM = 0 }
+if(!exist("BABS")) { BABS = 1 }
+if(!exist("BABSINV")) { BABSINV = 2 }
+
+# check min and max nums of scans
+cmd="ls -C1 *.fio |tail -n 1|sed -e 's/[^0-9]//g'"
+maxn= system(cmd)
+cmd="ls -C1 *.fio |head -n 1|sed -e 's/[^0-9]//g'"
+minn= system(cmd)
+
+# check if we have some files or not for the 'a' command
+cmd="ls -C1 *.fio 2>&1| grep -i 'No such file'"
+cmd=system(cmd)
+
+if(strlen(cmd)>0){
+	maxn=0
+	minn=0
+}else{
+	maxn=maxn+0
+	minn=minn+0
+}
+
+# set maximum/minimiu value of channel
+if(!exist("maxch")) { maxch=6 }
+if(!exist("minch")) { minch=2 }
+
+# check current number
+if(!exists("num")) { num=maxn }
+
+# check current channel
+if(!exists("ch")) { ch=5 }
+
+# set up  message variable
+if(!exists("message")) { message="" }
+
+# set default type of plotting
+if(!exists("plottype")) { plottype="default" }
+
+# check if file with baked datafiles exist, if not - create one
+if(!exists("scans")) { scans="_scans.txt" }
+chkfile = system("file ".scans." |grep ERROR")
+if(strlen(chkfile)>0) { system("touch ".scans)}
+
+# allow only certain number of scans for baking procedure
+MAXBAKE=3
+
+# toggle all flag
+if(!exist("bshowinfo")){bshowinfo=0}
+if(!exist("bshowinfotoggle")){bshowinfotoggle=0}
+
+# bindings
+load "~/gnuplot/gnu_bindings"
+
+# setting fname
+if(maxn>0){
+	fname=sprintf("%05i", num)
+	cmd=sprintf("ls -C1 *.fio | grep %s", fname)
+	fname=system(cmd)
+}

@@ -1,0 +1,80 @@
+load "~/gnuplot/gnu_start"
+
+# if we have scans
+if(maxn>0){
+    # only for the default mode - no derivative
+    if(plottype eq "default"){
+        # output all data points in derivative mode to find max y and miny
+        tempf = "_temporary"
+        set table tempf
+        cmd = sprintf("plot [] [] fname u 1:(plot($%i)) title i w lp", ch)
+        eval cmd
+        unset table
+        
+        # calculate derivative
+        tempf2 = sprintf("%s2", tempf)
+        x0=NaN; y0=NaN;
+        set table tempf2
+        cmd = sprintf("plot [] [] '%s' u (dx=$1-x0,x0=$1,$1):(d($2)/dx) title i w lp", tempf)
+        eval cmd
+        unset table
+
+        # man - must find maximum and minimum in table
+        cmd = sprintf("cat %s |sort -k 2 -n  | sed -e 's/^\\s\\+//' -e 's/\\s\\+/\%/g'| cut -d '\%' -f 2 | tail -n 1", tempf2)
+        srchmaxy = system(cmd)+0
+        cmd = sprintf("cat %s |sort -k 2 -n  | sed -e 's/^\\s\\+//' -e 's/\\s\\+/\%/g'| cut -d '\%' -f 2 | head -n 1", tempf2)
+        scrhminy = system(cmd)+0
+        
+        # find peak position
+        srchx = 0
+        findxfromy(x,y,ysrch)=(y==ysrch? (srchx=x, y): y)
+
+        # find x value for maxy
+        tempf1 = sprintf("%s1", tempf)
+        set table tempf1
+        cmd = sprintf("plot [:] [] '%s' u 1:(findxfromy($1, $2, %f)) w lp", tempf2, srchmaxy)
+        eval cmd
+        unset table
+        
+        srchmaxx = srchx
+
+        # find x value for miny
+        set table tempf1
+        cmd = sprintf("plot [:] [] '%s' u 1:(findxfromy($1, $2, %f)) w lp", tempf2, scrhminy)
+        eval cmd
+        unset table
+        
+        srchminx = srchx
+        
+        # calculate FWHM
+        srchfwhm = abs(srchminx-srchmaxx)
+        # calculate center
+        srchcntr = (srchminx+srchmaxx)/2
+
+        # calculate peak positions
+        
+        # maximum values from the table
+        cmd = sprintf("cat %s |sort -k 2 -n  | sed -e 's/^\\s\\+//' -e 's/\\s\\+/\%/g'| cut -d '\%' -f 2 | tail -n 1", tempf)
+        srchpeaky = system(cmd)+0
+
+        # find x value for the peak
+        set table tempf1
+        cmd = sprintf("plot [:] [] '%s' u 1:(findxfromy($1, $2, %f)) w lp", tempf, srchpeaky)
+        eval cmd
+        unset table
+        
+        # peak x position
+        srchpeakx = srchx
+
+        # calculate cms - function
+        sumy=0; sumr=0; cms=0;
+        cmsf(x,y)=(sumy=sumy+y, sumr=sumr+y*x, (sumy!=0?cms=sumr/sumy:0), y)
+        
+        set table tempf1
+        cmd = sprintf("plot [:] [] '%s' u 1:(cmsf($1, $2)) w lp lw 1", tempf)
+        eval cmd
+        unset table
+
+        srchcms = cms
+    }
+}

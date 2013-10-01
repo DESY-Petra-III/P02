@@ -1,0 +1,10 @@
+load "~/gnuplot/gnu_start"
+
+if(babsolute!=BABS){
+	babsolute = BABS
+}
+else {
+	babsolute = BNORM
+}
+
+load "~/gnuplot/gnu_plot"

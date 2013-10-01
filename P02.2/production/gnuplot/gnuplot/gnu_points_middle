@@ -1,0 +1,84 @@
+load "~/gnuplot/gnu_start"
+
+lab2="Find center\nusing points\nSel. 1st point"
+#set object 1 rect center screen 0.2, 0.69 size character 30, 6  back
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Select first point\n"
+x1=MOUSE_X
+y1=MOUSE_Y
+
+lab2="Sel. 2nd point\n"
+#set object 1 rect center screen 0.2, 0.69 size character 30, 6  back
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Select second point\n"
+x2=MOUSE_X
+y2=MOUSE_Y
+
+set arrow 1 from x1, y1 to x2, y2 nohead lw 2 lt -1
+set label 2 "3rd point" at screen 0.1, 0.8; replot
+
+lab2="Sel. 3rd point"
+#set object 1 rect center screen 0.2, 0.69 size character 30, 6  back
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Select third point\n"
+x3=MOUSE_X
+y3=MOUSE_Y
+
+set arrow 2 from x2, y2 to x3, y3 nohead lw 2 lt -1
+set label 2 "Sel. 4rth point" at screen 0.1, 0.8; replot
+
+lab2="Sel. 4th point"
+#set object 1 rect center screen 0.2, 0.69 size character 30, 6  back
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Select fourth point\n"
+x4=MOUSE_X
+y4=MOUSE_Y
+
+set arrow 3 from x3, y3 to x4, y4 nohead lw 2 lt -1
+
+# left middle point
+xml = (x1+x2)/2
+yml = (y1+y2)/2
+
+#right point
+xmr = (x3+x4)/2
+ymr = (y3+y4)/2
+
+set arrow 4 from xml, yml to xmr, ymr  nohead lw 1 lt 1
+
+# center line
+xc = (xmr+xml)/2
+yc = (ymr+yml)/2
+
+set arrow 5 from xc, screen 0.05 to xc, screen 0.95  nohead lw 1 lt 1
+
+print sprintf("Middle point is at: %.04f\n", xc)
+print sprintf("Middle FWHM: %.04f\n", abs(xmr-xml))
+
+lab2=sprintf("Click to Finish\n%.04f (Center)\n%.04f (FWHM)\n", xc, abs(xmr-xml))
+set object 1 rect center screen 0.2, 0.69 size character 30, 8  front
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Click to finish\n"
+unset arrow 1
+unset arrow 2
+unset arrow 3
+unset arrow 4
+unset arrow 5
+unset label 2
+unset object 1
+
+if(maxn>0){
+	load "~/gnuplot/gnu_plot"
+}else{
+	replot
+}

@@ -1,0 +1,47 @@
+# change spectrum
+bind "Right" "load '~/gnuplot/gnu_right'"
+bind "Left" "load '~/gnuplot/gnu_left'"
+
+# change channel
+bind "Up" "load '~/gnuplot/gnu_up'"
+bind "Down" "load '~/gnuplot/gnu_down'"
+
+# reset spectrum number
+bind "Home" "load '~/gnuplot/gnu_reset_last'"
+bind "End" "load '~/gnuplot/gnu_reset_first'"
+
+# bake filenames into a file to show n top of latest file
+bind "b" "load '~/gnuplot/gnu_bake'"
+
+# set plot to derivative or normal
+bind "d" "load '~/gnuplot/gnu_derivative'"
+
+# absolute values
+bind "alt-a" "load '~/gnuplot/gnu_absolute'"
+bind "ctrl-a" "load '~/gnuplot/gnu_invabsolute'"
+
+# replot current 
+bind "F5" "load '~/gnuplot/gnu_plot'"
+
+# autoscale
+bind "a" "load '~/gnuplot/gnu_autoscale'"
+
+# centering by line and points
+bind "alt-l" "load '~/gnuplot/gnu_lines_middle'"
+bind "alt-p" "load '~/gnuplot/gnu_points_middle'"
+bind "ctrl-l" "load '~/gnuplot/gnu_lines_middle'"
+bind "ctrl-p" "load '~/gnuplot/gnu_points_middle'"
+
+# fitting functions
+#bind "alt-g" "load '~/gnuplot/gnu_gaussian'"
+#bind "ctrl-g" "load '~/gnuplot/gnu_gaussian'"
+
+# information
+bind "i" "load '~/gnuplot/gnu_info'"
+
+# help
+bind "F1" "load '~/gnuplot/gnu_show_help'"
+
+# calculate center by derivative
+bind "F2" "load '~/gnuplot/gnu_toggle_info'"
+

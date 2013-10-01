@@ -1,0 +1,10 @@
+
+load "~/gnuplot/gnu_start"
+
+# change current number
+num=minn
+
+fname="ls  -C1 *.fio| grep ".sprintf("%05i", num)
+fname=system(fname)
+
+load "~/gnuplot/gnu_plot"

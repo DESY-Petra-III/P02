@@ -1,0 +1,49 @@
+load "~/gnuplot/gnu_start"
+
+lab2="Find center\nusing lines\nSel. left side"
+#set object 1 rect center screen 0.2, 0.69 size character 30, 6  back
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Select left side\n"
+x1=MOUSE_X
+y1=MOUSE_Y
+set arrow 1 from x1, screen 0.1 to x1, screen 0.9 nohead lw 2 lt -1
+
+
+lab2="Sel. right side"
+#set object 1 rect center screen 0.2, 0.69 size character 30, 6  back
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Select right side\n"
+x2=MOUSE_X
+y2=MOUSE_Y
+
+mp=(x2+x1)/2
+set arrow 2 from x2, screen 0.1 to x2, screen 0.9 nohead lw 2 lt -1
+
+set arrow 3 from mp, screen 0.1 to mp, screen 0.9 nohead lw 1 lt 1
+# set label 1 "%.04f (Center)\n",mp,"%.04f (FWHM)",abs(x2-x1) at x1+(x2-x1)*1.1, (y2+y1)/2
+
+print sprintf("Middle point is at: %.04f\n", mp)
+print sprintf("Middle FWHM: %.04f", abs(x2-x1))
+
+lab2=sprintf("Click to Finish\n%.04f (Center)\n%.04f (FWHM)\n", mp, abs(x2-x1))
+set object 1 rect center screen 0.2, 0.69 size character 30, 6  front
+set label 2 lab2 at screen 0.2, 0.7 center front
+replot
+
+pause mouse "Click to finish\n"
+unset arrow 1
+unset arrow 2
+unset arrow 3
+#unset label 1
+unset label 2
+unset object 1
+
+if(maxn>0){
+	load "~/gnuplot/gnu_plot"
+}else{
+	replot
+}

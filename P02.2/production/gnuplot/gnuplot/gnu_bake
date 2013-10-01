@@ -1,0 +1,45 @@
+load "~/gnuplot/gnu_start"
+
+# make a switch - baked unbaked
+
+cmd = "cat ".scans." | grep \"".fname."\" | sed -e 's/\s*//g'"
+temp = system(cmd)
+
+# baking
+if(strlen(temp)==0){
+	message = "Baking ".fname
+        # check previous baked files, make sure that current is not shown
+        cmd="cat ".scans." |sed -e 's/".fname."//g'"
+        fnames=system(cmd)
+        
+        # add current file to bake ones - to the beginning
+        fnames=sprintf("%s %s",fname,fnames)
+        
+        # allow only certain number of scans to be shown
+        count=0
+        tstr = ""
+        do for [f in fnames] { if(count<MAXBAKE){tstr=sprintf("%s%s ", tstr, f)}; count=count+1;}
+        
+        # beatiful!!!
+        fnames = tstr
+        
+        # save all baked files, including the new one
+        cmd="echo '".fnames."' >".scans
+        system(cmd)
+}
+
+# unbaking
+if(strlen(temp)>0){
+	message = "Unbaking ".fname
+        
+        # check previous baked files, make sure that current is not shown
+        cmd="cat ".scans." |sed -e 's/".fname."\\s*//g'| sed -e 's/^\\s*//'"
+        fnames=system(cmd)
+        
+        # save all baked files
+        cmd="echo \"".fnames."\" >".scans
+        system(cmd)
+}
+
+# replot
+load "~/gnuplot/gnu_plot"

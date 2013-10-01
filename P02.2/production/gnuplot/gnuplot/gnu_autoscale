@@ -1,0 +1,5 @@
+load "~/gnuplot/gnu_start"
+
+set autoscale keepfix
+
+if(maxn>0) { load "~/gnuplot/gnu_plot"}

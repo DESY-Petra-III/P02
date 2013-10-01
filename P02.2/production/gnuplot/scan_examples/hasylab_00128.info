@@ -1,0 +1,357 @@
+
+ File created at 26-Sep-2013 21:25:35
+ Scan name: hasylab_00128
+ Motor information
+ Command: scan/exec/noalpha /_range=0.5/_np=50/_auto_return=1/_repeats=1/nocls/_sample_time=0.2/_ssa=0/_update=1/_wait_time=0/gmn=auto_scan EH2B_MOT42
+Counter readings are offset-corrected
+Sample_time 0.2
+>>>
+date 26-Sep-2013 21:25:04
+sindex 1
+position 0.1997
+EH2B_VFC01 2169
+EH2B_VFC02 1935
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:04
+sindex 2
+position 0.1895
+EH2B_VFC01 2159
+EH2B_VFC02 1948
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:05
+sindex 3
+position 0.1793
+EH2B_VFC01 2155
+EH2B_VFC02 1963
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:05
+sindex 4
+position 0.1691
+EH2B_VFC01 2150
+EH2B_VFC02 1968
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:06
+sindex 5
+position 0.1589
+EH2B_VFC01 2168
+EH2B_VFC02 1928
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:06
+sindex 6
+position 0.1487
+EH2B_VFC01 2162
+EH2B_VFC02 1949
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:07
+sindex 7
+position 0.1385
+EH2B_VFC01 2155
+EH2B_VFC02 1957
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:08
+sindex 8
+position 0.1283
+EH2B_VFC01 2155
+EH2B_VFC02 1962
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:08
+sindex 9
+position 0.1181
+EH2B_VFC01 2167
+EH2B_VFC02 1930
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:09
+sindex 10
+position 0.1079
+EH2B_VFC01 2159
+EH2B_VFC02 1947
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:09
+sindex 11
+position 0.0977
+EH2B_VFC01 2156
+EH2B_VFC02 1958
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:10
+sindex 12
+position 0.0875
+EH2B_VFC01 2151
+EH2B_VFC02 1963
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:10
+sindex 13
+position 0.0773
+EH2B_VFC01 2165
+EH2B_VFC02 1940
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:11
+sindex 14
+position 0.067
+EH2B_VFC01 2156
+EH2B_VFC02 1950
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:12
+sindex 15
+position 0.0568
+EH2B_VFC01 2156
+EH2B_VFC02 1960
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:12
+sindex 16
+position 0.0466
+EH2B_VFC01 2155
+EH2B_VFC02 1960
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:13
+sindex 17
+position 0.0364
+EH2B_VFC01 2160
+EH2B_VFC02 1943
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:13
+sindex 18
+position 0.0262
+EH2B_VFC01 2155
+EH2B_VFC02 1955
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:14
+sindex 19
+position 0.016
+EH2B_VFC01 2153
+EH2B_VFC02 1964
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:14
+sindex 20
+position 0.0058
+EH2B_VFC01 2149
+EH2B_VFC02 1966
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:15
+sindex 21
+position -0.0044
+EH2B_VFC01 2169
+EH2B_VFC02 1935
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:16
+sindex 22
+position -0.0146
+EH2B_VFC01 2161
+EH2B_VFC02 1951
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:16
+sindex 23
+position -0.0248
+EH2B_VFC01 2155
+EH2B_VFC02 1960
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:17
+sindex 24
+position -0.035
+EH2B_VFC01 2149
+EH2B_VFC02 1969
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:17
+sindex 25
+position -0.0452
+EH2B_VFC01 2167
+EH2B_VFC02 1938
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:18
+sindex 26
+position -0.0554
+EH2B_VFC01 2157
+EH2B_VFC02 1957
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:18
+sindex 27
+position -0.0656
+EH2B_VFC01 2152
+EH2B_VFC02 1968
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:19
+sindex 28
+position -0.0758
+EH2B_VFC01 2148
+EH2B_VFC02 1973
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:20
+sindex 29
+position -0.086
+EH2B_VFC01 2165
+EH2B_VFC02 1940
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:20
+sindex 30
+position -0.0962
+EH2B_VFC01 2161
+EH2B_VFC02 1952
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:21
+sindex 31
+position -0.1064
+EH2B_VFC01 2153
+EH2B_VFC02 1962
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:21
+sindex 32
+position -0.1166
+EH2B_VFC01 2159
+EH2B_VFC02 1943
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:22
+sindex 33
+position -0.1268
+EH2B_VFC01 2158
+EH2B_VFC02 1956
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:22
+sindex 34
+position -0.137
+EH2B_VFC01 2151
+EH2B_VFC02 1960
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:23
+sindex 35
+position -0.1472
+EH2B_VFC01 2152
+EH2B_VFC02 1963
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:23
+sindex 36
+position -0.1574
+EH2B_VFC01 2157
+EH2B_VFC02 1953
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:24
+sindex 37
+position -0.1676
+EH2B_VFC01 2157
+EH2B_VFC02 1958
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:25
+sindex 38
+position -0.1779
+EH2B_VFC01 2150
+EH2B_VFC02 1967
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:25
+sindex 39
+position -0.1881
+EH2B_VFC01 2151
+EH2B_VFC02 1967
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:26
+sindex 40
+position -0.1983
+EH2B_VFC01 2163
+EH2B_VFC02 1941
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:26
+sindex 41
+position -0.2085
+EH2B_VFC01 2154
+EH2B_VFC02 1960
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:27
+sindex 42
+position -0.2187
+EH2B_VFC01 2153
+EH2B_VFC02 1968
+EH2B_VFC04 2
+>>>
+date 26-Sep-2013 21:25:27
+sindex 43
+position -0.2289
+EH2B_VFC01 2149
+EH2B_VFC02 1972
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:28
+sindex 44
+position -0.2391
+EH2B_VFC01 2170
+EH2B_VFC02 1935
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:28
+sindex 45
+position -0.2493
+EH2B_VFC01 2158
+EH2B_VFC02 1954
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:29
+sindex 46
+position -0.2595
+EH2B_VFC01 2153
+EH2B_VFC02 1962
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:30
+sindex 47
+position -0.2697
+EH2B_VFC01 2153
+EH2B_VFC02 1969
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:30
+sindex 48
+position -0.2799
+EH2B_VFC01 2170
+EH2B_VFC02 1925
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:31
+sindex 49
+position -0.2901
+EH2B_VFC01 2161
+EH2B_VFC02 1953
+EH2B_VFC04 1
+>>>
+date 26-Sep-2013 21:25:31
+sindex 50
+position -0.3003
+EH2B_VFC01 2154
+EH2B_VFC02 1957
+EH2B_VFC04 1

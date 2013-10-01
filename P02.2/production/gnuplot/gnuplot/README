@@ -1,0 +1,22 @@
+
+gnu_absolute		- shows data as a f(x)=abs(y)
+gnu_all_info		- calculates most common information (center, peak, center of mass)
+gnu_autoscale		- rebinding of the gnuplot autoscale
+gnu_bake		- store a spectrum (bake) for comparison with currently selected spectrum
+gnu_bindings		- current key bindings for the gnuplot
+gnu_derivative		- show derivative of the data
+gnu_down		- process key press of Down button (Channel change)
+gnu_info		- shows information on position intereasting to user (click based)
+gnu_invabsolute		- show data as a f(x)=-y
+gnu_left		- process key press of the Left button (spectrum number change)
+gnu_lines_middle	- calculate user middle position based on 2 user selected points/lines
+gnu_peak 		- calculate position of the peak
+gnu_plot 		- main functions for plotting data
+gnu_points_middle	- calculate user middle position based on 4 user selected points
+gnu_reset_first		- spectrum number change to the first scan
+gnu_reset_last		- spectrum number change to the last, most recent
+gnu_right		- process key press of the Right button (spectrum number change)
+gnu_show_help		- shows active usage manual (F1)
+gnu_start		- main initialization procedures
+gnu_toggle_info		- process F2 key press - switch on/off calculation for most common information (center, peak, center of mass)
+gnu_up			- process key press of Up button (Channel change)

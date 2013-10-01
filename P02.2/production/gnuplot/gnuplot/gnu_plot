@@ -1,0 +1,103 @@
+load "~/gnuplot/gnu_start"
+
+if(maxn>0){ # do only if data is available
+
+# prepare strings for title
+strabs = "Raw (y)"
+if(babsolute==BABS) { strabs = "Abs(y)"}
+if(babsolute==BABSINV) {strabs = "(-y)"}
+
+# prepare string with scan name
+cmd=sprintf("cat %s |grep -i started|cut -f 2 -d ' '", fname)
+scanname=system(cmd)
+
+# prepare string with channel name
+strch = sprintf("%i", ch)
+if(ch==5) {strch = sprintf("%i - DIODE", ch)}
+if(ch==3) {strch = sprintf("%i - ION1", ch)}
+if(ch==4) {strch = sprintf("%i - ION2", ch)}
+if(ch==6) {strch = sprintf("%i - PETRAIII", ch)}
+
+	# set title
+str=sprintf("%s (%s) Channel: (%s); Mode: (%s, %s)", fname, scanname, strch, plottype, strabs)
+
+# show message in the title if available
+if(strlen(message)>0) { str=sprintf("%s (%s)", str, message); message=""}
+
+set title str
+
+# add baked scans here without current file
+cmd = "cat ".scans."|sed -e 's/".fname."//'"
+fnames = system(cmd)
+
+# add current file to the view
+fnames=sprintf("%s %s", fname, fnames)
+cmd="echo fnames|wc -w"
+scannum=system(cmd)
+cntwidth=1
+cntps=1
+lwidth(x) = (cntwidth==2? cntwidth=cntwidth+1: 1)
+lpsize(x) = (cntps==3? cntps=cntps-1: 2)
+
+# raw data plot
+if(plottype eq "default") {
+        # prep functions
+	plot(y) = def(y)
+	if(babsolute==BABS) {plot(y) = abso(def(y))}
+	if(babsolute==BABSINV) {plot(y) = invabso(def(y))}
+	cntwidth=1
+	cntps=1
+
+        # prep info label
+        if(bshowinfo>0){
+                # have to call it twice due to an unknown reason, wrong maximum?
+		load "~/gnuplot/gnu_all_info"
+                load "~/gnuplot/gnu_all_info"
+                lab2= sprintf("Info:\n Middle: %.04f FWHM: %.04f\n CMS:   %0.4f\n Peak: x: %.04f y: %.02f\n", srchcntr, srchfwhm, srchcms, srchpeakx, srchpeaky)
+                set object 2 rect center screen 0.2, 0.83 size character 35, 5  front
+                set label 5 lab2  at screen 0.2, 0.87 center front
+                set arrow 5 from srchcntr, screen 0.1 to srchcntr, screen 0.8 nohead lt 1 lw 2
+                set arrow 6 from srchcms, screen 0.1 to srchcms, screen 0.2 nohead lt 3 lw 2
+                set arrow 7 from srchpeakx, screen 0.1 to srchpeakx, screen 0.2 lt 5 lw 2
+		
+	}
+	if(bshowinfo==0){
+		if(bshowinfotoggle==1){
+			bshowinfotoggle=0
+                        unset object 2
+                        unset label 5
+                        unset arrow 5
+                        unset arrow 6
+                        unset arrow 7
+		}
+	}
+        
+        # plot final
+	cmd = sprintf("plot [] [] for [i in fnames] i u 1:(plot($%i)) title i w lp lw lwidth(cntwidth) ps lpsize(cntps) pt 1", ch)
+	eval cmd
+
+}
+
+# derivative data plot
+if(plottype eq "derivative"){
+	plot(y) = d(y)
+	if(babsolute==BABS) {plot(y) = abso(d(y))}
+        if(babsolute==BABSINV) {plot(y) = invabso(d(y))}
+	x0=NaN
+	y0=NaN
+	cntwidth=1
+	cntps=1
+	cmd = sprintf("plot [] [] for [i in fnames] i u (dx=$1-x0,x0=$1,$1):(plot($%i)/dx) title i w lp lw lwidth(cntwidth) ps lpsize(cntps) pt 1 ", ch)
+	eval cmd
+}
+
+
+# set maximum and minimum for the derivatives calculation
+if(plottype eq "default"){
+	if(babsolute==BNORM){
+		MAXY=GPVAL_DATA_Y_MAX
+	        MINY=GPVAL_DATA_Y_MIN
+	}
+}
+
+}

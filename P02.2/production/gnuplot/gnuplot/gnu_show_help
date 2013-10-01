@@ -1,0 +1,53 @@
+load "~/gnuplot/gnu_start"
+
+if(maxn>0){
+    temptoggle = bshowinfo
+    if(temptoggle==1){
+        load "~/gnuplot/gnu_toggle_info"
+        load "~/gnuplot/gnu_plot"
+    }
+}
+
+set object 1 rect at screen 0.5, 0.5 size screen 0.98, 0.98 front
+lab2="Click to close this message:\n\
+\nHelp on keybindings:\n\
+F1 - this message\n\
+\n\
+  # basic calculations and output\n\
+i  - (x,y) information on a specific point in the space of the graph\n\
+F2 - switch on insitu statistics calculation (middle, cms, peak)\n\n\
+  # centering related\n\
+ctrl-p | alt-p - calculate a center for a complex shape using 4 points selection\n\
+ctrl-l | alt-l - calculate a center for a complex shape using 2 points selection\n\n\
+# navigation through spectra\n\
+Left, Right - navigate through the spectra from low number to the higher number\n\
+End, Home   - select the oldest (End) or the newest (Home) spectrum\n\
+Up, Down    - navigate through different channels of the spectrum (3 - ION1, 4 - ION2, etc.)\n\
+F5 - replot currently selected spectrum\n\n\
+  # spectrum manipulation\n\
+d - calculate derivative - d(y)\n\
+alt-a  - calculate Abs(y) or Abs(d(y))\n\
+ctrl-a - calculate -y or -d(y)\n\n\
+  # gnuplot specific\n\
+a - unzoom\n\
+l - log scale\n\
+g - show/hide grid\n\
+" 
+
+set label 2 lab2 at screen 0.1, 0.9 front
+replot
+
+pause mouse "Click to finish\n"
+print lab2
+
+unset object 1
+unset label 2
+
+if(maxn>0){
+    if(temptoggle==1){
+        load "~/gnuplot/gnu_toggle_info"
+    }
+    load "~/gnuplot/gnu_plot"
+}else{
+	replot
+}

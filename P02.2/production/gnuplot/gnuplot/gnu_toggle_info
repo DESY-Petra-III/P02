@@ -1,0 +1,13 @@
+load "~/gnuplot/gnu_start"
+
+# enable only for online scans mode
+if(maxn>0){
+	if(bshowinfo==1){
+		bshowinfo=0
+	}else{
+		bshowinfo=1
+	}
+	bshowinfotoggle=1
+        
+        load "~/gnuplot/gnu_plot"
+}

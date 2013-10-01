@@ -1,0 +1,27 @@
+load "~/gnuplot/gnu_start"
+
+#set object 1 rect center screen 0.2, 0.69 size character strlen(lab2), 6  front
+lab2= "Click for (x,y) info\n"
+set label 2 lab2  at screen 0.2, 0.7 center front
+refresh
+pause mouse "Click for position information\n"
+
+print sprintf("Mouse X: %04f\n", MOUSE_X)
+print sprintf("Mouse Y: %04f\n", MOUSE_Y)
+
+lab2=sprintf("Click to finish\n%.04f (X)\n%0.4f (Y)\n", MOUSE_X, MOUSE_Y)
+set arrow 2 from MOUSE_X, screen 0.1 to MOUSE_X, screen 0.9 nohead lw 2 lt 1 back
+
+set object 1 rect center screen 0.2,0.69 size character 40,6  front
+set label 2 lab2 at screen 0.2, 0.7 center front
+refresh
+
+pause mouse "Click for finish\n"
+unset label 2
+unset arrow 2
+unset object 1
+replot
+
+if(maxn>0){
+	load "~/gnuplot/gnu_plot"
+}

@@ -1,0 +1,13 @@
+load "~/gnuplot/gnu_start"
+
+# switch between different types
+type = plottype
+if(type  eq "default"){
+	plottype="derivative"
+}
+
+if( type eq "derivative"){
+	plottype="default"
+}
+
+load "~/gnuplot/gnu_plot"
