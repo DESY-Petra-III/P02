@@ -41,6 +41,9 @@ MOTORWIDGETTEMPLATE = {"Template":
 # MotorWidget timer update 
 MOTORTIMER = 250
 
+# SIGNAL
+SIGNALMOTORPOSITION = "motorPosition"
+
 ###
 ## Motor_QPushButton, Motor_QLineEditPosition, Motor_QLineEditStep, Motor_QComboBoxStep - override default sizes or styles
 ###
@@ -137,7 +140,9 @@ class MotorWidgetAdvanced(QtGui.QWidget):
 
         # add new widget
         self.btnStopMotors = QtGui.QPushButton("&Stop all Motors")
-        tlist = [None, None, None, self.btnStopMotors]
+        self.btnShowSave = QtGui.QPushButton("S&ave Pos.")
+        self.btnShowSave.hide()
+        tlist = [self.btnShowSave, None, None, self.btnStopMotors]
         self.gridAddWidgetList(grid, grid.rowCount(), tlist)
 
         # set stretch
@@ -151,6 +156,8 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         self.connect(self.btnStopMotors, QtCore.SIGNAL("clicked()"), self.processStopMotors)
         # main timer
         self.connect(self._mainTimer, QtCore.SIGNAL("timeout()"), self.updateUI)
+        # report positions in a signal
+        self.connect(self.btnShowSave, QtCore.SIGNAL("clicked()"), self.processReportPosition)
         return
 
     # init different button events for specific motor
@@ -312,6 +319,13 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         for col, w in enumerate(tlist):
             if(w is not None and type(w) is not str):
                 grid.addWidget(w, row, col)
+                
+                # set standard palette
+                pal = w.style().standardPalette()
+                t = type(w)
+                if(t is not QtGui.QLabel):
+                    pal = w.style().standardPalette()
+                    w.setPalette(pal)
         return
 
     # sets specific steps to combobox of choice
@@ -439,6 +453,16 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         except ValueError:
             print("Error: Value error in MotorWidgetAdvanced.processNewPosition()")
         return
+    
+    # process recorded position, report it for inter-widget processing
+    def processReportPosition(self):
+        res = []
+        for name in self._motorsdict:
+            print(name, self._motorsdict[name]["Position"])
+            res.append(name)
+            res.append(self._motorsdict[name]["Position"])
+        self.emit(QtCore.SIGNAL(SIGNALMOTORPOSITION), str(self.windowTitle()), res)
+        return
 
     # update UI on timer
     def updateUI(self):
@@ -525,7 +549,7 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         # use motor name as criterion
         for name in self._motorsdict.keys():
             # found
-            if(name==extname): 
+            if(name.find(extname)>=0): 
                 (pos, format) = (0.0, "%.04f")
                 try:
                     pos = float(value)
@@ -576,6 +600,10 @@ class MotorWidgetAdvanced(QtGui.QWidget):
 
         for w in tlist:
             w.setDisabled(value)
+    
+    # show hidden save position button
+    def showBtnSavePos(self):
+        self.btnShowSave.show()
 
     # cleanup on close
     def closeEvent(self, event):

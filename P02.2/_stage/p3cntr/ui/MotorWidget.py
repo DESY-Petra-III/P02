@@ -1,3 +1,5 @@
+#!/bin/env python
+
 import sys
 from PyQt4 import QtGui,QtCore
 import PyTango
@@ -71,7 +73,8 @@ class MotorWidget(QtGui.QDialog):
 ##            layout.addWidget(self.motordev_widget[-1][-1],row,col)
 ##            col+=1
             
-            self.motordev_widget[-1]+=[My_QPushButton("<<")]
+            wdgtll = My_QPushButton("<<")
+            self.motordev_widget[-1]+=[wdgtll]
             self.motordev_widget[-1][-1].setAutoDefault(False)
             self.motordev_widget[-1][-1].setWindowFlags(QtCore.Qt.SplashScreen)
             self.wrappers[-1]+= [functools.partial(self.rel_move,self.device_list[dev_index],-1.,
@@ -81,8 +84,8 @@ class MotorWidget(QtGui.QDialog):
             layout.addWidget(self.motordev_widget[-1][-1],row,col)
             col+=1
 
-            
-            self.motordev_widget[-1]+=[My_QPushButton("<")]
+            wdgtl = My_QPushButton("<")
+            self.motordev_widget[-1]+=[wdgtl]
             self.motordev_widget[-1][-1].setAutoDefault(False)
             self.motordev_widget[-1][-1].setWindowFlags(QtCore.Qt.SplashScreen)
             self.wrappers[-1]+= [functools.partial(self.rel_move,self.device_list[dev_index],-1.,
@@ -91,21 +94,26 @@ class MotorWidget(QtGui.QDialog):
                          self.wrappers[-1][-1])
             layout.addWidget(self.motordev_widget[-1][-1],row,col)
             col+=1
-
-            self.motordev_widget[-1]+=[QtGui.QLineEdit("")]
+            
+            wdgtmotor = QtGui.QLineEdit("")
+            wdgtmotor.setValidator(QtGui.QDoubleValidator(wdgtmotor))
+            self.motordev_widget[-1]+=[wdgtmotor]
             self.motordev_widget[-1][-1].setWindowFlags(QtCore.Qt.SplashScreen)
             self.wrappers[-1]+=[functools.partial(self.abs_move,
                                                          self.device_list[dev_index],
                                                          self.motordev_widget[-1][-1])]
+            
+            func_callback = functools.partial(self.text_edited, wdgtmotor)
+            self.connect(self.motordev_widget[-1][-1], QtCore.SIGNAL("textEdited(const QString&)"), func_callback)
             self.connect(self.motordev_widget[-1][-1],QtCore.SIGNAL("returnPressed()"),
                          self.wrappers[-1][-1])
-            self.connect(self.motordev_widget[-1][-1],QtCore.SIGNAL("editingFinished()"),
-                         self.wrappers[-1][-1])
+            #self.connect(self.motordev_widget[-1][-1],QtCore.SIGNAL("editingFinished()"),
+            #             self.wrappers[-1][-1])
             layout.addWidget(self.motordev_widget[-1][-1],row,col)
             col+=1
 
-
-            self.motordev_widget[-1]+=[My_QPushButton(">")]
+            wdgtr = My_QPushButton(">")
+            self.motordev_widget[-1]+=[wdgtr]
             self.motordev_widget[-1][-1].setAutoDefault(False)
             self.motordev_widget[-1][-1].setWindowFlags(QtCore.Qt.SplashScreen)
             self.wrappers[-1]+= [functools.partial(self.rel_move,self.device_list[dev_index],1.,
@@ -115,7 +123,8 @@ class MotorWidget(QtGui.QDialog):
             layout.addWidget(self.motordev_widget[-1][-1],row,col)
             col+=1
             
-            self.motordev_widget[-1]+=[My_QPushButton(">>")]
+            wdgtrr = My_QPushButton(">>")
+            self.motordev_widget[-1]+=[wdgtrr]
             self.motordev_widget[-1][-1].setAutoDefault(False)
             self.motordev_widget[-1][-1].setWindowFlags(QtCore.Qt.SplashScreen)
             self.wrappers[-1]+= [functools.partial(self.rel_move,self.device_list[dev_index],1.,
@@ -134,13 +143,14 @@ class MotorWidget(QtGui.QDialog):
 ##            layout.addWidget(self.motordev_widget[-1][-1],row,col)
 ##            col+=1         
             
-
+            
             self.motordev_widget[-1]+=[QtGui.QLabel("step size:")]
             self.motordev_widget[-1][-1].setWindowFlags(QtCore.Qt.SplashScreen)
             layout.addWidget(self.motordev_widget[-1][-1],row,col)
             col+=1
             
-            wdgtlestep = QtGui.QLineEdit("%.04f"% self.button_rel_actions[dev_index])
+            wdgtlestep = QtGui.QLineEdit("%.03f"% self.button_rel_actions[dev_index])
+            wdgtlestep.setValidator(QtGui.QDoubleValidator(wdgtmotor))
             wdgtlestep.setWindowFlags(QtCore.Qt.SplashScreen)
             wdgtlestep.setMaximumWidth(70)
             self.motordev_widget[-1]+=[wdgtlestep]
@@ -151,19 +161,23 @@ class MotorWidget(QtGui.QDialog):
                          self.wrappers[-1][-1])
             self.connect(self.motordev_widget[-1][-1],QtCore.SIGNAL("editingFinished()"),
                          self.wrappers[-1][-1])
+            
+            func_callback = functools.partial(self.text_edited, wdgtlestep)
+            self.connect(wdgtlestep, QtCore.SIGNAL("textEdited(const QString&)"), func_callback)
+            
             layout.addWidget(self.motordev_widget[-1][-1],row,col)
             col+=1
             
             # create step size widgets
             wdgtcmbstep = QtGui.QComboBox()
-            tlist = ("step",0.001, 0.002, 0.005, 0.010, 0.020, 0.050, 0.100, 1)
-            if(wdgtdevice.text().indexOf("zoom")>0):
-                tlist = ("step", 1, 10, 100)
+            tlist = ["step",0.001, 0.002, 0.005, 0.010, 0.020, 0.050, 0.100, 1]
             strlist = QtCore.QStringList()
             for string in tlist:
                 format = "%.3f"
                 if(type(string) is str):
                     format = "%s"
+                elif((type(string) is float or type(string) is int) and string>0.9):
+                    format = "%.f"
                 string = format%string
                 strlist.append(QtCore.QString(string))
             wdgtcmbstep.addItems(strlist)
@@ -177,9 +191,7 @@ class MotorWidget(QtGui.QDialog):
                                                          wdgtlestep)]
             self.connect(wdgtcmbstep, QtCore.SIGNAL("currentIndexChanged(const QString&)"), self.wrappers[-1][-1])
             
-            col+=1
             row+=1
-
             col=0
 
         
@@ -215,7 +227,11 @@ class MotorWidget(QtGui.QDialog):
     def abs_move(self,device,widget):
 ##        print device,widget
         position=widget.text()
-        position=float(position)
+        self.setWdgtFontWeight(widget, False)
+        try:
+            position=float(position)
+        except ValueError:
+            return
 ##        print "Now in abs-move, moving to ",position
 ##        time.sleep(2)
         device.move(position)
@@ -244,14 +260,17 @@ class MotorWidget(QtGui.QDialog):
     
     
     def set_delta_step(self,dev_index,widget):
-        print "In deltastep"
+        # selection confirmed - change font weight if needed
+        self.setWdgtFontWeight(widget, False)
+        
+        # change delta step
         delta_step=widget.text()
         try:
             delta_step=float(delta_step)
         except ValueError:
             print("Error: ValueError while setting step value")
             delta_step=0.002
-            widget.setText(".4f"%delta_step)
+            widget.setText(".3f"%delta_step)
     
         print self.button_rel_actions[dev_index]
         print self.wrappers[dev_index][0]
@@ -305,11 +324,24 @@ class MotorWidget(QtGui.QDialog):
                 device_value="Tango Failure"
             if self.values[dev_index]!=device_value:
                 self.values[dev_index]=device_value
-                self.motordev_widget[dev_index][2].setText("%.4f"%device_value)
+                self.motordev_widget[dev_index][2].setText("%.4f" % device_value)
 ##        self.motordev_widget[dev_index][5].setText(str(self.button_rel_actions[0]))
         return
-
-
+    
+    # change font weight upon text editing
+    def text_edited(self, *tlist):
+        (wdgt, string) = tlist
+        self.setWdgtFontWeight(wdgt, True)
+        
+        # avoid widget resizing upon change of the font weight
+        wdgt.setMaximumSize(wdgt.size())
+        
+    def setWdgtFontWeight(self, wdgt, bflag):
+        font = wdgt.font()
+        font.setBold(bflag)
+        wdgt.setFont(font)
+    
+    # stop all moves
     def stop_all_moves(self):
         for device in self.device_list:
             device._proxy.StopMove()

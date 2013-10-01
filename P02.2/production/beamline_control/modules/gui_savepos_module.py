@@ -193,8 +193,6 @@ class MSavePos(QWidget):
                 group = self._data[k]
                 setting.beginGroup(k)
                 for gk in group:
-                    print(gk)
-                    print(group)
                     setting.setValue(gk, str(group[gk]))
                 setting.endGroup()
         return
@@ -653,20 +651,24 @@ class MPositionDialog(QDialog):
         
         # external data
         self._extdata = extdata
+
+        # 
+        self.btnCancel = None
+        self.btnSave = None
         return
 
+    #
     def initSelf(self):
         self.setModal(True)
 
         # sets template, try basic error handling
         # each class should have its own position template attached
-
+        # template must be defined and present
         template = None
         try:
             template = self._data[self._class]["Template"]
         except KeyError:
             pass
-
 
         # exit if template is unknown
         if(template is None):
