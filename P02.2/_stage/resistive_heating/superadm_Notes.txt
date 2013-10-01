@@ -1,0 +1,293 @@
+Keithley3706(p02/keithley3706/eh2b.01)
+DeviceInfo[
+     dev_class = 'Keithley3706'
+      dev_type = 'Uninitialised'
+       doc_url = 'Doc URL = http://www.esrf.eu/computing/cs/tango/tango_doc/ds_doc/'
+   server_host = 'haspp02eh2b.desy.de'
+     server_id = 'Keithley3706/EH2B'
+server_version = 4]
+
+Device is in ON state
+True
+Control Server: tango://haspp02oh1.desy.de:10000/dserver/Keithley3706/EH2B
+DeviceInfo[
+     dev_class = 'DServer'
+      dev_type = 'Uninitialised'
+       doc_url = 'Doc URL = http://www.tango-controls.org'
+   server_host = 'haspp02eh2b.desy.de'
+     server_id = 'Keithley3706/EH2B'
+server_version = 4]
+
+The device is ON
+The polling is ON
+True
+CommandInfo[
+     cmd_name = 'AddLoggingTarget'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+ in_type_desc = 'Str[i]=Device-name. Str[i+1]=Target-type::Target-name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'AddObjPolling'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+ in_type_desc = 'Lg[0]=Upd period. Str[0]=Device name. Str[1]=Object type. Str[2]=Object name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'DevLockStatus'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevString
+ in_type_desc = 'Device name'
+     out_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+out_type_desc = 'Device locking status']
+
+CommandInfo[
+     cmd_name = 'DevPollStatus'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevString
+ in_type_desc = 'Device name'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Device polling status']
+
+CommandInfo[
+     cmd_name = 'DevRestart'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevString
+ in_type_desc = 'Device name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'EventSubscriptionChange'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+ in_type_desc = 'list of events consumer wants to subscribe to'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'none']
+
+CommandInfo[
+     cmd_name = 'GetLoggingLevel'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+ in_type_desc = 'Device list'
+     out_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+out_type_desc = 'Lg[i]=Logging Level. Str[i]=Device name.']
+
+CommandInfo[
+     cmd_name = 'GetLoggingTarget'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevString
+ in_type_desc = 'Device name'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Logging target list']
+
+CommandInfo[
+     cmd_name = 'Init'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'Kill'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'LockDevice'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+ in_type_desc = 'Str[0] = Device name. Lg[0] = Lock validity'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'PolledDevice'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Polled device name list']
+
+CommandInfo[
+     cmd_name = 'QueryClass'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Device server class(es) list']
+
+CommandInfo[
+     cmd_name = 'QueryDevice'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Device server device(s) list']
+
+CommandInfo[
+     cmd_name = 'QuerySubDevice'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Device server sub device(s) list']
+
+CommandInfo[
+     cmd_name = 'QueryWizardClassProperty'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevString
+ in_type_desc = 'Class name'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Class property list (name - description and default value)']
+
+CommandInfo[
+     cmd_name = 'QueryWizardDevProperty'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevString
+ in_type_desc = 'Class name'
+     out_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+out_type_desc = 'Device property list (name - description and default value)']
+
+CommandInfo[
+     cmd_name = 'ReLockDevices'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+ in_type_desc = 'Device(s) name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'RemObjPolling'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+ in_type_desc = 'Str[0]=Device name. Str[1]=Object type. Str[2]=Object name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'RemoveLoggingTarget'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarStringArray
+ in_type_desc = 'Str[i]=Device-name. Str[i+1]=Target-type::Target-name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'RestartServer'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'SetLoggingLevel'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+ in_type_desc = 'Lg[i]=Logging Level. Str[i]=Device name.'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'StartLogging'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'StartPolling'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'State'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevState
+out_type_desc = 'Device state']
+
+CommandInfo[
+     cmd_name = 'Status'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevString
+out_type_desc = 'Device status']
+
+CommandInfo[
+     cmd_name = 'StopLogging'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'StopPolling'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVoid
+ in_type_desc = 'Uninitialised'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+
+CommandInfo[
+     cmd_name = 'UnLockDevice'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+ in_type_desc = 'Str[x] = Device name(s). Lg[0] = Force flag'
+     out_type = PyTango._PyTango.CmdArgType.DevLong
+out_type_desc = 'Device global lock counter']
+
+CommandInfo[
+     cmd_name = 'UpdObjPollingPeriod'
+      cmd_tag = 0
+   disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      in_type = PyTango._PyTango.CmdArgType.DevVarLongStringArray
+ in_type_desc = 'Lg[0]=Upd period. Str[0]=Device name. Str[1]=Object type. Str[2]=Object name'
+     out_type = PyTango._PyTango.CmdArgType.DevVoid
+out_type_desc = 'Uninitialised']
+

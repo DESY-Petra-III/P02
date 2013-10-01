@@ -1,0 +1,400 @@
+Keithley3706(p02/keithley3706/eh2b.01)
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevString
+       description = 'Get/Set dmm.func (temperature or fourwireohms)'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'Configuration'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Configuration'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'configuration']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevLong
+       description = 'Get/Set scan.measurecount'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'Counts'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = '450000'
+         min_alarm = 'Not specified'
+         min_value = '1'
+              name = 'Counts'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'counts']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevString
+       description = 'List of channels that will be use in the measurement.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'ChList'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'ChList'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'chlist']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevLong
+       description = 'Nb of open channels.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'NbChannels'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'NbChannels'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'nbchannels']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'ValueCh1'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'ValueCh1'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'ValueCh2'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'ValueCh2'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'ValueCh3'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'ValueCh3'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'ValueCh4'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'ValueCh4'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevString
+       description = 'String for setting backplane when SetMeasurement is called. Format: 1911,1922,...'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'Backplane'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Backplane'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'backplane']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'Temperature'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Temperature'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevLong
+       description = 'Thermocouple type:\n-1  -> if transducer not set to THERMOCOPLE, 0 -> J, 1 -> K, 2 -> T, 3 -> D, 4 -> R, 5 -> S, 6 -> B, 7 -> N'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = '1.0'
+        extensions = []
+            format = '%6.2f'
+             label = 'Thermocouple'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Thermocouple'
+     standard_unit = '1.0'
+              unit = 'None'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'thermocouple']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevLong
+       description = '-1 not meaning for set configuration, 0 -> volts, 1 -> decibels, \n2 -> celsius, 3 -> kelvin, 4 -> fahrenheit'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = '1.0'
+        extensions = []
+            format = '%6.2f'
+             label = 'Units'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Units'
+     standard_unit = '1.0'
+              unit = 'None'
+          writable = PyTango._PyTango.AttrWriteType.READ_WRITE
+writable_attr_name = 'units']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SPECTRUM
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'Result of the measurement.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'DataCh1'
+         max_alarm = 'Not specified'
+         max_dim_x = 1000
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'DataCh1'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SPECTRUM
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'Result of the measurement.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'DataCh2'
+         max_alarm = 'Not specified'
+         max_dim_x = 1000
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'DataCh2'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SPECTRUM
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'Result of the measurement.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'DataCh3'
+         max_alarm = 'Not specified'
+         max_dim_x = 1000
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'DataCh3'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SPECTRUM
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'Result of the measurement.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'DataCh4'
+         max_alarm = 'Not specified'
+         max_dim_x = 1000
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'DataCh4'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SPECTRUM
+         data_type = PyTango._PyTango.CmdArgType.DevDouble
+       description = 'Result of the measurement.'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'Data'
+         max_alarm = 'Not specified'
+         max_dim_x = 10000
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Data'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevState
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'State'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'State'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+
+AttributeInfo[
+       data_format = PyTango._PyTango.AttrDataFormat.SCALAR
+         data_type = PyTango._PyTango.CmdArgType.DevString
+       description = 'No description'
+        disp_level = PyTango._PyTango.DispLevel.OPERATOR
+      display_unit = 'No display unit'
+        extensions = []
+            format = '%6.2f'
+             label = 'Status'
+         max_alarm = 'Not specified'
+         max_dim_x = 1
+         max_dim_y = 0
+         max_value = 'Not specified'
+         min_alarm = 'Not specified'
+         min_value = 'Not specified'
+              name = 'Status'
+     standard_unit = 'No standard unit'
+              unit = 'No unit'
+          writable = PyTango._PyTango.AttrWriteType.READ
+writable_attr_name = 'None']
+

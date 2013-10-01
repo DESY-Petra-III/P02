@@ -1,0 +1,23 @@
+Keithley3706(p02/keithley3706/eh2b.01)
+DeviceInfo[
+     dev_class = 'Keithley3706'
+      dev_type = 'Uninitialised'
+       doc_url = 'Doc URL = http://www.esrf.eu/computing/cs/tango/tango_doc/ds_doc/'
+   server_host = 'haspp02eh2b.desy.de'
+     server_id = 'Keithley3706/EH2B'
+server_version = 4]
+
+Open error. Not Socket connection
+False
+Control Server: tango://haspp02oh1.desy.de:10000/dserver/Keithley3706/EH2B
+DeviceInfo[
+     dev_class = 'DServer'
+      dev_type = 'Uninitialised'
+       doc_url = 'Doc URL = http://www.tango-controls.org'
+   server_host = 'haspp02eh2b.desy.de'
+     server_id = 'Keithley3706/EH2B'
+server_version = 4]
+
+The device is ON
+The polling is ON
+True

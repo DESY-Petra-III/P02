@@ -1,0 +1,12 @@
+Right work with TANGO and Keithley 3706:
+K3706 - accepts only 1 connection at a time (simultaneous working is impossible!!!)
+
+correct protocol:
+ - check device state and state of adm device
+	 - both services should be hard wired into program - no device polling
+ 
+ - if no adm service - ask user to start the service through tango
+ - if adm is on, but "set measurement" does not set the correct parameter or device is off:  
+	- ask user to restart Keithley and restart the adm server
+	- cannot start tango service through commands so far
+ - report to the user if device is available
