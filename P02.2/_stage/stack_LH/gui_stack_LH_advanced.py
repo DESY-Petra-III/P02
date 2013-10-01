@@ -23,7 +23,6 @@ from gui_starter_module_LH import *
 from gui_counter_module import *
 from gui_savepos_module import *
 
-
 DISCLAMER = """-- full gui for general purpose table --
 -- LGPL licence applies - as we use QT library for free --
 
@@ -682,6 +681,7 @@ class StackForm(QMainWindow):
             self.dockbeam.show()
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
         return
 
     # process show - hide beamline
@@ -692,6 +692,7 @@ class StackForm(QMainWindow):
             self.dockcount.show()
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
         return
 
     # process show - hide expert mode
@@ -743,6 +744,7 @@ class StackForm(QMainWindow):
 
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
         return
 
 
@@ -775,6 +777,7 @@ class StackForm(QMainWindow):
     def processCountersFloat(self, state):
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
 
         size = self.size()
         pos = self.pos()
@@ -786,6 +789,7 @@ class StackForm(QMainWindow):
     def processPositionsFloat(self, state):
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
 
         size = self.size()
         pos = self.pos()
@@ -797,6 +801,7 @@ class StackForm(QMainWindow):
     def processTabSwitch(self, index):
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
        
     # process saved position
     def processSavedPosition(self, group, data):
