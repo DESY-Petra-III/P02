@@ -6,7 +6,7 @@ All code fragments come under Creative Commons Attribution-ShareAlike 3.0 Unport
 Files and Directories:
 ./.gnuplot 		- file for initialization of our gnuplot stack scripts, key bindings, etc.
 			intended position : ~/.gnuplot
-./gnuplot 		- directory with main scripts (calculation, )
+./gnuplot 		- directory with main scripts (calculation, etc.)
 			intended position : ~/gnuplot
 ./deploy_gnuplot.sh	- file for deployment at the beamline or desired location
 ./scan_examples 	- directory with examples of .fio scan files
