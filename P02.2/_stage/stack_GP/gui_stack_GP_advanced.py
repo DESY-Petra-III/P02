@@ -22,6 +22,7 @@ from gui_beamline_GP import *
 from gui_starter_module_GP import *
 from gui_counter_module import *
 from gui_savepos_module import *
+from gui_module_ruby import MRubyWidget
 
 DISCLAMER = """-- full gui for general purpose table --
 -- LGPL licence applies - as we use QT library for free --
@@ -55,7 +56,7 @@ SPSVALVEDATA = {"GPValve1":[0, 0, 0], "GPValve2":[25, 0, 1], "GPValve3":[25, 1, 
 (VFMCURV, VFMELL, VFMTILT, VFMZ) = ("haspp02oh1:10000/p02/attributemotor/vcurvature.gp", "haspp02oh1:10000/p02/attributemotor/vellipticity.gp", "haspp02oh1:10000/p02/attributemotor/vtilt.gp", "haspp02oh1:10000/p02/attributemotor/vzpos.gp")
 
 ### Tab names - may control widget color
-(TABSAMPLE, TABDETECTOR, TABPINHOLE, TABSPS, TABHFM, TABVFM, TABGUI) = ("Sample stage", "Detector stage", "Pinhole stack", "SPS (filters, etc.)", "KB Mirror (HFM)", "KB Mirror (VFM)", "Tools (gnuplot, online)")
+(TABSAMPLE, TABMICROSCOPE, TABDETECTOR, TABPINHOLE, TABSPS, TABHFM, TABVFM, TABGUI) = ("Sample stage", "Microscope", "Detector stage", "Pinhole stack", "SPS (filters, etc.)", "KB Mirror (HFM)", "KB Mirror (VFM)", "Tools (gnuplot, online)")
 
 # colors used in TAB:
 (PINHOLECOLOR, SPSCOLOR, HFMCOLOR, VFMCOLOR) = (QColor('pink'), QColor('orange').light(), QColor(170, 255, 170), QColor(100, 255, 100))
@@ -110,6 +111,10 @@ class StackForm(QMainWindow):
         self.pinhole_widget = None        # p3cntr set of widgets
         self.wpinhole = None            # tabwidget
         
+        # microscope widget
+        self.wmicroscope = None
+        self.micro_widget = None
+        
         # SPS stack
         self.sps_widgets = SPSVALVEDATA.copy()    # set of widgets, positions, properties for SPS
         self.sps_widget = None            # tabwidget
@@ -162,12 +167,15 @@ class StackForm(QMainWindow):
         # tab with sample stack - updates itself
         self.createSampleStackTab(tab, tabpal)
         
+        # tab with microscope stack - updates itself
+        self.createMicroscopeStackTab(tab, tabpal)
+        
         # tab with detector stack - updates itself
         self.createDetectorStackTab(tab, tabpal)
 
         # tab with pinhole stack
         tabpal = QPalette(PINHOLECOLOR)
-        self.createPinHoleStackTab(tab, tabpal)        
+        self.createPinHoleStackTab(tab, tabpal)
         
         # tab with SPS control stack - updates here
         tabpal = QPalette(SPSCOLOR)
@@ -546,6 +554,24 @@ class StackForm(QMainWindow):
         tab.addTab(wdgt, title)
         return
     
+    # ruby stack
+    def createMicroscopeStackTab(self, tab, pal):
+        title = TABMICROSCOPE
+        wdgt = QWidget()
+        grid = QGridLayout(wdgt)
+
+        wdgt.setAutoFillBackground(True)
+        wdgt.setPalette(pal)
+
+        self.micro_widget = MRubyWidget(self)
+
+        grid.addWidget(self.micro_widget, 0, 0)
+
+        self.wmicroscope = wdgt
+
+        tab.addTab(wdgt, title)
+        return
+    
     def createSPSStackTab(self, tab, pal):
         title = TABSPS
         wdgt = QWidget()
@@ -746,6 +772,9 @@ class StackForm(QMainWindow):
             self.ashowcounter.toggle()
         elif(string.indexOf(BEAMLOPTICS)>-1):
             index = tab.indexOf(self.whfm)
+            tab.setCurrentIndex(index)
+        elif(string.indexOf(BEAMLMICROSCOPE)>-1):   # clicked on microscope
+            index = tab.indexOf(self.wmicroscope)
             tab.setCurrentIndex(index)
         return
 

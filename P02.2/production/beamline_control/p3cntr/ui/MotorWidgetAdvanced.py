@@ -496,8 +496,8 @@ class MotorWidgetAdvanced(QtGui.QWidget):
                 # try exception
                 tlist.index(number)
                 # found
-                wdgtlist = self._motorsdict[name]["Widgets"]
-                self.setWidgetsDisabled(value, tlist)
+                wdgtlist = self._motorsdict[name]["Widgets"].values()
+                self.setWidgetsDisabled(value, wdgtlist)
             except ValueError:
                 # not found
                 continue
@@ -515,8 +515,8 @@ class MotorWidgetAdvanced(QtGui.QWidget):
                 # try exception
                 tlist.index(name)
                 # found
-                wdgtlist = self._motorsdict[name]["Widgets"]
-                self.setWidgetsDisabled(value, tlist)
+                wdgtlist = self._motorsdict[name]["Widgets"].values()
+                self.setWidgetsDisabled(value, wdgtlist)
             except ValueError:
                 # not found
                 continue
@@ -594,6 +594,7 @@ class MotorWidgetAdvanced(QtGui.QWidget):
 
     # enable, disable set of widgets at once
     def setWidgetsDisabled(self, value, *tlist):
+        print(tlist)
         t = type(tlist[0])
         if(t is tuple or t is list):
             tlist = tlist[0]        
