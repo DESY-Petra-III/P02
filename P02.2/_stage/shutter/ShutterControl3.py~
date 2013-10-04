@@ -438,14 +438,12 @@ def check_beamline_status(self,dev_threshold=0.05,minimum_current=10.,acctr_targ
         elif self.hutch_modification[BS_index]=="Stop beam operation":
             self.keep_BS_open[BS_index]=False
             self.beam_in_hutch[BS_index]=False
-            
-            # feedback
-            """if self.QBPM_feedback_status == 1:
+            if self.QBPM_feedback_status == 1:
                 initialize_feedback() # will actually stop it
             elif self.QBPM_feedback_status == 2 and BS_index==0:
                 start_mono_feedback() # will actually stop it
             elif self.QBPM_feedback_status == 3 and BS_index!=2:
-                start_micro_feedback() # will actually stop it"""
+                start_micro_feedback() # will actually stop it
                 
                 
             print "Closing BS"+str(BS_index)+" now!"
