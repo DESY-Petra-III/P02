@@ -839,7 +839,7 @@ form = CurrentSmallForm(
                 
                 print_device_labels=False,  # print_device_labels
                 
-                ics_url="http://ics/tineinterface.php?",    # ics_url
+                ics_url="",    # ics_url
                 
                 BS_list=[["P02/shutter/1","P02/shutter/1"], # BS_list
                          ["P02/shutter/1","P02/shutter/1"],
