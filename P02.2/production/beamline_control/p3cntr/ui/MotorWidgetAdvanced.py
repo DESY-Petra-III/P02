@@ -594,7 +594,6 @@ class MotorWidgetAdvanced(QtGui.QWidget):
 
     # enable, disable set of widgets at once
     def setWidgetsDisabled(self, value, *tlist):
-        print(tlist)
         t = type(tlist[0])
         if(t is tuple or t is list):
             tlist = tlist[0]        
