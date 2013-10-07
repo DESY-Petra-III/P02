@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-# add modules to the list
-sys.path.append("/home/p02user/scripts/")
-sys.path.append("/home/p02user/scripts/modules")
 
 from  PyTango import *
 import pylab
