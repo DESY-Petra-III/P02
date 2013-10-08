@@ -158,6 +158,9 @@ class MLedWidget(QWidget):
 
         # flag to control when to update slider position and when not (no update while sliding is in progress)
         self._bslide = False
+
+        # flag to control the led light switch
+        self._bonoff =  False
         return
 
     # initialize gui
@@ -233,9 +236,12 @@ class MLedWidget(QWidget):
         # device proxy - establish connection to the device proxy
         dev = DeviceProxy(self._dev)
 
-        # try device it, if it is Running or not
+        # try device it, if it is Running or not, test aditionally timeouts
         try:
             dev.state()
+        except DevFailed:
+            self.reportErrorMessage("Error: Tango connection Failed (processLedRead - timeout)")
+            return
         except DevError:
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
             return
@@ -283,7 +289,8 @@ class MLedWidget(QWidget):
             berror = True       # means timeout
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
-        if(not berror):
+        # process if no error has occured and button has not been pressed
+        if(not berror and not self._bonoff):
             if(temp>0):     # ON
                 self.btnonoff.setChecked(True)
                 self.btnonoff.setText(MLEDON)
@@ -300,6 +307,9 @@ class MLedWidget(QWidget):
         # try device
         try:
             dev.state()
+        except DevFailed:
+            self.reportErrorMessage("Error: Tango connection Failed (processLedRead - timeout)")
+            return
         except DevError:
             self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
             return
@@ -316,9 +326,16 @@ class MLedWidget(QWidget):
                 self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
                 pass
 
+        # allow reading from tango change the state of the button
+        if(self._bonoff):
+           self._bonoff = False 
+
 
     # process light switching - ON/OFF
     def processLightSwitch(self, bflag):
+        # mark the beginnign of the write cycle
+        self._bonoff = True
+
         value = 0
         if(bflag):     # ON
             self.btnonoff.setText(MLEDON)
