@@ -160,7 +160,7 @@ class MLedWidget(QWidget):
         self._bslide = False
 
         # flag to control the led light switch
-        self._bonoff =  False
+        self._bvaluechanged =  False
         return
 
     # initialize gui
@@ -233,6 +233,10 @@ class MLedWidget(QWidget):
 
     # process timer update
     def processLedRead(self):
+        #check if value has been changed, exit from reading to initiate writing cycle
+        if(self._bvaluechanged):
+            return
+
         # device proxy - establish connection to the device proxy
         dev = DeviceProxy(self._dev)
 
@@ -258,7 +262,7 @@ class MLedWidget(QWidget):
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
         # update widget if not timeout occurs and 
-        if(not berror and temp != self.slintensity.value() and not self._bslide):
+        if(not berror and temp != self.slintensity.value() and not self._bslide and not self._bvaluechanged):
             self.leintensity.setText("%i" % temp)
             self.slintensity.setValue(temp)
 
@@ -275,7 +279,7 @@ class MLedWidget(QWidget):
             berror = True       # means timeout
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
-        if(not berror):
+        if(not berror and not self._bvaluechanged):
             self.letemp.setText("%i" % temp)
 
         # read on/off state
@@ -290,7 +294,7 @@ class MLedWidget(QWidget):
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
         # process if no error has occured and button has not been pressed
-        if(not berror and not self._bonoff):
+        if(not berror and not self._bvaluechanged):
             if(temp>0):     # ON
                 self.btnonoff.setChecked(True)
                 self.btnonoff.setText(MLEDON)
@@ -326,15 +330,15 @@ class MLedWidget(QWidget):
                 self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
                 pass
 
-        # allow reading from tango change the state of the button
-        if(self._bonoff):
-           self._bonoff = False 
+        # allow reading from tango server and consequent gui updating
+        if(self._bvaluechanged):
+           self._bvaluechanged = False
 
 
     # process light switching - ON/OFF
     def processLightSwitch(self, bflag):
         # mark the beginnign of the write cycle
-        self._bonoff = True
+        self._bvaluechanged = True
 
         value = 0
         if(bflag):     # ON
@@ -365,6 +369,9 @@ class MLedWidget(QWidget):
         # set value
         self.slintensity.setValue(value)
         self.leintensity.setText("%i" % value)
+
+        # set flag indicating that value has been changed
+        self._bvaluechanged = True
 
         # add values to the write cycle
         self._worker.addWritable(MLEDINTENSITY, value)
