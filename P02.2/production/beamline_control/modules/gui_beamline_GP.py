@@ -64,10 +64,10 @@ DEVSIGNALERR = "reportError"
 # Petra-III related information
 # general information from PETRA-III
 MANBEAMLINEPETRAIII = "tango://haspp02oh1.desy.de:10000/petra/globals/keyword"
-MANBEAMLINEPETRAIIISTYLESHEET = "QWidget {font-size: 12px; font-weight: bolder; padding: 10px; margin-bottom:20px; background-color: #efefef; }"
-MANBEAMLINEPETRAIIISTYLESHEETLABEL = "QLabel {font-size: 12px; font-weight:normal; padding-top: 10px; padding-bottom: 10px; padding-left:0px; padding-right:0px; margin-bottom:20px; }"
-MANBEAMLINEPETRAIIISTYLESHEETNORMAL = "QLabel {font-size: 12px; font-weight:bold; padding-top: 10px; padding-bottom: 10px; padding-left:0px; padding-right:0px; margin-bottom:20px; }"
-MANBEAMLINEPETRAIIISTYLESHEETATTENTION = "QLabel {font-size: 12px; font-weight:bold; padding-top: 10px; padding-bottom: 10px; margin: 0px; padding-left:0px; padding-right:0px; background-color: red; color: white; margin-bottom:20px;}"
+MANBEAMLINEPETRAIIISTYLESHEET = "QWidget {font-size: 12px; font-weight: bolder; padding: 5px; margin-bottom:10px; background-color: #efefef; }"
+MANBEAMLINEPETRAIIISTYLESHEETLABEL = "QLabel {font-size: 12px; font-weight:normal; padding-top: 5px; padding-bottom: 5px; padding-left:0px; padding-right:0px; margin-bottom:10px; }"
+MANBEAMLINEPETRAIIISTYLESHEETNORMAL = "QLabel {font-size: 12px; font-weight:bold; padding-top: 5px; padding-bottom: 5px; padding-left:0px; padding-right:0px; margin-bottom:10px; }"
+MANBEAMLINEPETRAIIISTYLESHEETATTENTION = "QLabel {font-size: 12px; font-weight:bold; padding-top: 5px; padding-bottom: 5px; margin: 0px; padding-left:0px; padding-right:0px; background-color: red; color: white; margin-bottom:10px;}"
 
 # identifiers for PETRA3
 (PETRACURRENT, PETRAENERGY, PETRAMESSAGE, PETRATOPUP) = ("BeamCurrent", "Energy", "MessageText", "TopUpStatusText")
