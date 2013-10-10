@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# License GPL v3
+# author Konstantin Glazyrin (lorcat at gmail.com)
+
+
 import sys
 
 from  PyTango import *
@@ -27,25 +31,34 @@ MLEDTIMERTIMEOUT = 3000
 # signal to report values and errors - 
 SIGNALREPORT = "report(QString)"
 
+# timer timeout to switch off LED for inactivity - makes sense for offline Raman system
+# default - 10 mins
+MLEDIDLETIMEOUT = 600000
 
 ###
 ## MRamanWidget class - widget controling Offline Raman system motors and light
 ###
 class MRamanWidget(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, app, parent=None):
         super(MRamanWidget, self).__init__(parent)
 
-        self.initVars()
+        self.initVars(app)
         self.initSelf()
         self.initEvents()
+
+        # read settings // such as previous position
+        self.readSettings()
         return
 
     # initialize main variables
-    def initVars(self):
+    def initVars(self, app):
+        self._app = app
         # motors widget
         self.wmotors = None
         # LED widget
         self.wled  = None
+        # settings
+        self._settings = QSettings(self)
         return
 
     # initialize gui
@@ -87,6 +100,18 @@ class MRamanWidget(QMainWindow):
         self.connect(self.wled, SIGNAL(SIGNALREPORT), self.processLedReport)
         return
 
+    # reading settings
+    def readSettings(self):
+        value = self._settings.value("Position").toPoint()
+        self.move(value)
+
+        return
+
+    # writing settings
+    def writingSettings(self):
+        self._settings.setValue("Position", self.pos())
+        return
+
     # initialize Motors widget
     def initMotorsWidget(self):
         wdgt = QGroupBox("Motors")
@@ -122,11 +147,15 @@ class MRamanWidget(QMainWindow):
         print(msg)
         self._status.showMessage(msg, 5000)
 
+    # closing event
     def closeEvent(self, event):
         event.accept()
 
         # cleanup LED widget - thread processing and etc.
         self.wled.close()
+
+        # write settings
+        self.writingSettings()
 
 ###
 ## MRubyWidget class End
@@ -158,6 +187,13 @@ class MLedWidget(QWidget):
 
         # flag to control when to update slider position and when not (no update while sliding is in progress)
         self._bslide = False
+
+        # flag to control the led light switch
+        self._bvaluechanged =  False
+
+        # timer to switch LED off if running for long time without activity
+        self._timeroff = QTimer(self)
+        self._timeroff.setInterval(MLEDIDLETIMEOUT)
         return
 
     # initialize gui
@@ -214,8 +250,14 @@ class MLedWidget(QWidget):
             # wheel event of the slider
         self.slintensity.wheelEvent = self.processSliderWheelEvent
 
-        # start timer - thread in this case
+        # timer controlling idle state
+        self.connect(self._timeroff, SIGNAL("timeout()"), self.processIdleOff)
+
+        # start thread in this case
         self._worker.start()
+
+        # start timer to control idle state
+        self._timeroff.start()
         return
 
     # correct widgets length in a set
@@ -228,14 +270,27 @@ class MLedWidget(QWidget):
             w.setMaximumWidth(value)
         return
 
+    # timer switching off led in case of iactivity
+    def processIdleOff(self):
+        # switch LED Off
+        self.processLedWrite(MLEDONOFF, 0)
+        return
+
     # process timer update
     def processLedRead(self):
+        #check if value has been changed, exit from reading to initiate writing cycle
+        if(self._bvaluechanged):
+            return
+
         # device proxy - establish connection to the device proxy
         dev = DeviceProxy(self._dev)
 
-        # try device it, if it is Running or not
+        # try device it, if it is Running or not, test aditionally timeouts
         try:
             dev.state()
+        except DevFailed:
+            self.reportErrorMessage("Error: Tango connection Failed (processLedRead - timeout)")
+            return
         except DevError:
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
             return
@@ -252,7 +307,7 @@ class MLedWidget(QWidget):
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
         # update widget if not timeout occurs and 
-        if(not berror and temp != self.slintensity.value() and not self._bslide):
+        if(not berror and temp != self.slintensity.value() and not self._bslide and not self._bvaluechanged):
             self.leintensity.setText("%i" % temp)
             self.slintensity.setValue(temp)
 
@@ -269,7 +324,7 @@ class MLedWidget(QWidget):
             berror = True       # means timeout
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
-        if(not berror):
+        if(not berror and not self._bvaluechanged):
             self.letemp.setText("%i" % temp)
 
         # read on/off state
@@ -283,7 +338,8 @@ class MLedWidget(QWidget):
             berror = True       # means timeout
             self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
 
-        if(not berror):
+        # process if no error has occured and button has not been pressed
+        if(not berror and not self._bvaluechanged):
             if(temp>0):     # ON
                 self.btnonoff.setChecked(True)
                 self.btnonoff.setText(MLEDON)
@@ -300,6 +356,9 @@ class MLedWidget(QWidget):
         # try device
         try:
             dev.state()
+        except DevFailed:
+            self.reportErrorMessage("Error: Tango connection Failed (processLedRead - timeout)")
+            return
         except DevError:
             self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
             return
@@ -316,9 +375,16 @@ class MLedWidget(QWidget):
                 self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
                 pass
 
+        # allow reading from tango server and consequent gui updating
+        if(self._bvaluechanged):
+           self._bvaluechanged = False
+
 
     # process light switching - ON/OFF
     def processLightSwitch(self, bflag):
+        # mark the beginnign of the write cycle
+        self._bvaluechanged = True
+
         value = 0
         if(bflag):     # ON
             self.btnonoff.setText(MLEDON)
@@ -328,6 +394,10 @@ class MLedWidget(QWidget):
 
         # write values
         self._worker.addWritable(MLEDONOFF, value)
+
+        # restart iddle timer
+        self._timeroff.stop()
+        self._timeroff.start()
         return
 
     # intensity value changed by QLineEdit field
@@ -348,6 +418,9 @@ class MLedWidget(QWidget):
         # set value
         self.slintensity.setValue(value)
         self.leintensity.setText("%i" % value)
+
+        # set flag indicating that value has been changed
+        self._bvaluechanged = True
 
         # add values to the write cycle
         self._worker.addWritable(MLEDINTENSITY, value)
@@ -378,6 +451,9 @@ class MLedWidget(QWidget):
     def closeEvent(self, event):
         # accept event to close window
         event.accept()
+
+        # switch LED Off
+        self.processLedWrite(MLEDONOFF, 0)
 
         # cleanup LED widget, its thread update processing - read/write operation
         if(self._worker is not None and self._worker.isRunning()):
@@ -438,8 +514,18 @@ class MWorker(QThread):
 ## MWorker class End
 ###
 
+MAPPLICATION = "BeamlineStack"
+MDOMAIN = "desy.de"
+MORG = "DESY"
+
 # possibility to start, debug and test widget
 if __name__ == "__main__":
     app = QApplication([])
-    form = MRamanWidget()
+
+    # initialize values for settings
+    app.setOrganizationName(MORG)
+    app.setOrganizationDomain(MDOMAIN)
+    app.setApplicationName(MAPPLICATION)
+
+    form = MRamanWidget(app)
     app.exec_()
