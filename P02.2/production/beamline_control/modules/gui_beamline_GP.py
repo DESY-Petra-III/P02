@@ -41,6 +41,7 @@ BEAMLSPECIAL = "Special Signal"
 (NICKSHUTTER, NICKDIODE, NICKMICROSCOPE,
 NICKSPSFILTER1, NICKSPSFILTER2, NICKSPSFILTER3, NICKSPSFILTER4) = ("shutter", "diode", "ruby microscope",
                                             "filter1", "filter2", "filter3", "filter4")
+
 DEVICES = {
             NICKSHUTTER: {"nick": BEAMLSHUTTER, "link": "tango://haspp02oh1:10000/p02/register/eh2a.out01", "property": "Value", "in":1, "out":0}, 
             NICKDIODE: {"nick": BEAMLDIODE, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve1", "in": 1, "out": 0},
@@ -48,7 +49,7 @@ DEVICES = {
             NICKSPSFILTER1: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve2", "in": 1, "out": 0},
             NICKSPSFILTER2: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve3", "in": 1, "out": 0},
             NICKSPSFILTER3: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve4", "in": 1, "out": 0},
-            NICKSPSFILTER4: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve5", "in": 1, "out": 0}
+            NICKSPSFILTER4: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve5", "in": 1, "out": 0},
           }
 
 # device states
@@ -59,6 +60,26 @@ TIMERTIMEOUT = 200
 
 # debugging signals
 DEVSIGNALERR = "reportError"
+
+# Petra-III related information
+# general information from PETRA-III
+MANBEAMLINEPETRAIII = "tango://haspp02oh1.desy.de:10000/petra/globals/keyword"
+MANBEAMLINEPETRAIIISTYLESHEET = "QWidget {font-size: 12px; font-weight: bolder; padding: 10px; margin-bottom:20px; background-color: #efefef; }"
+MANBEAMLINEPETRAIIISTYLESHEETLABEL = "QLabel {font-size: 12px; font-weight:normal; padding-top: 10px; padding-bottom: 10px; padding-left:0px; padding-right:0px; margin-bottom:20px; }"
+MANBEAMLINEPETRAIIISTYLESHEETNORMAL = "QLabel {font-size: 12px; font-weight:bold; padding-top: 10px; padding-bottom: 10px; padding-left:0px; padding-right:0px; margin-bottom:20px; }"
+MANBEAMLINEPETRAIIISTYLESHEETATTENTION = "QLabel {font-size: 12px; font-weight:bold; padding-top: 10px; padding-bottom: 10px; margin: 0px; padding-left:0px; padding-right:0px; background-color: red; color: white; margin-bottom:20px;}"
+
+# identifiers for PETRA3
+(PETRACURRENT, PETRAENERGY, PETRAMESSAGE, PETRATOPUP) = ("BeamCurrent", "Energy", "MessageText", "TopUpStatusText")
+DEVICESPETRA = {
+        PETRACURRENT: {"nick": "Current:", "link":MANBEAMLINEPETRAIII, "property":PETRACURRENT, "wdgt": None, "Value": None},
+        PETRAENERGY: {"nick": "Energy:", "link": MANBEAMLINEPETRAIII, "property":  PETRAENERGY, "wdgt": None, "Value": None},
+        PETRATOPUP: {"nick": "TopUp:", "link": MANBEAMLINEPETRAIII, "property":  PETRATOPUP, "wdgt": None, "Value": None},
+        PETRAMESSAGE: {"nick": "", "link": MANBEAMLINEPETRAIII, "property":  PETRAMESSAGE, "wdgt": None, "Value": None}
+}
+
+# low current
+PETRA3LOWCURRENT = 30
 
 ###
 ##  MBeamLineGP class - widget for controlling beamline visualization
@@ -88,8 +109,11 @@ class MBeamLineGP(QWidget):
         # catch signals from beamline widgets and process them
         self.connect(self, SIGNAL(BEAMLSIGNALTOGGLE), self.processToggle)
 
-        # catch special signals from widgets like SPS
+        # catch special signals from widgets like SPS, transfer them to the parent widget
+            # SPS widget
         self.connect(self.wsps, SIGNAL(BEAMLSPECIAL), self.processSpecialSignal)
+            # microscope widget
+        self.connect(self.wmicroscope, SIGNAL(BEAMLSPECIAL), self.processSpecialSignal)
 
         # timer
         self.connect(self._timer, SIGNAL("timeout()"), self.updateBeamline)
@@ -101,6 +125,7 @@ class MBeamLineGP(QWidget):
         # timer to update visuals for a beamline
         self._timer = QTimer(self)
         self._timer.setInterval(TIMERTIMEOUT)
+
         return
 
     # startup init UI
@@ -126,21 +151,29 @@ class MBeamLineGP(QWidget):
 
         # small adjustments
             # force transparent
+            # SPS
         self.wsps.forceTransparent()
-        self.wsps.setEmitSpecial(True, BEAMLSPS)
 
             # disable user mouseevents
         self.wsps.enableMouseClick(False)
-        self.wmicroscope.enableMouseClick(False)
         self.wsps.setChecked(True)
+        self.wmicroscope.enableMouseClick(False)
+            # SPS - allow SPS to emit special signals on click
+        self.wsps.setEmitSpecial(True, BEAMLSPS)
+            # microscope - allow to emit special signals on click
+        self.wmicroscope.setEmitSpecial(True, BEAMLMICROSCOPE)
 
-        # making layout
+        # making layout - beamline
         self._beamline = [self.wdetector, self.wdiode, self.wmicroscope, self.wstage, self.wpinhole,self.woptics, self.wshutter, self.wion2, self.wion1, self.wsps, self.wxray]
         count = 0
         for w in self._beamline:
             w.isTransparent(True)
-            grid.addWidget(w, 0, count)
+            grid.addWidget(w, 1, count)
             count += 1
+
+        # adding layout - PETRA-III status
+        w = self.createPetra3Widget()
+        grid.addWidget(w, 0, 0, 1, grid.columnCount())
 
         self._beamline.reverse()
         self.setupBeam(self._beamline)
@@ -173,6 +206,38 @@ class MBeamLineGP(QWidget):
         for w in self._beamline:
             bbeam = w.isTransparent(bbeam)
 
+    # create Petra3 widget
+    def createPetra3Widget(self):
+        wdgt = QWidget(self)
+        wdgt.setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEET)
+        grid = QGridLayout(wdgt)
+
+        # enumerate through Petra3 properties, add them to the widget
+        col = 0
+        for k in (PETRACURRENT, PETRAENERGY, PETRATOPUP, PETRAMESSAGE):
+            # create label based on device nick
+            nick = DEVICESPETRA[k]["nick"]
+            w = QLabel(nick)
+            grid.addWidget(w, 0, col)
+            col = col+1
+
+            w.setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETLABEL)
+
+            # create label used for upodate
+            w = QLabel("")
+            if(k==PETRAENERGY or k==PETRACURRENT):
+                w.setMinimumWidth(90)
+                w.setMaximumWidth(90)
+            DEVICESPETRA[k]["wdgt"] = w
+            grid.addWidget(w, 0, col)
+
+            w.setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
+            col = col+1
+
+        grid.setColumnStretch(col, 50)
+        return wdgt
+
+
     # update view for the beamline
     def updateBeamline(self):
 
@@ -202,8 +267,6 @@ class MBeamLineGP(QWidget):
             bflag = True
         elif(res<=device["out"]):
             bflag = False
-        #print("microscope should be: in? %i %f" % (res, device["in"]))
-        #print(res, bflag)
         self.controlMicroscope(bflag)
 
         # update SPS - filters - check 4 of them - put sps in if any filter is in
@@ -238,11 +301,30 @@ class MBeamLineGP(QWidget):
 
         self.controlSPS(tres)
 
+        # update Petra3 parameters
+        for k in DEVICESPETRA.keys():
+            device = DEVICESPETRA[k]
+            res = self.readWriteDevice(device)
+            DEVICESPETRA[k]["Value"] = res
+
+            (format, t) = ("%s", type(res))
+
+            # adjust format and style, check for low Petra3  current and inform user
+            if(k==PETRAENERGY):
+                format = "%02.2f GeV"
+            elif(k==PETRACURRENT):
+                format = "%02.2f mA"
+                style = DEVICESPETRA[k]["wdgt"].styleSheet()
+                if(res<PETRA3LOWCURRENT and style!=MANBEAMLINEPETRAIIISTYLESHEETATTENTION):
+            		DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETATTENTION)
+            	elif(style != MANBEAMLINEPETRAIIISTYLESHEETNORMAL):
+            		DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
+            DEVICESPETRA[k]["wdgt"].setText(format % res)
         return
 
     # check device, it's property, gets value
     def readWriteDevice(self, devlist, value = None):
-        (bsuccess, res) = (True, None)
+        (bsuccess, res, dev) = (True, None, None)
 
         (nick, link, prop) = (devlist["nick"], devlist["link"], devlist["property"])
 
@@ -340,7 +422,6 @@ class MBeamLineGP(QWidget):
         if(type(value) is bool and value==self.wdiode.isEnabled()):
             self.wdiode.setEnabled(not value)
             self.wdiode.setToolTip("%s - Disabled (Microscope is in)"%BEAMLDIODE)
-            #print("diode enabled? %i"%self.wdiode.isEnabled())
             if(self.wdiode.isEnabled()):
                 self.wdiode.setToolTip(BEAMLDIODE)
         return self.controlWidget(self.wmicroscope, value)
