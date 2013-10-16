@@ -43,6 +43,7 @@ MOTORTIMER = 250
 
 # SIGNAL
 SIGNALMOTORPOSITION = "motorPosition"
+SIGNALMOTORPOSITIONCHANGED = "motorPositionChanged" 
 
 ###
 ## Motor_QPushButton, Motor_QLineEditPosition, Motor_QLineEditStep, Motor_QComboBoxStep - override default sizes or styles
@@ -84,6 +85,7 @@ class MotorWidgetAdvanced(QtGui.QWidget):
 
         # start gui update
         self._mainTimer.start()
+        
         return
 
     # init most important variables
@@ -119,6 +121,9 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         # timer to update ui
         self._mainTimer = QtCore.QTimer(self)
         self._mainTimer.setInterval(MOTORTIMER)
+        
+        # flag telling if we report changes of positions to the parent widget
+        self._breport = False
         return
 
     # init gui
@@ -139,11 +144,19 @@ class MotorWidgetAdvanced(QtGui.QWidget):
             self.initMotorEvents(name, motor)
 
         # add new widget
+            # button to stop all motors
         self.btnStopMotors = QtGui.QPushButton("&Stop all Motors")
+            # button to initiate save sequence
         self.btnShowSave = QtGui.QPushButton("S&ave Pos.")
         self.btnShowSave.hide()
+            # checkbox to enable or disable signal reporting of positions if they have changed
+        self.cbReportPos = QtGui.QCheckBox("Report positions")
+        self.cbReportPos.setChecked(self._breport)
+        self.cbReportPos.hide()
+
         tlist = [self.btnShowSave, None, None, self.btnStopMotors]
         self.gridAddWidgetList(grid, grid.rowCount(), tlist)
+        grid.addWidget(self.cbReportPos, grid.rowCount()-1, 6, 1, grid.columnCount()-4)
 
         # set stretch
         grid.setRowStretch(grid.rowCount()+1, 50)
@@ -156,8 +169,10 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         self.connect(self.btnStopMotors, QtCore.SIGNAL("clicked()"), self.processStopMotors)
         # main timer
         self.connect(self._mainTimer, QtCore.SIGNAL("timeout()"), self.updateUI)
-        # report positions in a signal
+        # report positions in a signal - on click of Save Position button
         self.connect(self.btnShowSave, QtCore.SIGNAL("clicked()"), self.processReportPosition)
+        # report positions with a signal if enabled by special flag
+        self.connect(self.cbReportPos, QtCore.SIGNAL("toggled(bool)"), self.processEnableReport)
         return
 
     # init different button events for specific motor
@@ -419,6 +434,10 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         font.setBold(bbold)
         w.setFont(font)
         return
+    
+    # process enabling of reports
+    def processEnableReport(self, flag):
+        self._breport = flag
 
     # process new step value
     def processNewStep(self, name, wdgt):
@@ -466,7 +485,13 @@ class MotorWidgetAdvanced(QtGui.QWidget):
 
     # update UI on timer
     def updateUI(self):
+        # update gui based on internal flags, values
+            # check flag using which we enable reporting if any motor position has changed
+        if(self.cbReportPos.isChecked()!=self._breport):
+            self.cbReportPos.setChecked(self._breport)
+        
         # enumerate motors, update their positions into position widget
+        bchanged = False
         for name in self._motorsdict.keys():
             (motor, wpos, oldpos) = (self._motorsdict[name]["Motor"], self._motorsdict[name]["Widgets"]["Position"], self._motorsdict[name]["Position"])
             # update if positions have changed
@@ -477,6 +502,12 @@ class MotorWidgetAdvanced(QtGui.QWidget):
                 wpos.setText("%.04f" % motor.pos)
                 # update motors(dict) set new position
                 self._motorsdict[name]["Position"] = pos
+                # make sure we have verified that motor position is new
+                bchanged = True
+        
+        # emit signal with new, indeed changed positions
+        if(bchanged and self._breport):
+            self.emit(QtCore.SIGNAL(SIGNALMOTORPOSITIONCHANGED), self._motorsdict)
 
     #
     # utility functions - enable disable, set positions
@@ -601,10 +632,29 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         for w in tlist:
             w.setDisabled(value)
     
-    # show hidden save position button
-    def showBtnSavePos(self):
-        self.btnShowSave.show()
-
+    # show hidden save position button or hide it
+    def showBtnSavePos(self, value=True):
+        if(value):
+            self.btnShowSave.show()
+        else:
+            self.btnShowSave.hide()
+    
+    # show hidden checkbox controling if we report changing position to the parent widget
+    def showCbReportPos(self, value=True):
+        if(value):
+            self.cbReportPos.show()
+        else:
+            self.cbReportPos.hide()
+    
+    # show all hidden controls
+    def showAllHiddenControls(self, value=True):
+        # enumerate known widgets, show or hide them depending on value
+        for w in (self.cbReportPos, self.btnShowSave):
+            if(value):
+                w.show()
+            else:
+                w.hide()
+        
     # cleanup on close
     def closeEvent(self, event):
         # cleanup timer

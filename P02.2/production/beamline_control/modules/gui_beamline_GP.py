@@ -317,7 +317,7 @@ class MBeamLineGP(QWidget):
                 style = DEVICESPETRA[k]["wdgt"].styleSheet()
                 if(res<PETRA3LOWCURRENT and style!=MANBEAMLINEPETRAIIISTYLESHEETATTENTION):
             		DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETATTENTION)
-            	elif(style != MANBEAMLINEPETRAIIISTYLESHEETNORMAL):
+            	elif(res>=PETRA3LOWCURRENT and style != MANBEAMLINEPETRAIIISTYLESHEETNORMAL):
             		DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
             DEVICESPETRA[k]["wdgt"].setText(format % res)
         return
