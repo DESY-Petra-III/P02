@@ -436,7 +436,7 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         return
     
     # process enabling of reports
-    def processEnableReport(self, flag):
+    def processEnableReport(self, flag=True):
         self._breport = flag
 
     # process new step value
@@ -507,7 +507,7 @@ class MotorWidgetAdvanced(QtGui.QWidget):
         
         # emit signal with new, indeed changed positions
         if(bchanged and self._breport):
-            self.emit(QtCore.SIGNAL(SIGNALMOTORPOSITIONCHANGED), self._motorsdict)
+            self.emit(QtCore.SIGNAL(SIGNALMOTORPOSITIONCHANGED), self.windowTitle(), self._motorsdict)
 
     #
     # utility functions - enable disable, set positions

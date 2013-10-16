@@ -82,7 +82,7 @@ class MClipboardTest(QMainWindow):
         # get text from QTextEdit
         text = self.teclip.toPlainText()
         
-        dataReadToClipboardFromString(text)
+        dataWriteToClipboardFromString(text)
         return
 
     def close(self, event):
@@ -193,12 +193,12 @@ class MClipboardTracker(QObject):
 ###
 
 # add data in form of from:to:value
-def dataReadToClipboard(self, vfrom, vto, value):
+def dataWriteToClipboard(vfrom, vto, value):
     string = MCLIPBOARDTRACKERREADTEMPLATE%(str(vfrom), str(vto), str(value))
-    self.dataReadToClipboardFromString(app, string)
+    dataWriteToClipboardFromString(string)
 
 # add data in form of a preapred string
-def dataReadToClipboardFromString(string):
+def dataWriteToClipboardFromString(string):
     #
     string = QString(string)
     #
