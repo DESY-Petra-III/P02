@@ -855,6 +855,17 @@ class StackForm(QMainWindow):
             for name in tlist:
                 self.stack_widget.setMotorPositionByName(name, self.checkPositionByName(name, data))
         return
+    
+    
+    # process list with values reported by position widget, select specific position
+    def checkPositionByName(self, name, tlist):
+        res = 0.0
+        for i in range(len(tlist)/2):
+            label = tlist[2*i]
+            value = tlist[2*i+1]
+            if(label.find(name)>=0):
+                res = value
+        return res
 
     # process positions float - adjust window sizes
     def processPositionsFloat(self, state):

@@ -732,7 +732,7 @@ class StackForm(QMainWindow):
     def processReportedPositionChange(self, title, motorsdict):
         (strfrom, strto, strvalue) = (title, "all", "")
         
-        # numerate through the motors
+        # enumerate through the motors
         items = motorsdict.items()
         # sort motors by number
         for m in sorted(items, key=lambda k: k[1]["Number"]):
