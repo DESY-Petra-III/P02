@@ -377,8 +377,10 @@ class MWorker(QThread):
     def run(self):
         # proceed untill told to stop
         while(not self._bstop):
+            time = QTime.currentTime()
+            time.start()
             # check how much time we need for reading - writing operations, adjust read waiting time accordingly
-            (timestart, timeend, timediffall) = (QDateTime.currentMSecsSinceEpoch() , 0, 0)
+            (timestart, timeend, timediffall) = (0, 0, 0)
 
             # write values in the beginning of read cycle
             
@@ -405,7 +407,7 @@ class MWorker(QThread):
                     break
                 
             # calculate how much time we spend on one cycle
-            timeend = QDateTime.currentMSecsSinceEpoch()
+            timeend = time.elapsed()
             timediffall = timeend - timestart
 
             # check every 250 ms if we have new value to write - proceed to writing, otherwise wait for the same time it took us to read+write full setup
