@@ -465,10 +465,10 @@ class MLedWidget(QWidget):
 ###
 
 ###
-## MWorker class - QThread class for dirty work - to write and previously set data
+## MWorker class - QThread class for dirty work - to write and previously set data, widgets are disabled until all right commands are executed
 ###
 class MWorker(QThread):
-    def __init__(self, readoperation, writeoperation, parent=None):
+    def __init__(self, wdgts, parent=None):
         super(MWorker, self).__init__(parent)
 
         # mutex to control exit conditions
@@ -476,54 +476,95 @@ class MWorker(QThread):
         self._stopmutex = QMutex()
 
         # function to process
-        self.read = readoperation
-        self.write = writeoperation
+        self._wdgts = wdgts
 
         # storage for data writing
-        self._datawrite = {}
+        self._cmds = {"&i" : None, "&l" : None, "&ct" : None}
         self._writemutex = QMutex()
+
+        # socket wrapper for operation
+        self._tcp = MTcpSocketWrapper(self)
 
     # run specific operation when access mutex allows it
     def run(self):
+        # proceed untill told to stop
         while(not self._bstop):
+            # check how much time we need for reading - writing operations, adjust read waiting time accordingly
+            (timestart, timeend, timediffall) = (QDateTime.currentMSecsSinceEpoch() , 0, 0)
+
             # write values in the beginning of read cycle
             with(QMutexLocker(self._writemutex)):
                 # enumerate through different keys
-                for k in self._datawrite.keys():
+                for k in self._cmds.keys():
                     # check values, write value to the Led device (attribute and its value)
-                    if(self._datawrite[k] is not None):
-                        self.write(k, self._datawrite[k])
-                        self._datawrite[k] = None
-                        self.msleep(500)
-            # read data
-            self.read()
-            self.msleep(500)
+                    if(self._cmds[k] is not None):
+                        self.processSetCommand(k, self._cmds[k])
+                        self._cmds[k] = None
+            
+            # read data for all things it should be read
+            for k in self._cmds.keys():
+                self.processGetCommand(self, self._cmds[k])
+                
+            # calculate how much time we spend on one cycle
+            timeend = QDateTime.currentMSecsSinceEpoch()
+            timediffall = timeend - timestart
+
+            # check every 250 ms if we have new value to write - proceed to writing, otherwise wait for the same time it took us to read+write full setup
+            for i in range(timediffall, 250):
+                bnewwritable = False
+                # see if we have something to write
+                for k in self._cmds.keys():
+                    # new value is set
+                    if(self._cmds[k] is not None):
+                        bnewwritable = True
+                        break
+
+                if(bnewwritable):
+                    break
+                self.msleep(250)
+
         self.stop()
         return
 
+    # stop function
     def stop(self):
+        if(not self._bstop):
         with(QMutexLocker(self._stopmutex)):
+            # set a flag for thread loop to exit
             self._bstop = True
+        
+        # close any socket operations if present
+        self._tcp.stop()
 
-    # make sure only the last attribute value is written - use dictionaries
-    def addWritable(self, attribute, value):
+    # set command
+    def processSetCommand(self, cmd, value):
+        format = "%s%i"
+        if(cmd=="&i"):
+            format = "%s%x"
+        return self._tcp.send(format % (cmd,value) )
+        
+    # get command
+    def processGetCommand(self, cmd):
+        return self._tcp.send("%s?"%cmd)
+
+    # make sure only the one attribute value is written - use dictionaries
+    def addWritable(self, cmd, value):
         with(QMutexLocker(self._writemutex)):
-            self._datawrite[attribute] = value
+            self._cmds[cmd] = value
 
 ###
 ## MWorker class End
 ###
 
 ###
-## MTcpSocket - class for direct working with LED
+## MTcpSocket - class for direct working with LED - clocking operation
 ###
 
 class MTcpSocketWrapper(QObject):
     def __init__(self, parent=None):
-        super(MTcpSocket, self).__init__(parent)
+        super(MTcpSocketWrapper, self).__init__(parent)
 
         self.initVars()
-        self.initSelf()
         self.initEvents()
 
     def initVars(self):
@@ -532,9 +573,6 @@ class MTcpSocketWrapper(QObject):
         self._host = "192.168.57.243"
 
         self._mutex = QMutex()
-        return
-
-    def initSelf(self):
         return
 
     def initEvents(self):
@@ -556,18 +594,42 @@ class MTcpSocketWrapper(QObject):
     def host(self, value="192.168.57.243"):
         self._host = str(value)
 
-    # command for blocking read
-    def read(self, cmd):
+    # command for blocking operation
+    def send(self, cmd, signal=None):
+        bsuccess = False
         # try to see if we can read - lock mutex
         if(not self._mutex.tryLock()):
-            return
+            return bsuccess
         else
             self._mutex.unlock()
 
         # read values
         with(QMutexLocker(self._mutex):
             self._socket.connectToHost(self.host, self.port)
+            # make sure we got connected to the device
+            if(self._socket.waitForConnected(3000)):
+                self._socket.write(cmd)
+                self._socket.flush()
 
+                # we have data to read
+                if(self.waitForReadyRead(3000)):
+                    # read data with buffer size of 10, should be enough, pass data as a signal to the tread
+                    result = self._socket.readData(10)
+                    self.emit(SIGNAL("responseRecieved"), cmd, result)
+                    bsuccess = True
+                    # disconnect a socket
+                    self._socket.close()
+                else:
+                    self.emit(SIGNAL("timeout(const QString &)"), QString("Reading Operation"))
+            else:
+                # no connection is established, sorry
+                self.emit(SIGNAL("connectionError()"))
+        return bsuccess
+
+    # cleaning up function
+    def close(self):
+        if(self._socket.isOpen()):
+            self._socket(close)
 
 ###
 ## MTcpSocket - end
