@@ -371,7 +371,7 @@ class MWorker(QThread):
         self._writemutex = QMutex()
 
         # socket wrapper for operation
-        self._tcp = MTcpSocketWrapper(self)
+        self._tcp = MTcpSocketWrapper(parent)
 
     # run specific operation when access mutex allows it
     def run(self):
@@ -395,7 +395,7 @@ class MWorker(QThread):
                     with(QMutexLocker(self._writemutex)):
                         self._cmds[k] = None
                 else:
-                    self.processGetCommand(self._cmds[k])
+                    self.processGetCommand(k)
 
             # after full cycle - enable widgets after sending command to the LED
             if(self._wdgts is not None):
