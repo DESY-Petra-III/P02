@@ -514,7 +514,7 @@ class MTcpSocketWrapper(QObject):
             self._mutex.unlock()
 
         # read values
-        with(QMutexLocker(self._mutex):
+        with(QMutexLocker(self._mutex)):
             self._socket.connectToHost(self.host, self.port)
             # make sure we got connected to the device
             if(self._socket.waitForConnected(MLEDTIMERTIMEOUT)):
