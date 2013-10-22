@@ -510,7 +510,7 @@ class MTcpSocketWrapper(QObject):
         # try to see if we can read - lock mutex
         if(not self._mutex.tryLock()):
             return bsuccess
-        else
+        else:
             self._mutex.unlock()
 
         # read values
