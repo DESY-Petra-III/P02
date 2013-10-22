@@ -14,6 +14,7 @@ reload(p3cntr)
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyQt4.QtNetwork import *
 
 # Ruby Motors
 (MRAMANMOTORX, MRAMANMOTORY, MRAMANMOTORZ) = ("haspllabcl1:10000/llab/motor/mot.01", "haspllabcl1:10000/llab/motor/mot.02", "haspllabcl1:10000/llab/motor/mot.03")
