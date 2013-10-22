@@ -526,9 +526,10 @@ class MTcpSocketWrapper(QObject):
                 self._socket.flush()
 
                 # we have data to read
-                if(self.waitForReadyRead(MLEDTIMERTIMEOUT)):
+                if(self._socket.waitForReadyRead(MLEDTIMERTIMEOUT)):
                     # read data with buffer size of 10, should be enough, pass data as a signal to the tread
                     result = self._socket.readData(10)
+                    print(cmd, result)
                     self.emit(SIGNAL("responseReceived"), cmd, result)
                     bsuccess = True
                     # disconnect a socket
