@@ -1,0 +1,740 @@
+(0, 11, PyQt4.QtCore.QString(u'The issuer certificate of a locally looked up certificate could not be found'))
+(1, 17, PyQt4.QtCore.QString(u'The root CA certificate is not trusted for this purpose'))
+HTTP/1.1 200 OK
+Date: Thu, 10 Oct 2013 08:44:22 GMT
+Server: Apache/2.2.3 (Scientific Linux)
+X-Powered-By: PHP/5.3.3
+Connection: close
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=UTF-8
+
+2032
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+
+        <title>ICS : Interlock Control System</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="language" content="en" />
+        <meta name="robots" content="index,follow" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8"> 
+        <link rel="stylesheet" type="text/css" href="scripts/blclass.css" />
+        <link rel="stylesheet" type="text/css" href="scripts/css/custom-theme/jquery-ui-1.8.9.custom.css" />
+        <script type="text/javascript" src="scripts/js/jquery.min.js"></script>
+        <script type="text/javascript" src="scripts/js/jquery-ui-1.8.9.custom.min.js"></script>
+
+
+
+
+         
+
+        <script type="text/javascript">
+            var browser="";
+
+            var server="hasics3";
+            var emailcheck=0;
+            var displayCount   = "3"; // Anzahl der Gebiete
+            var currentDisplay = 0; 						//startgebiet
+            var currentDevice  = 0; 						//startdevice
+            var deviceCount    = 13; 						// Anzahl der Devices (-1 da die 0 mit zaehlt), genaue Bezeichnung wird weiter unten festgelegt
+            var gebietId;
+            var classorid='#'; 								//fuer jquery
+            var deviceName;
+            var bsgebiet;
+
+            var gebiet="2";           // Gebiet fuer das man Kontrolle hat
+            var beamline = "02";	// Beamline
+            //var lang ="labelDe";							// Spracheinstellung
+            var errorcount=0;								//zählt aufeinanderfolgende Timeouts
+            var devices=new Array();
+            var sessid;
+            var hostname,
+            addbeamline,
+            tips;
+
+
+
+            var displayUrl = 'tineinterface.php?'; 			// vom Ajax aufgerufene site welche die Tine funktionen zur Verfuegung stellt und einen State wert zurueckliefert
+            var states=new Array();
+            if(browser=='prism')
+            {
+
+                window.resizeTo(1000,700);
+            }
+
+function tine_put(putObject) {
+
+
+            checkBtnConfirm(putObject);
+
+        }
+
+
+        jQuery(document).ready(function() {
+			/// geht nciht
+            //$("#G02_2_ACncelSrch").click(function() {
+              //  tine_put('G02_2_ACncelSrch');
+               // $("#checkDachs").removeClass("nodisplay");
+           // });
+
+
+
+            //jQuery.ui.dialog.defaults.bgiframe = true;
+            // Dialoge
+            $('#addHost').dialog({
+                bgiframe: true,
+                autoOpen: false,
+                height: 300,
+                modal: true,
+                buttons: {
+                    'Close': function() {
+                        $(this).dialog('close');
+                    },
+                    'Save': function() {
+                        sessid=jQuery("#addHostsessid");
+                        var adminhost=$("#adminhost:checked");
+                        addbeamline = $("#addbeamline");
+                        hostname = $("#hostname");
+                        tips = $("#validateTips");
+                        jQuery.ajax({
+                            url: "newdevice.php",
+                            type: 'POST',
+                            data:"hostname="+hostname.val()+"&adminhost="+adminhost.val()+"&beamline="+addbeamline.val()+"&sessid="+sessid.val()+"&action=check",
+                            dataType: '',
+                            timeout: 1000,
+                            success: function(data){
+                                data=jQuery.trim(data);
+                                if(data.substr(-6)=='exists')
+                                {
+                                    $('#confirmHost').dialog('open');
+                                }
+                                else
+                                {
+                                    updateTips(data);
+
+                                }
+
+                            }
+                        });
+
+
+
+                    }
+
+                }
+
+            });
+            $(".ui-dialog").live("keyup", function(e) {
+				
+				if (e.keyCode === 13) {
+					
+					$('.ok-button', $(this) ).first().click();
+				}
+			});
+			$( "#enableareasearch" ).dialog({
+							  
+				  autoOpen: false,
+				  height:280,
+				  width: 400,
+				  autocomplete: false,
+				  modal: true,
+				  buttons: {
+					"Authenticate": function() {
+						checkDoorPwd($("#enablesearchuser").val(),$("#enablesearchpassword").val(),beamline);
+						$("#enablesearchuser").val('');
+						$("#enablesearchpassword").val('');
+					  $( this ).dialog( "close" );
+					},
+					Cancel: function() {
+						
+					  $( this ).dialog( "close" );
+					}
+				  }
+				});
+			$( "#startareasearch" ).dialog({
+			  
+				  autoOpen: false,
+				  height:260,
+				  width: 400,
+				  autocomplete:false,
+				  modal: true,
+				  buttons: {
+					"Start Search": function() {
+						checkStartSearchPwd($("#startsearchuser").val(),$("#startsearchpassword").val(),$('.AStartSrch').attr('id'),beamline,gebiet);
+						$("#startsearchuser").val('');
+						$("#startsearchpassword").val('');
+					  $( this ).dialog( "close" );
+					},
+					Cancel: function() {
+					  $( this ).dialog( "close" );
+					}
+			  }
+			});
+            $('#confirmHost').dialog({
+                autoOpen: false,
+                width: 600,
+                buttons: {
+                    Cancel: function() {
+                        $(this).dialog('close');
+                    },
+                    'delete': function() {
+                        jQuery.ajax({
+                            url: "newdevice.php",
+                            type: 'POST',
+                            data:"hostname="+hostname.val()+"&beamline="+addbeamline.val()+"&sessid="+sessid.val()+"&action=delete",
+                            dataType: '',
+                            timeout: 1000,
+                            success: function(data){
+
+                                updateTips(data);
+                                $('#confirmHost').dialog('close');
+
+
+                            }
+                        });
+
+                    },
+                    'overwrite': function() {
+                        var adminhost=$("#adminhost:checked");
+                        jQuery.ajax({
+                            url: "newdevice.php",
+                            type: 'POST',
+                            data:"hostname="+hostname.val()+"&adminhost="+adminhost.val()+"&beamline="+addbeamline.val()+"&sessid="+sessid.val()+"&action=overwrite",
+                            dataType: '',
+                            timeout: 1000,
+                            success: function(data){
+
+                                updateTips(data);
+                                $('#confirmHost').dialog('close');
+
+
+                            }
+                        });
+
+                    }
+
+                }
+            });
+            $('#myareahelp').dialog({
+                autoOpen: false,
+                width: 600
+            });
+            $('#blockbsform').dialog({
+                autoOpen: false,
+                width: 600
+
+            });
+            $('#timeout').dialog({
+                autoOpen: false,
+                width: 600,
+                modal: true,
+                buttons: {
+                    'Reload': function() {
+                        document.location.href="http://ics.desy.de";
+                    }
+                }
+            });
+            $('#insertname2').dialog({
+                autoOpen: false,
+                width: 600
+            });
+
+            // Dialog Link
+            $('#areahelpicon').click(function(){
+                $('#myareahelp').dialog('open');
+                return false;
+            });
+
+
+
+
+            jQuery(".ui-icon").hover(function() {
+                jQuery(this).parent().addClass("ui-state-hover");
+            },function() {
+                jQuery(this).parent().removeClass("ui-state-hover");
+            });
+            jQuery(".icsbtn").hover(function() {
+                jQuery(this).addClass("ui-state-hover");
+            },function() {
+                jQuery(this).removeClass("ui-state-hover");
+            });
+
+            var sessid='
+
+3112
+';
+            if((sessid).length>3)
+            {
+                jQuery.ajax({
+                    url: "checkpwd.php",
+                    type: 'POST',
+                    dataType: '',
+                    data:"sessid=",
+                    timeout: 5000,
+                    success: function(data){
+                        data=jQuery.trim(data);
+                        if (data!='')
+                        {
+                            jQuery('#switchblpw').hide();
+                            jQuery('#switchblform').show();
+                             
+                            
+                        }
+
+                    }
+                });
+            }
+
+
+
+
+
+        }
+
+
+    );
+
+        </script>
+        <script type="text/javascript" src="scripts/main.js"></script>
+    </head>
+    <body >
+
+
+        
+        <div id="switchbl" class="ui-corner-all">
+                
+            <form action="index.php" method="post" name="setbl03_1">
+                <input type="hidden" name="beamline" value="03">
+                <input type="hidden" name="gebiet" value="1">
+            </form>
+            <button class="ui-state-default ui-corner-all icsbtn" type="button"  onclick="javascript:document.forms['setbl03_1'].submit();">Beamline P03</button>
+
+                                                <button class="ui-state-default ui-corner-all icsbtn" type="button"  onclick="location.href='http://ics/overall.php'">overview</button>
+                                <div id="switchblform" style="display:none" class="ui-corner-all">
+                Switch Beamline:
+                <form action="index.php" method="post" name="switchbl">
+                    <table>
+                        <tr>
+                            <td> Beamline:</td>
+                            <td>
+                                <select name="beamline" >
+                                                                            <option value="1">1</option>
+                                                                                <option value="2">2</option>
+                                                                                <option value="3">3</option>
+                                                                                <option value="4">4</option>
+                                                                                <option value="5">5</option>
+                                                                                <option value="6">6</option>
+                                                                                <option value="7">7</option>
+                                                                                <option value="8">8</option>
+                                                                                <option value="9">9</option>
+                                                                                <option value="10">10</option>
+                                                                                <option value="11">11</option>
+                                                                                <option value="12">12</option>
+                                                                                <option value="13">13</option>
+                                                                                <option value="14">14</option>
+                                                                            </select>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <input type="hidden" name="gebiet" value="1">
+                    <input type="hidden" id="sessid" class="sessid" value="" name="sessid"></input>
+                    <button class="ui-state-default ui-corner-all icsbtn" type="button"  onclick="javascript:document.forms['switchbl'].submit();">switch</button>
+                    <button class="ui-state-default ui-corner-all icsbtn" type="button"  onclick="$('#addHost').dialog('open');">hosts</button>
+
+                </form>
+                <div id="blockbsform" title="
+block auto BS"><p>
+		 
+auf folgenden Hosts ist der Zugriff blockiert: <br>
+		<div id='blockbshosts' class='ui-widget'>
+		<table class='ui-widget blockbshosts'><tr><td>haso111n</td>
+				<td><button class="ui-state-default ui-corner-all icsbtn" type="button" id=haso111n  onclick="$('#blockbshost').val($(this).attr('id'));javascript:document.forms['blockbs'].submit();">unblock</button></td></tr></tbody></table></div>               <p>F&uuml;r welchen PC/Hostnamen soll der BS - Skript Zugriff blockiert werden? </p>
+				 <form action="index.php" method="post" name="blockbs">
+                    Hostname:<input type="text" name="host" id="blockbshost" style="width:106px;">
+                    <input type="hidden" id="sessid" class="sessid" value="" name="sessid"></input>
+					<input type="hidden" id="blockbs" value="1" name="blockbs"></input>
+					<button class="ui-state-default ui-corner-all icsbtn" type="button"  onclick="javascript:document.forms['blockbs'].submit();">submit</button>
+					
+				</form>       
+            </div>
+                
+               
+					
+				</form>
+                <button class="ui-state-default ui-corner-all icsbtn" type="button"  onclick="$('#blockbsform').dialog('open');">(un)block auto BS</button>
+            </div>
+        </div>
+            
+        <h1 align=center>Beamline P02            <form action="index.php" method="post" name="setbl02A_2">
+                <input type="hidden" name="beamline" value="02A">
+                <input type="hidden" name="gebiet" value="2">
+            </form>
+            <form action="index.php" method="post" name="setbl02B_2">
+                <input type="hidden" name="beamline" value="02B">
+                <input type="hidden" name="gebiet" value="2">
+            </form>
+            <button class="ui-state-default ui-corner-all doublebl icsbtn " type="button"  onclick="javascript:document.forms['setbl02A_2'].submit();">A</button>
+            <button class="ui-state-default ui-corner-all doublebl icsbtn selected" type="button"  onclick="javascript:document.forms['setbl02B_2'].submit();">B</button>
+         
+
+
+                        </h1>
+        <hr id="topline"></hr>
+
+        <div id="beamline" class="ui-corner-all">
+            <div  style='top:105px;width:100px;' class="BS02_0_offen blfrontdif check">Hauptbeamshutter</div>
+            <div class="blfrontdif check" id="ABS02_0_offen" style='top:111px;width:100px;'>Absorber</div>
+            <div class="blfrontdif check" style='top:120px;float:left;width:100px;' id="displayedPS02_geschlossen">Photonenshutter</div>
+
+
+
+            <script type="text/javascript">
+		jQuery(document).ready(function() {
+			$("#g02_01small").hover(function() {
+			$(document).mousemove(function(e){
+				
+      			$("#g02_01").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#g02_01").removeClass("nodisplay");
+			$("#g02_01").show();
+			
+		}
+		,function() {
+			$("#g02_01").hide();
+			$("#g02_01").addClass("nodisplay");
+   		});
+   		
+		$(".BS02_1_offen").hover(function() {
+			$(document).mousemove(function(e){
+      			$("#BS02_1_detail").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#BS02_1_detail").removeClass("nodisplay");
+			$("#BS02_1_detail").show();
+			
+		},function() {
+			$("#BS02_1_detail").hide();
+			$("#BS02_1_detail").addClass("nodisplay");
+		})
+		
+	});
+		</script>	
+		<form action="index.php" method="post" name="setbl02_1">
+		<input type="hidden" name="beamline" value="02"></input>
+		<input type="hidden" name="gebiet" value="1"></input>
+		</form><div class="gebiet ui-corner-all" id="g02_01small" style="margin-left:20px;" align=center onclick="javascript:document.forms['setbl02_1'].submit();">G 02.1<br><br>
+				<a class="displayedG02_1_SFGerteilt check"></a>
+			</div><div class="BS02_1_offen check blfrontdif" style="top:99px;margin-left:10px;float:left;width:60px;">Beamshutter</div>
+				
+			<div id="BS02_-1_detail" class="bsdetail ui-corner-all nodisplay">
+			<h3>Beamshutter BS02.-1</h3>
+				
+			<ul>
+			
+			<li class="check" id="BS02_-1_geschlossen">	</li>
+			
+			<li><p>Conditions to open:</p></li>
+			
+			<li class="check" id="displayedBS02_-1_Schluessel">loading ...	
+			</li>
+			<li class="check" id="displayedBS02_-1_TuerenVerriegelt">		
+			</li>
+			<li class="check" id="displayedBS02_-1_TechnischesIL">		
+			</li>
+			<li class="check" id="displayedBS02_0_RadMon"></li></ul></div>
+		<div class="gebietdetail nodisplay" id="g02_01" ui-corner-all> 
+				<h3>Strahlfreigabe G 02.1</h3>
+				<ul>
+					<li class="check" id="G02_1_TI">loading ...
+					</li>
+					<li class="check" id="G02_1_NAok">
+					</li>
+					<li class="check" id="G02_1_gewarnt">
+					</li><!--<li class="displayedG02_1_SFGerteilt">		
+					</li>-->
+				</ul>
+					
+			</div><script type="text/javascript">
+		jQuery(document).ready(function() {
+			$("#g03_01small").hover(function() {
+			$(document).mousemove(function(e){
+				
+      			$("#g03_01").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#g03_01").removeClass("nodisplay");
+			$("#g03_01").show();
+			
+		}
+		,function() {
+			$("#g03_01").hide();
+			$("#g03_01").addClass("nodisplay");
+   		});
+   		
+		$(".BS03_1_offen").hover(function() {
+			$(document).mousemove(function(e){
+      			$("#BS03_1_detail").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#BS03_1_detail").removeClass("nodisplay");
+			$("#BS03_1_detail").show();
+			
+		},function() {
+			$("#BS03_1_detail").hide();
+			$("#BS03_1_detail").addClass("nodisplay");
+		})
+		
+	});
+		</script>	
+		<form action="index.php" method="post" name="setbl03_1">
+		<input type="hidden" name="beamline" value="03"></input>
+		<input type="hidden" name="gebiet" value="1"></input>
+		</form><div class="gebiet ui-corner-all" id="g03_01small" style="margin-left:20px;" align=center onclick="javascript:document.forms['setbl03_1'].submit();">G 03.1<br><br>
+				<a class="displayedG03_1_SFGerteilt check"></a>
+			</div>
+				
+			<div id="BS03_-1_detail" class="bsdetail ui-corner-all nodisplay">
+			<h3>Beamshutter BS03.-1</h3>
+				
+			<ul>
+			
+			<li class="check" id="BS03_-1_geschlossen">	</li>
+			
+			<li><p>Conditions to open:</p></li>
+			
+			<li class="check" id="displayedBS03_-1_Schluessel">loading ...	
+			</li>
+			<li class="check" id="displayedBS03_-1_TuerenVerriegelt">		
+			</li>
+			<li class="check" id="displayedBS03_-1_TechnischesIL">		
+			</li>
+			<li class="check" id="displayedBS03_0_RadMon"></li></ul></div>
+		<div class="gebietdetail nodisplay" id="g03_01" ui-corner-all> 
+				<h3>Strahlfreigabe G 03.1</h3>
+				<ul>
+					<li class="check" id="G03_1_TI">loading ...
+					</li>
+					<li class="check" id="G03_1_NAok">
+					</li>
+					<li class="check" id="G03_1_gewarnt">
+					</li><!--<li class="displayedG03_1_SFGerteilt">		
+					</li>-->
+				</ul>
+					
+			</div><script type="text/javascript">
+		jQuery(document).ready(function() {
+			$("#g02B_02small").hover(function() {
+			$(document).mousemove(function(e){
+				
+      			$("#g02B_02").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#g02B_02").removeClass("nodisplay");
+			$("#g02B_02").show();
+			
+		}
+		,function() {
+			$("#g02B_02").hide();
+			$("#g02B_02").addClass("nodisplay");
+   		});
+   		
+		$(".BS02B_2_offen").hover(function() {
+			$(document).mousemove(function(e){
+      			$("#BS02B_2_detail").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#BS02B_2_detail").removeClass("nodisplay");
+			$("#BS02B_2_detail").show();
+			
+		},function() {
+			$("#BS02B_2_detail").hide();
+			$("#BS02B_2_detail").addClass("nodisplay");
+		})
+		
+	$(".BS02_1_offen").addClass("BS02B_1_offen").removeClass("BS02_1_offen check blfrontdif").addClass("check blfrontdif");
+		
+		$(".BS02B_-1_offen").hover(function() {
+			$(document).mousemove(function(e){
+      			$("#BS02B_-1_detail").css({'left' : e.pageX+"px"});
+      		}); 
+      		$("#BS02B_-1_detail").removeClass("nodisplay");
+			$("#BS02B_-1_detail").show();
+			
+		},function() {
+			$("#BS02B_-1_detail").hide();
+			$("#BS02B_-1_detail").addClass("nodisplay");
+		})
+		
+		
+		
+		});
+		</script>	
+		<form action="index.php" method="post" name="setbl02B_2">
+		<input type="hidden" name="beamline" value="02B"></input>
+		<input type="hidden" name="gebiet" value="2"></input>
+		</form><div class="gebiet ui-corner-all" id="g02B_02small" style="margin-left:20px;border-color:red;border-width:2px" align=center onclick="javascript:document.forms['setbl02B_2'].submit();">G 02B.2<br><br>
+				<a class="displayedG02B_2_SFGerteilt check"></a>
+			</div>
+
+23e4
+
+        </div>
+
+        <div id="mygebiet" class="ui-corner-all">
+
+            <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-tr ui-corner-tl" align=center  id="gheadline" >Area 02<span style='color:#FF0000'>B</span>.2                <a class="ui-corner-all" href="#" role="button" unselectable="on" style="-moz-user-select: none;">
+                    <span id="areahelpicon" class="ui-icon ui-icon-help ui-state-default ui-corner-all" unselectable="on" style="-moz-user-select: none;">help</span>
+                </a>
+            </h3>
+		            <ul id="lsleft" >
+                <li><u>Area Conditions</u></li>
+                <li  class="check" id="G02B_2_TI">G02B_2_TI
+                </li>
+                <li  class="check" id="G02B_2_NAok">G02B_2_NAok
+                </li>
+                <li class="check" id="G02B_2_gewarnt">G02B_2_gewarnt
+                </li>
+                                <li class="displayedG02B_2_SFGerteilt check">G02B_2_SFGerteilt
+                </li>
+				             </ul>
+                        <div class="vline" style="position:absolute;left:230px;top:35px;"></div>
+
+            <ul id="lsmid" style="width:190px;">
+                <li><u>Beamshutter Conditions</u></li>
+                <li class="check" id="displayedBS02B_1_Schluessel">
+					displayedBS02B_1_Schluessel</li>
+                <li class="check" id="displayedBS02B_1_TuerenVerriegelt">
+					displayedBS02B_1_TuerenVerriegelt</li>
+                <li class="check" id="displayedBS02B_1_TechnischesIL">
+					displayedBS02B_1_TechnischesIL</li>	
+							
+                	                <li class="check" id="displayedBS02B_1_Schikanen">BS02B_1_Schikanen
+                </li>
+
+                                    </ul>
+            <div class="vline" style="position:absolute;left:450px;top:35px;"></div>
+            <ul id="lsright">
+                <li class="BS02B_1_offen check">BS02B_1_offen
+                </li>
+                <li class="check" id="BS02B_1_geschlossen">BS02B_1_geschlossen</li>
+
+
+
+
+
+            </ul>
+    <!--        
+###########################      
+# START Hidden Dialogs    #         
+###########################  -->        
+            <div id="myareahelp" style="display:none" title="Getting Started">
+
+Vorbereitung des Messbetriebs:
+<ol id="lshelp"><li>
+DACHS Karte an DACHS Terminal verwenden, Absuche / Durchsage wird gestartet.
+(Wenn nicht innerhalb einer Minute nach dem Start die Lichtschranke gesetzt wird, bricht die Absuche wieder ab.)
+</li><li>
+Gebiet absuchen.
+</li>
+<li>
+erneut DACHS Karte an DACHS Terminal verwenden, Absuche wird beendet, Strahlwarnung wird gestartet.
+</li><li>
+„Permit Beam Operation“ betätigen, Strahlfreigabe des Gebiets wird erteilt.
+</li><li>
+„open ABS/BS…“ betätigen  Beamshutter und Absorber öffnet, es wird eine Freigabe zum Öffnen des Spaltsystems erteilt; dieses soll dann automatisch öffnen.
+ die Statusmeldungen „ABS….open“ und „BS….open“ werden grün, die zugehörigen „closed“- Meldungen werden rot.
+</li>
+</ol>
+Achtung: die Beamshuttersteuerung funktioniert nur, wenn der Beamshutter-schlüssel in Technikraum L036 in sein Schloss gedreht ist und ist und das technische Interlock von Beamshutter und Absorber ok ist.                <br />
+<hr></hr>
+<center><p><b>Interlock Control System</b></p>
+<p><a href="mailto:marcus.fleck@desy.de">marcus.fleck@desy.de</a></p>
+<p>phone: 040 8998 4353</p></center>
+            </div>
+            <div id="timeout" style="display:none" title="Server Timeout">
+			An error occured while trying to connect to a TINE server. Please wait 30 seconds for the automatic retry or click "Reload".
+
+            </div>
+            <div id="startareasearch" title="Safety Warning"><p>
+		
+               <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>to Confirm the start of an area search without DACHS enter your Door username and password. </p>
+				<form action="index.php" method="post" name="searchform">
+                    username:<input type="text" name="startsearchuser" id="startsearchuser" style="width:106px;">
+                    password:<input type="password" name="startsearchpassword" id="startsearchpassword" style="width:106px">
+				</form>       
+            </div>
+            
+			<div id="enableareasearch" title="Enable Manual Search?"
+>
+			  <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>DACHS reports everything is fine, do you really want to enable the ICS area search? You have to enter your DOOR username and password then. You
+			  can disable the ICS area search at any time by clicking this button again.</p>
+				<form action="index.php" method="post" name="enableareasearchlogin"  autocomplete="off">
+                    username:<input type="text" name="enablesearchuser" id="enablesearchuser" style="width:106px;">
+                    password:<input type="password" name="enablesearchpassword" id="enablesearchpassword" style="width:106px">
+
+                    
+                    
+                </form>
+			</div>
+            <div id="addHost" title="add new Beamline host">
+                <p id="validateTips">All form fields are required.</p>
+
+                <form>
+                    <fieldset>
+                        <label for="hostname">hostname</label>
+                        <input type="text" name="hostname" id="hostname" class="text ui-widget-content ui-corner-all" />
+                        <label for="addbeamline">beamline</label>
+                        <select name="addbeamline" id="addbeamline" class="text ui-widget-content ui-corner-all">
+                            <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                            </select>
+                        <label for="adminhost">administrative Host</label>
+                        <input type="checkbox" name="adminhost" id="adminhost" value="1">
+                        <input type="hidden" id="addHostsessid" class="sessid" value="" name="addHostsessid">
+                    </fieldset>
+
+                </form>
+            </div>
+            <div id="confirmHost" title="confirmation required">
+                <p id="confirmHostText">This hostname already exists!</p>
+            </div>
+     <!--        
+###########################      
+# END Hidden Dialogs    #         
+###########################  -->  
+
+
+
+
+<!-- <div class="buttonstyle" id="G02B_2_AbrkIntrlk"style="left:215px;top:230px;">reset emergency off</div>-->
+            <div class="buttonstyle ui-corner-all check" id="openBS02B_1" style="left:125px;top:230px;" onclick="tine_put('openBS02B_1')"></div>
+            <div class="buttonstyle ui-corner-all check" id="closeBS02B_1" style="left:125px;top:260px;" onclick="tine_put('closeBS02B_1')"></div>
+                                            <div class="buttonstyle ui-corner-all searchbtn nodisplay check AStartSrch" id="G02B_2_AStartSrch" style="left:20px;top:230px;" onclick="jQuery('#startareasearch').dialog('open');"></div>
+            <div class="buttonstyle ui-corner-all searchbtn nodisplay check" id="G02B_2_ACncelSrch" onclick="tine_put('G02B_2_ACncelSrch');" style="left:20px;top:260px;" ></div>
+            <div class="buttonstyle ui-corner-all check" id="G02B_2_grantBeamPermiss" style="left:230px;top:230px;" onclick="tine_put('G02B_2_grantBeamPermiss')"></div>
+            <div class="buttonstyle ui-corner-all check" id="G02B_2_cancelBeamPermis" style="left:230px;top:260px;" onclick="tine_put('G02B_2_cancelBeamPermis')"></div>
+            <div class="buttonstyle ui-corner-all check" id="G02B_2_AbrkIntrlk" style="left:335px;top:230px;" onclick="tine_put('G02B_2_AbrkIntrlk')"></div>
+            <div class="buttonstyle ui-corner-all check" id="G02B_2_startBeamWarning" style="left:335px;top:260px;" onclick="tine_put('G02B_2_startBeamWarning')"></div>
+                        <div class="buttonstyle ui-corner-all check" id="S2_resetEstop" style="left:590px;top:230px;" onclick="tine_put('S2_resetEstop')"></div>
+            <div class="buttonstyle ui-corner-all" id="checkDachs" style="left:590px;top:260px;color: #000000;" onclick="checkDachs('click');">check <br />DACHS</div>
+
+            <div id="info" class="ui-corner-bl">Interlock Control System</div>
+
+            <div id="status" class="ui-corner-br">Absuche laeuft...</div>
+        </div>
+    </body>
+</html>
+
+
+0
+
+

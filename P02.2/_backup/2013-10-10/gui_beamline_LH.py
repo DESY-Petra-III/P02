@@ -58,26 +58,6 @@ TIMERTIMEOUT = 200
 # debugging signals
 DEVSIGNALERR = "reportError"
 
-# Petra-III related information
-# general information from PETRA-III
-MANBEAMLINEPETRAIII = "tango://haspp02oh1.desy.de:10000/petra/globals/keyword"
-MANBEAMLINEPETRAIIISTYLESHEET = "QWidget {font-size: 12px; font-weight: bolder; padding: 5px; margin-bottom:10px; background-color: #efefef; }"
-MANBEAMLINEPETRAIIISTYLESHEETLABEL = "QLabel {font-size: 12px; font-weight:normal; padding-top: 5px; padding-bottom: 5px; padding-left:0px; padding-right:0px; margin-bottom:10px; }"
-MANBEAMLINEPETRAIIISTYLESHEETNORMAL = "QLabel {font-size: 12px; font-weight:bold; padding-top: 5px; padding-bottom: 5px; padding-left:0px; padding-right:0px; margin-bottom:10px; }"
-MANBEAMLINEPETRAIIISTYLESHEETATTENTION = "QLabel {font-size: 12px; font-weight:bold; padding-top: 5px; padding-bottom: 5px; margin: 0px; padding-left:0px; padding-right:0px; background-color: red; color: white; margin-bottom:10px;}"
-
-# identifiers for PETRA3
-(PETRACURRENT, PETRAENERGY, PETRAMESSAGE, PETRATOPUP) = ("BeamCurrent", "Energy", "MessageText", "TopUpStatusText")
-DEVICESPETRA = {
-        PETRACURRENT: {"nick": "Current:", "link":MANBEAMLINEPETRAIII, "property":PETRACURRENT, "wdgt": None, "Value": None},
-        PETRAENERGY: {"nick": "Energy:", "link": MANBEAMLINEPETRAIII, "property":  PETRAENERGY, "wdgt": None, "Value": None},
-        PETRATOPUP: {"nick": "TopUp:", "link": MANBEAMLINEPETRAIII, "property":  PETRATOPUP, "wdgt": None, "Value": None},
-        PETRAMESSAGE: {"nick": "", "link": MANBEAMLINEPETRAIII, "property":  PETRAMESSAGE, "wdgt": None, "Value": None}
-}
-
-# low current
-PETRA3LOWCURRENT = 30
-
 ###
 ##  MBeamLineGP class - widget for controlling beamline visualization
 ###
@@ -154,12 +134,8 @@ class MBeamLineGP(QWidget):
         count = 0
         for w in self._beamline:
             w.isTransparent(True)
-            grid.addWidget(w, 1, count)
+            grid.addWidget(w, 0, count)
             count += 1
-
-        # adding layout - PETRA-III status
-        w = self.createPetra3Widget()
-        grid.addWidget(w, 0, 0, 1, grid.columnCount())
 
         self._beamline.reverse()
         self.setupBeam(self._beamline)
@@ -190,37 +166,6 @@ class MBeamLineGP(QWidget):
 
         for w in self._beamline:
             bbeam = w.isTransparent(bbeam)
-
-    # create Petra3 widget
-    def createPetra3Widget(self):
-        wdgt = QWidget(self)
-        wdgt.setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEET)
-        grid = QGridLayout(wdgt)
-
-        # enumerate through Petra3 properties, add them to the widget
-        col = 0
-        for k in (PETRACURRENT, PETRAENERGY, PETRATOPUP, PETRAMESSAGE):
-            # create label based on device nick
-            nick = DEVICESPETRA[k]["nick"]
-            w = QLabel(nick)
-            grid.addWidget(w, 0, col)
-            col = col+1
-
-            w.setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETLABEL)
-
-            # create label used for upodate
-            w = QLabel("")
-            if(k==PETRAENERGY or k==PETRACURRENT):
-                w.setMinimumWidth(90)
-                w.setMaximumWidth(90)
-            DEVICESPETRA[k]["wdgt"] = w
-            grid.addWidget(w, 0, col)
-
-            w.setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
-            col = col+1
-
-        grid.setColumnStretch(col, 50)
-        return wdgt
 
     # update view for the beamline
     def updateBeamline(self):
@@ -275,25 +220,6 @@ class MBeamLineGP(QWidget):
 
         self.controlSPS(tres)
 
-        # update Petra3 parameters
-        for k in DEVICESPETRA.keys():
-            device = DEVICESPETRA[k]
-            res = self.readWriteDevice(device)
-            DEVICESPETRA[k]["Value"] = res
-
-            (format, t) = ("%s", type(res))
-
-            # adjust format and style, check for low Petra3  current and inform user
-            if(k==PETRAENERGY):
-                format = "%02.2f GeV"
-            elif(k==PETRACURRENT):
-                format = "%02.2f mA"
-                style = DEVICESPETRA[k]["wdgt"].styleSheet()
-                if(res<PETRA3LOWCURRENT and style!=MANBEAMLINEPETRAIIISTYLESHEETATTENTION):
-                    DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETATTENTION)
-                elif(res>=PETRA3LOWCURRENT and style != MANBEAMLINEPETRAIIISTYLESHEETNORMAL):
-                    DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
-            DEVICESPETRA[k]["wdgt"].setText(format % res)
         return
 
     # check device, it's property, gets value

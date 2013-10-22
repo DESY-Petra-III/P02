@@ -1,0 +1,10 @@
+Experiment with SSL, and webinterface
+
+
+tineinterface.php?action=readall&deviceName=BS02_0_offen,ABS02_0_offen,displayedPS02_geschlossen,displayedG02_1_SFGerteilt,BS02B_1_offen,displayedG03_1_SFGerteilt,displayedG02B_2_SFGerteilt,G02B_2_TI,G02B_2_NAok,G02B_2_gewarnt,displayedG02B_2_SFGerteilt,displayedBS02B_1_Schluessel,displayedBS02B_1_TuerenVerriegelt,displayedBS02B_1_TechnischesIL,displayedBS02B_1_Schikanen,BS02B_1_offen,BS02B_1_geschlossen,openBS02B_1,closeBS02B_1,G02B_2_AStartSrch,G02B_2_ACncelSrch,G02B_2_grantBeamPermiss,G02B_2_cancelBeamPermis,G02B_2_AbrkIntrlk,G02B_2_startBeamWarning,S2_resetEstop&onload=false
+
+break door interlock
+G02B_2_AbrkIntrlk
+tineinterface.php?action=confirm&deviceName=G02B_2_AbrkIntrlk
+
+

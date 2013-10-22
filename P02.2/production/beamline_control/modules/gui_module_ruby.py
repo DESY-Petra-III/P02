@@ -33,6 +33,7 @@ MDIODEPOS = "GPValve1"
 
 # signal reporting diode position
 MSIGNALDIODEINOUT = "isDiodeIn(bool)"
+MSIGNALDIODECHECK = "checkDiodeIn()"
 
 
 ###
@@ -88,7 +89,13 @@ class MRubyWidget(QMainWindow):
     # initialize events
     def initEvents(self):
         # process signal reporting that diode is in - disable corresponding motor controls
+            # timer based updates
         self.connect(self.wled, SIGNAL(MSIGNALDIODEINOUT), self.processDiodeInOut)
+            # initial check for the diode position
+        self.connect(self, SIGNAL(MSIGNALDIODECHECK), self.wled.processDiodeCheck)
+
+        # request initial diode state
+        self.emit(SIGNAL(MSIGNALDIODECHECK))
         return
 
     # initialize Motors widget
@@ -221,6 +228,8 @@ class MLedWidget(QWidget):
 
         # start timer
         self._timer.start()
+        
+        self.processLedUpdate()
         return
 
     # correct widgets length in a set
@@ -342,6 +351,13 @@ class MLedWidget(QWidget):
         self.leintensity.setText("%i" % value)
         dev.write_attribute(MLEDINTENSITY, value)
         return
+
+    # get request from parent widget and return current diode position
+    def processDiodeCheck(self, ):
+        bflag = False
+        if(self._olddiodepos>0):
+            bflag = True
+            self.emit(SIGNAL(MSIGNALDIODEINOUT), bflag)
 
     def closeEvent(self, event):
         event.accept()

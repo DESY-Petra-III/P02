@@ -17,11 +17,17 @@ reload(p3cntr)
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-# beamline module - General Purpose table
+# beamline module - Laser Heating Table
+    # module responsible for drawing basic beamline layout
 from gui_beamline_LH import *
+    # module responsible for starting most used external applications 
 from gui_starter_module_LH import *
+    # module with counters
 from gui_counter_module import *
+    # module for saving special positions
 from gui_savepos_module import *
+    # module to paste required positions to the clipboard
+from module_clipboard import dataWriteToClipboard
 
 DISCLAMER = """-- full gui for general purpose table --
 -- LGPL licence applies - as we use QT library for free --
@@ -234,6 +240,9 @@ class StackForm(QMainWindow):
         
         # save current position pass them into positions widget
         self.connect(self.stack_widget, SIGNAL("motorPosition"), self.processSavePosition)
+        
+        # get and transform positions reported by some motors into the clipboard
+        self.connect(self.stack_widget, SIGNAL("motorPositionChanged"), self.processReportedPositionChange)
         return
 
     # initialize menu
@@ -540,7 +549,10 @@ class StackForm(QMainWindow):
            
         self.stack_widget = p3cntr.ui.MotorWidgetAdvanced([cenxGP,cenyGP,SamzGP,omegaGP])
         self.stack_widget.setWindowTitle(TABSAMPLE)
+        # show button enabling to save positions
         self.stack_widget.showBtnSavePos()
+        # enable reports from this widget on motor changes
+        self.stack_widget.processEnableReport(True)
 
         self.stack_widget.setAutoFillBackground(True)
         self.stack_widget.setPalette(pal)
@@ -553,6 +565,7 @@ class StackForm(QMainWindow):
         tab.addTab(wdgt, title)
         return
     
+    # SPS stack showing different filters for now
     def createSPSStackTab(self, tab, pal):
         title = TABSPS
         wdgt = QWidget()
@@ -694,7 +707,33 @@ class StackForm(QMainWindow):
         self.adjustSize()
         self.resize(self.minimumSizeHint())
         return
-
+    
+    # process change of motor positions - put values into the clipboard on special mime type
+    def processReportedPositionChange(self, title, motorsdict):
+        (strfrom, strto, strvalue) = (title, "all", "")
+        
+        # enumerate through the motors in a sequence by number
+        items = motorsdict.items()
+        # sort motors by number
+        for m in sorted(items, key=lambda k: k[1]["Number"]):
+            # get a name
+            name = m[0]
+            
+            # get motor and its position
+            (motor, pos) = (motorsdict[name], motorsdict[name]["Position"])
+            
+            # prepare a format for position data
+            format = "%0.4f"
+            if(pos>100):
+                format = "%0.2f"
+            
+            # prepare a string with motor positions
+            strvalue = strvalue + "%s: %s; " %(name, format % pos)
+        
+        if(len(strfrom)>0):
+            dataWriteToClipboard(strfrom, strto, strvalue)
+        return
+    
     # process show - hide expert mode
     def processShowHideExpert(self, state):
         tab = self._tab

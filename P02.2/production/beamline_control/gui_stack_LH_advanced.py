@@ -17,12 +17,17 @@ reload(p3cntr)
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-# beamline module - General Purpose table
+# beamline module - Laser Heating Table
+    # module responsible for drawing basic beamline layout
 from gui_beamline_LH import *
+    # module responsible for starting most used external applications 
 from gui_starter_module_LH import *
+    # module with counters
 from gui_counter_module import *
+    # module for saving special positions
 from gui_savepos_module import *
-
+    # module to paste required positions to the clipboard
+from module_clipboard import dataWriteToClipboard
 
 DISCLAMER = """-- full gui for general purpose table --
 -- LGPL licence applies - as we use QT library for free --
@@ -190,13 +195,6 @@ class StackForm(QMainWindow):
         tabpal = QPalette(VFMCOLOR)
         self.createVFMStackTab(tab, tabpal)
         
-        # check exit button and remove it if necessary
-        self.removeExitButton(self.detector_widget)
-        self.removeExitButton(self.stack_widget)
-        self.removeExitButton(self.pinhole_widget)
-        self.removeExitButton(self.hfm_widget)
-        self.removeExitButton(self.vfm_widget)
-        
         # show tab as widget
         self.setCentralWidget(self.maintwidget)
         self.show()
@@ -236,13 +234,22 @@ class StackForm(QMainWindow):
 
         # update size of main window upon switching between different tabs
         self.connect(self._tab, SIGNAL("currentChanged(int)"), self.processTabSwitch)
+        
+        # collect reports from positions
+        self.connect(self.dockpositionswdgt, SIGNAL(SIGNALMSAVEPOSEXPORT), self.processSavedPosition)
+        
+        # save current position pass them into positions widget
+        self.connect(self.stack_widget, SIGNAL("motorPosition"), self.processSavePosition)
+        
+        # get and transform positions reported by some motors into the clipboard
+        self.connect(self.stack_widget, SIGNAL("motorPositionChanged"), self.processReportedPositionChange)
         return
 
     # initialize menu
     def initToolbar(self):
         tb = QToolBar(self)
 
-        # set pallete, adjust stule
+        # set pallete, adjust style
         label = QLabel("")
         label.setMinimumWidth(1)
         tb.addWidget(label)
@@ -365,8 +372,8 @@ class StackForm(QMainWindow):
                     "detector Y LH",
                     DETECTORY)
            
-        self.detector_widget = p3cntr.ui.MotorWidget([det_x,det_y])
-        self.detector_widget.setWindowTitle('Sample stack LH')
+        self.detector_widget = p3cntr.ui.MotorWidgetAdvanced([det_x,det_y])
+        self.detector_widget.setWindowTitle(TABDETECTOR)
 
         self.detector_widget.setAutoFillBackground(True)
         self.detector_widget.setPalette(pal)
@@ -377,11 +384,8 @@ class StackForm(QMainWindow):
         self.wdetector = wdgt
 
         # update cmb boxes for good steps
-        cmbdetx = self.findStepCmbInMotors(self.detector_widget.motordev_widget[0])
-        self.updateStepCmb(cmbdetx, 10, 20, 50, 100, 150, 200, 300)
-
-        cmbdety = self.findStepCmbInMotors(self.detector_widget.motordev_widget[1])
-        self.updateStepCmb(cmbdety, 10, 20, 50, 100, 150, 200, 300)
+        self.detector_widget.setMotorStepsByName("Detector X LH", ["step", 10, 20, 50, 100, 150, 200, 300])
+        self.detector_widget.setMotorStepsByName("Detector Y LH", ["step", 10, 20, 50, 100, 150, 200, 300])
 
         tab.addTab(wdgt, title)
         return
@@ -423,7 +427,7 @@ class StackForm(QMainWindow):
                     "Pinhole Z LH",
                     PINHOLEZ)
            
-        self.pinhole_widget = p3cntr.ui.MotorWidget([pin_y, pin_z])
+        self.pinhole_widget = p3cntr.ui.MotorWidgetAdvanced([pin_y, pin_z])
 
         self.pinhole_widget.setAutoFillBackground(True)
         self.pinhole_widget.setPalette(pal)
@@ -459,7 +463,7 @@ class StackForm(QMainWindow):
                     "HFM Z LH",
                     HFMZ)
            
-        self.hfm_widget = p3cntr.ui.MotorWidget([hfm_curv, hfm_ell, hfm_tilt, hfm_z])
+        self.hfm_widget = p3cntr.ui.MotorWidgetAdvanced([hfm_curv, hfm_ell, hfm_tilt, hfm_z])
 
         self.hfm_widget.setAutoFillBackground(True)
         self.hfm_widget.setPalette(pal)
@@ -470,17 +474,10 @@ class StackForm(QMainWindow):
         self.whfm = wdgt
 
         # update cmb boxes for good steps
-        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[0])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
-
-        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[1])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
-
-        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[2])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
-
-        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[3])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+        self.hfm_widget.setMotorStepsByName("HFM Curvature LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        self.hfm_widget.setMotorStepsByName("HFM Ellipticity LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        self.hfm_widget.setMotorStepsByName("HFM Tilt LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        self.hfm_widget.setMotorStepsByName("HFM Z LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
 
         tab.addTab(wdgt, title)
         return
@@ -495,20 +492,20 @@ class StackForm(QMainWindow):
         wdgt.setPalette(pal)
 
         # motors
-        vfm_cur = p3cntr.Motor("VFM Curvature GP",
-                    "VFM Curvature GP",
+        vfm_cur = p3cntr.Motor("VFM Curvature LH",
+                    "VFM Curvature LH",
                     VFMCURV)
-        vfm_ell = p3cntr.Motor("VFM Ellipticity GP",
-                    "VFM Ellipticity GP",
+        vfm_ell = p3cntr.Motor("VFM Ellipticity LH",
+                    "VFM Ellipticity LH",
                     VFMELL)
-        vfm_tilt = p3cntr.Motor("VFM Tilt GP",
-                    "VFM Tilt GP",
+        vfm_tilt = p3cntr.Motor("VFM Tilt LH",
+                    "VFM Tilt LH",
                     VFMTILT)
-        vfm_z = p3cntr.Motor("VFM Z GP",
-                    "VFM Z GP",
+        vfm_z = p3cntr.Motor("VFM Z LH",
+                    "VFM Z LH",
                     VFMZ)
            
-        self.vfm_widget = p3cntr.ui.MotorWidget([vfm_cur, vfm_ell, vfm_tilt, vfm_z])
+        self.vfm_widget = p3cntr.ui.MotorWidgetAdvanced([vfm_cur, vfm_ell, vfm_tilt, vfm_z])
 
         self.vfm_widget.setAutoFillBackground(True)
         self.vfm_widget.setPalette(pal)
@@ -519,17 +516,10 @@ class StackForm(QMainWindow):
         self.wvfm = wdgt
 
         # update cmb boxes for good steps
-        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[0])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
-
-        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[1])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
-
-        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[2])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
-
-        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[3])
-        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+        self.vfm_widget.setMotorStepsByName("VFM Curvature LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        self.vfm_widget.setMotorStepsByName("VFM Ellipticity LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        self.vfm_widget.setMotorStepsByName("VFM Tilt LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        self.vfm_widget.setMotorStepsByName("VFM Z LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
 
         tab.addTab(wdgt, title)
         return
@@ -557,8 +547,12 @@ class StackForm(QMainWindow):
                 "Omega LH",
                 SAMPLEOMEGA)
            
-        self.stack_widget = p3cntr.ui.MotorWidget([cenxGP,cenyGP,SamzGP,omegaGP])
-        self.stack_widget.setWindowTitle('Sample stack LH')
+        self.stack_widget = p3cntr.ui.MotorWidgetAdvanced([cenxGP,cenyGP,SamzGP,omegaGP])
+        self.stack_widget.setWindowTitle(TABSAMPLE)
+        # show button enabling to save positions
+        self.stack_widget.showBtnSavePos()
+        # enable reports from this widget on motor changes
+        self.stack_widget.processEnableReport(True)
 
         self.stack_widget.setAutoFillBackground(True)
         self.stack_widget.setPalette(pal)
@@ -571,6 +565,7 @@ class StackForm(QMainWindow):
         tab.addTab(wdgt, title)
         return
     
+    # SPS stack showing different filters for now
     def createSPSStackTab(self, tab, pal):
         title = TABSPS
         wdgt = QWidget()
@@ -606,17 +601,6 @@ class StackForm(QMainWindow):
 
         tab.addTab(wdgt, title)
         return
-    
-    # update interface - remove unnecessary exit button,update style for the QPushButton
-    def removeExitButton(self, stack):
-        for tlist in stack.motordev_widget:
-            for w in tlist:
-                if(type(w) is QPushButton and w.text().indexOf("Exit")>-1):
-                    w.close()
-                if(type(w) is not QLabel and type(w) is not QLineEdit):
-                    pal = w.style().standardPalette()
-                    w.setPalette(pal)
-            
     
     # creates an icon with specific color
     def createIcon(self, color, w=16, h=16):
@@ -710,6 +694,7 @@ class StackForm(QMainWindow):
             self.dockbeam.show()
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
         return
 
     # process show - hide beamline
@@ -720,8 +705,35 @@ class StackForm(QMainWindow):
             self.dockcount.show()
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
         return
-
+    
+    # process change of motor positions - put values into the clipboard on special mime type
+    def processReportedPositionChange(self, title, motorsdict):
+        (strfrom, strto, strvalue) = (title, "all", "")
+        
+        # enumerate through the motors in a sequence by number
+        items = motorsdict.items()
+        # sort motors by number
+        for m in sorted(items, key=lambda k: k[1]["Number"]):
+            # get a name
+            name = m[0]
+            
+            # get motor and its position
+            (motor, pos) = (motorsdict[name], motorsdict[name]["Position"])
+            
+            # prepare a format for position data
+            format = "%0.4f"
+            if(pos>100):
+                format = "%0.2f"
+            
+            # prepare a string with motor positions
+            strvalue = strvalue + "%s: %s; " %(name, format % pos)
+        
+        if(len(strfrom)>0):
+            dataWriteToClipboard(strfrom, strto, strvalue)
+        return
+    
     # process show - hide expert mode
     def processShowHideExpert(self, state):
         tab = self._tab
@@ -771,6 +783,7 @@ class StackForm(QMainWindow):
 
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
         return
 
 
@@ -803,6 +816,7 @@ class StackForm(QMainWindow):
     def processCountersFloat(self, state):
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
 
         size = self.size()
         pos = self.pos()
@@ -814,6 +828,7 @@ class StackForm(QMainWindow):
     def processPositionsFloat(self, state):
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
 
         size = self.size()
         pos = self.pos()
@@ -825,6 +840,30 @@ class StackForm(QMainWindow):
     def processTabSwitch(self, index):
         self.maintwidget.adjustSize()
         self.adjustSize()
+        self.resize(self.minimumSizeHint())
+       
+    # process saved position
+    def processSavedPosition(self, group, data):
+        if(group=="Cells" or group==TABSAMPLE):
+            tlist = ("CenX", "CenY", "SamZ", "Omega")
+            for name in tlist:
+                self.stack_widget.setMotorPositionByName(name, self.checkPositionByName(name, data))
+        return
+    
+    # save current position from sample stack
+    def processSavePosition(self, group, positions):
+        self.dockpositionswdgt.addExternalData(group, positions)
+        return
+        
+    # process list with values reported by position widget, select specific position
+    def checkPositionByName(self, name, tlist):
+        res = 0.0
+        for i in range(len(tlist)/2):
+            label = tlist[2*i]
+            value = tlist[2*i+1]
+            if(label.find(name)>=0):
+                res = value
+        return res
 
     # update combobox with steps
     def updateStepCmb(self, wdgt, *tlist):
@@ -843,14 +882,6 @@ class StackForm(QMainWindow):
             string = format%string
             strlist.append(QString(string))
         wdgt.addItems(strlist)
-
-    # finding cmb object in stack from p3cntr.ui.MotorWidget
-    def findStepCmbInMotors(self, tlist):
-        wdgt = None
-        for w in tlist:
-            if(type(w) is QComboBox):
-                wdgt = w
-        return wdgt
 
     # check system settings for file paths, convert if on linux
     def checkPath(self, path):

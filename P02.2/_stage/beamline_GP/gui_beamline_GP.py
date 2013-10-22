@@ -19,18 +19,19 @@ contact lorcat@gmail.com for questions, comments and suggestions
 """
 
 # beamline setting
-MANBEAMLINE = "Beamline overview: Laser Heating Table (LH)"
+MANBEAMLINE = "Beamline overview: General Purpose Table (GP)"
 
 # images - windows format - conversion to linux is done during initialization of individual widgets
 (ISHUTTERIN, ISHUTTEROUT) = ( "beamline_images\\shutter_closed.png", "beamline_images\\shutter_open.png")
 (IIONCHAMBEROUT, IOPTICSOUT, ISTAGEOUT, IPINHOLEOUT, IDETECTORIN, IXRAYIN) = ( "beamline_images\\ion_chamber.png", "beamline_images\\optics.png", "beamline_images\\stage.png", "beamline_images\\pinhole.png", "beamline_images\\detector.png", "beamline_images\\x-ray.png")
 (ISPSIN, ISPSOUT) = ( "beamline_images\\sps_closed.png", "beamline_images\\sps_open.png")
 (IDIODEIN, IDIODEOUT) = ( "beamline_images\\diode_closed.png", "beamline_images\\diode_open.png")
+(IMICROIN, IMICROOUT) = ( "beamline_images\\microscope_closed.png", "beamline_images\\microscope_open.png")
 
 # identifiers for signals coming beamline widgets
 (BEAMLSIGNALTOGGLE, BEAMLSIGNALCLICK) = ("BeamLine toggle", "BeamLine click")
 (BEAMLDETECTOR, BEAMLDIODE, BEAMLMICROSCOPE, BEAMLSAMPLESTAGE,
-    BEAMLPINHOLE,  BEAMLOPTICS,  BEAMLSHUTTER,  BEAMLION2,  BEAMLION1,  BEAMLSPS, BEAMLXRAY)=( "Detector", "Diode", "Microscope", "Sample stage", 
+    BEAMLPINHOLE,  BEAMLOPTICS,  BEAMLSHUTTER,  BEAMLION2,  BEAMLION1,  BEAMLSPS, BEAMLXRAY)=( "Detector", "Diode", "Microscope","Sample stage", 
     "Pinhole", "Beamline optics (mirrors)", "Hatch shutter", "Second Ion. Chamber", "First Ion. Chamber", "SPS registers (Pt foil filters)", "X-ray beam")
 
 # special signals
@@ -40,13 +41,15 @@ BEAMLSPECIAL = "Special Signal"
 (NICKSHUTTER, NICKDIODE, NICKMICROSCOPE,
 NICKSPSFILTER1, NICKSPSFILTER2, NICKSPSFILTER3, NICKSPSFILTER4) = ("shutter", "diode", "ruby microscope",
                                             "filter1", "filter2", "filter3", "filter4")
+
 DEVICES = {
             NICKSHUTTER: {"nick": BEAMLSHUTTER, "link": "tango://haspp02oh1:10000/p02/register/eh2a.out01", "property": "Value", "in":1, "out":0}, 
-            NICKDIODE: {"nick": BEAMLDIODE, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "LHValve1", "in": 1, "out": 0},
+            NICKDIODE: {"nick": BEAMLDIODE, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve1", "in": 1, "out": 0},
+            NICKMICROSCOPE: {"nick": BEAMLMICROSCOPE, "link": "haspp02oh1:10000/p02/motor/eh2b.47", "property": "Position", "in": -80.0, "out": -90.0},
             NICKSPSFILTER1: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve2", "in": 1, "out": 0},
             NICKSPSFILTER2: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve3", "in": 1, "out": 0},
             NICKSPSFILTER3: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve4", "in": 1, "out": 0},
-            NICKSPSFILTER4: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve5", "in": 1, "out": 0}
+            NICKSPSFILTER4: {"nick": BEAMLSPS, "link": "tango://haspp02oh1:10000/p02/spseh2/eh2a.01", "property": "GPValve5", "in": 1, "out": 0},
           }
 
 # device states
@@ -96,17 +99,21 @@ class MBeamLineGP(QWidget):
         self.connect(self.wsps, SIGNAL("toggled(bool)"), func_callback)
         self.connect(self.wshutter, SIGNAL("toggled(bool)"), func_callback)
         self.connect(self.wdiode, SIGNAL("toggled(bool)"), func_callback)
+        self.connect(self.wmicroscope, SIGNAL("toggled(bool)"), func_callback)
 
         # setup reporting which element has been toggled
         self.setWidgetsReportSignalToggle(self.wdiode, self.wshutter)
         # setup reporting which element has been clicked
-        self.setWidgetsReportSignalClicked(self.wdetector, self.wstage, self.wion1, self.wion2, self.wsps, self.woptics, self.wxray, self.wpinhole)
+        self.setWidgetsReportSignalClicked(self.wdetector, self.wstage, self.wion1, self.wion2, self.wsps, self.woptics, self.wxray, self.wmicroscope, self.wpinhole)
 
         # catch signals from beamline widgets and process them
         self.connect(self, SIGNAL(BEAMLSIGNALTOGGLE), self.processToggle)
 
-        # catch special signals from widgets like SPS
+        # catch special signals from widgets like SPS, transfer them to the parent widget
+            # SPS widget
         self.connect(self.wsps, SIGNAL(BEAMLSPECIAL), self.processSpecialSignal)
+            # microscope widget
+        self.connect(self.wmicroscope, SIGNAL(BEAMLSPECIAL), self.processSpecialSignal)
 
         # timer
         self.connect(self._timer, SIGNAL("timeout()"), self.updateBeamline)
@@ -118,6 +125,7 @@ class MBeamLineGP(QWidget):
         # timer to update visuals for a beamline
         self._timer = QTimer(self)
         self._timer.setInterval(TIMERTIMEOUT)
+
         return
 
     # startup init UI
@@ -139,18 +147,24 @@ class MBeamLineGP(QWidget):
         self.wdiode = MImageButton(IDIODEOUT, IDIODEIN)
         self.wdetector = MImageButton(None, IDETECTORIN)
         self.wxray = MImageButton(IXRAYIN)
+        self.wmicroscope = MImageButton(IMICROOUT, IMICROIN)
 
         # small adjustments
             # force transparent
+            # SPS
         self.wsps.forceTransparent()
-        self.wsps.setEmitSpecial(True, BEAMLSPS)
 
             # disable user mouseevents
         self.wsps.enableMouseClick(False)
         self.wsps.setChecked(True)
+        self.wmicroscope.enableMouseClick(False)
+            # SPS - allow SPS to emit special signals on click
+        self.wsps.setEmitSpecial(True, BEAMLSPS)
+            # microscope - allow to emit special signals on click
+        self.wmicroscope.setEmitSpecial(True, BEAMLMICROSCOPE)
 
-        # making layout
-        self._beamline = [self.wdetector, self.wdiode, self.wstage, self.wpinhole,self.woptics,  self.wion2, self.wion1, self.wshutter, self.wsps, self.wxray]
+        # making layout - beamline
+        self._beamline = [self.wdetector, self.wdiode, self.wmicroscope, self.wstage, self.wpinhole,self.woptics, self.wshutter, self.wion2, self.wion1, self.wsps, self.wxray]
         count = 0
         for w in self._beamline:
             w.isTransparent(True)
@@ -168,6 +182,7 @@ class MBeamLineGP(QWidget):
         self.setWidgetsTooltips(
             (self.wdetector, BEAMLDETECTOR),
             (self.wdiode, BEAMLDIODE),
+            (self.wmicroscope, BEAMLMICROSCOPE), 
             (self.wstage, BEAMLSAMPLESTAGE),
             (self.wpinhole, BEAMLPINHOLE),
             (self.woptics, BEAMLOPTICS),
@@ -222,6 +237,7 @@ class MBeamLineGP(QWidget):
         grid.setColumnStretch(col, 50)
         return wdgt
 
+
     # update view for the beamline
     def updateBeamline(self):
 
@@ -242,6 +258,16 @@ class MBeamLineGP(QWidget):
         elif(res==device["out"]):
             res = False
         self.controlDiode(res)
+
+        # update microscope
+        device = DEVICES[NICKMICROSCOPE]
+        res = self.readWriteDevice(device)
+        bflag = False
+        if(res>device["in"]):
+            bflag = True
+        elif(res<=device["out"]):
+            bflag = False
+        self.controlMicroscope(bflag)
 
         # update SPS - filters - check 4 of them - put sps in if any filter is in
         device = DEVICES[NICKSPSFILTER1]
@@ -290,15 +316,15 @@ class MBeamLineGP(QWidget):
                 format = "%02.2f mA"
                 style = DEVICESPETRA[k]["wdgt"].styleSheet()
                 if(res<PETRA3LOWCURRENT and style!=MANBEAMLINEPETRAIIISTYLESHEETATTENTION):
-                    DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETATTENTION)
-                elif(res>=PETRA3LOWCURRENT and style != MANBEAMLINEPETRAIIISTYLESHEETNORMAL):
-                    DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
+            		DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETATTENTION)
+            	elif(style != MANBEAMLINEPETRAIIISTYLESHEETNORMAL):
+            		DEVICESPETRA[k]["wdgt"].setStyleSheet(MANBEAMLINEPETRAIIISTYLESHEETNORMAL)
             DEVICESPETRA[k]["wdgt"].setText(format % res)
         return
 
     # check device, it's property, gets value
     def readWriteDevice(self, devlist, value = None):
-        (bsuccess, res) = (True, None)
+        (bsuccess, res, dev) = (True, None, None)
 
         (nick, link, prop) = (devlist["nick"], devlist["link"], devlist["property"])
 
@@ -390,6 +416,15 @@ class MBeamLineGP(QWidget):
     # control SPS
     def controlSPS(self, value = None):
         return self.controlWidget(self.wsps, value)
+
+    # control Microscope
+    def controlMicroscope(self, value = None):
+        if(type(value) is bool and value==self.wdiode.isEnabled()):
+            self.wdiode.setEnabled(not value)
+            self.wdiode.setToolTip("%s - Disabled (Microscope is in)"%BEAMLDIODE)
+            if(self.wdiode.isEnabled()):
+                self.wdiode.setToolTip(BEAMLDIODE)
+        return self.controlWidget(self.wmicroscope, value)
 
     # process toggle events
     def processToggle(self, *tlist):

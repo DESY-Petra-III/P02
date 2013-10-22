@@ -18,18 +18,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 # beamline module - General Purpose table
-    # module responsible for drawing basic beamline layout
 from gui_beamline_GP import *
-    # module responsible for starting most used external applications 
 from gui_starter_module_GP import *
-    # module with counters
 from gui_counter_module import *
-    # module for saving special positions
-from gui_savepos_module import *
-    # module for controling GP-Ruby-Microscope system
-from gui_module_ruby import MRubyWidget
-    # module to paste required positions to the clipboard
-from module_clipboard import dataWriteToClipboard
 
 DISCLAMER = """-- full gui for general purpose table --
 -- LGPL licence applies - as we use QT library for free --
@@ -63,7 +54,7 @@ SPSVALVEDATA = {"GPValve1":[0, 0, 0], "GPValve2":[25, 0, 1], "GPValve3":[25, 1, 
 (VFMCURV, VFMELL, VFMTILT, VFMZ) = ("haspp02oh1:10000/p02/attributemotor/vcurvature.gp", "haspp02oh1:10000/p02/attributemotor/vellipticity.gp", "haspp02oh1:10000/p02/attributemotor/vtilt.gp", "haspp02oh1:10000/p02/attributemotor/vzpos.gp")
 
 ### Tab names - may control widget color
-(TABSAMPLE, TABMICROSCOPE, TABDETECTOR, TABPINHOLE, TABSPS, TABHFM, TABVFM, TABGUI) = ("Sample stage", "Microscope", "Detector stage", "Pinhole stack", "SPS (filters, etc.)", "KB Mirror (HFM)", "KB Mirror (VFM)", "Tools (gnuplot, online)")
+(TABSAMPLE, TABDETECTOR, TABPINHOLE, TABSPS, TABHFM, TABVFM, TABGUI) = ("Sample stage", "Detector stage", "Pinhole stack", "SPS (filters, etc.)", "KB Mirror (HFM)", "KB Mirror (VFM)", "Tools (gnuplot, online)")
 
 # colors used in TAB:
 (PINHOLECOLOR, SPSCOLOR, HFMCOLOR, VFMCOLOR) = (QColor('pink'), QColor('orange').light(), QColor(170, 255, 170), QColor(100, 255, 100))
@@ -75,13 +66,7 @@ TIMERSPS = 200
 DEVSIGNALERR = "reportError"
 
 # icons used for menu
-(ICONBEAMLINE, ICONCOUNTERS, ICONEXPERT, ICONPOSITIONS) = ("beamline_images\\beam.png", "beamline_images\\counter.png", "beamline_images\\expert_mode.png", "beamline_images\\positions.png")
-
-# Application related values
-MAPPLICATION = "BeamlineStack"
-MDOMAIN = "desy.de"
-MORG = "DESY"
-MAPPCONFIG = "config/%s.ini" % MAPPLICATION
+(ICONBEAMLINE, ICONCOUNTERS, ICONEXPERT) = ("beamline_images\\beam.png", "beamline_images\\counter.png", "beamline_images\\expert_mode.png")
 
 ###
 # StackForm class - main window of the stack
@@ -117,10 +102,6 @@ class StackForm(QMainWindow):
         # pinhole widget
         self.pinhole_widget = None        # p3cntr set of widgets
         self.wpinhole = None            # tabwidget
-        
-        # microscope widget
-        self.wmicroscope = None
-        self.micro_widget = None
         
         # SPS stack
         self.sps_widgets = SPSVALVEDATA.copy()    # set of widgets, positions, properties for SPS
@@ -174,15 +155,12 @@ class StackForm(QMainWindow):
         # tab with sample stack - updates itself
         self.createSampleStackTab(tab, tabpal)
         
-        # tab with microscope stack - updates itself
-        self.createMicroscopeStackTab(tab, tabpal)
-        
         # tab with detector stack - updates itself
         self.createDetectorStackTab(tab, tabpal)
 
         # tab with pinhole stack
         tabpal = QPalette(PINHOLECOLOR)
-        self.createPinHoleStackTab(tab, tabpal)
+        self.createPinHoleStackTab(tab, tabpal)        
         
         # tab with SPS control stack - updates here
         tabpal = QPalette(SPSCOLOR)
@@ -198,6 +176,13 @@ class StackForm(QMainWindow):
         # tab with VFM mirror control
         tabpal = QPalette(VFMCOLOR)
         self.createVFMStackTab(tab, tabpal)
+        
+        # check exit button and remove it if necessary
+        self.removeExitButton(self.detector_widget)
+        self.removeExitButton(self.stack_widget)
+        self.removeExitButton(self.pinhole_widget)
+        self.removeExitButton(self.hfm_widget)
+        self.removeExitButton(self.vfm_widget)
         
         # show tab as widget
         self.setCentralWidget(self.maintwidget)
@@ -225,28 +210,15 @@ class StackForm(QMainWindow):
         self.connect(self.ashowcounter, SIGNAL("toggled(bool)"), self.processShowHideCounters)
             # show hide expert mode
         self.connect(self.ashowexpert, SIGNAL("toggled(bool)"), self.processShowHideExpert)
-            # show hide positions
-        self.connect(self.ashowpositions, SIGNAL("toggled(bool)"), self.processShowHidePositions)
 
         # check signals emitted by beamline, process them
         self.connect(self.dockbeamwdgt, SIGNAL(BEAMLSIGNALCLICK), self.processBeamLineClick)
 
         # dock/undock counters widget
         self.connect(self.dockcount, SIGNAL("topLevelChanged(bool)"), self.processCountersFloat)
-        # dock/undock positions
-        self.connect(self.dockpositions, SIGNAL("topLevelChanged(bool)"), self.processPositionsFloat)
 
         # update size of main window upon switching between different tabs
         self.connect(self._tab, SIGNAL("currentChanged(int)"), self.processTabSwitch)
-        
-        # collect reports from positions
-        self.connect(self.dockpositionswdgt, SIGNAL(SIGNALMSAVEPOSEXPORT), self.processSavedPosition)
-        
-        # save current position pass them into positions widget
-        self.connect(self.stack_widget, SIGNAL("motorPosition"), self.processSavePosition)
-        
-        # get and transform positions reported by some motors into the clipboard
-        self.connect(self.stack_widget, SIGNAL("motorPositionChanged"), self.processReportedPositionChange)
         return
 
     # initialize menu
@@ -280,18 +252,6 @@ class StackForm(QMainWindow):
         tb.addAction(self.ashowcounter)
         self.ashowcounter.setCheckable(True)
         self.ashowcounter.setChecked(False)
-
-        # save positions button
-        label = QLabel("")
-        label.setMinimumWidth(7)
-        tb.addWidget(label)
-        tb.addWidget(QLabel("Positions:  "))
-        imgpath = self.checkPath(ICONPOSITIONS)
-        self.ashowpositions = QAction(QIcon(imgpath), "Show saved positions", self)
-        tb.addAction(self.ashowpositions)
-        self.ashowpositions.setCheckable(True)
-        self.ashowpositions.setChecked(False)
-        self.processShowHidePositions(self.ashowpositions.isChecked())
 
         # expert mode button
         label = QLabel("")
@@ -341,20 +301,6 @@ class StackForm(QMainWindow):
         w.hide()
 
         self.addDockWidget(Qt.BottomDockWidgetArea, self.dockcount)
-
-         # dockbar with positions - initilize
-        self.dockpositionswdgt = MSavePos(self._app, MAPPCONFIG)
-        self.dockpositions = QDockWidget(MANPOSITIONS, self)
-            # adjust style
-        w = self.dockpositions
-        w.setAutoFillBackground(True)
-        w.setPalette(QPalette(QColor(230, 230, 230)))
-        w.setAllowedAreas(Qt.TopDockWidgetArea)
-        w.setWidget(self.dockpositionswdgt)
-        w.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetVerticalTitleBar | QDockWidget.DockWidgetFloatable)
-        w.hide()
-
-        self.addDockWidget(Qt.TopDockWidgetArea, self.dockpositions)
         return
     
     # detector stack
@@ -375,7 +321,7 @@ class StackForm(QMainWindow):
                     "detector Y GP",
                     DETECTORY)
            
-        self.detector_widget = p3cntr.ui.MotorWidgetAdvanced([det_x_GP,det_y_GP])
+        self.detector_widget = p3cntr.ui.MotorWidget([det_x_GP,det_y_GP])
         self.detector_widget.setWindowTitle('Sample stack GP')
 
         self.detector_widget.setAutoFillBackground(True)
@@ -387,8 +333,11 @@ class StackForm(QMainWindow):
         self.wdetector = wdgt
 
         # update cmb boxes for good steps
-        self.detector_widget.setMotorStepsByName("Detector X LH", ["step", 10, 20, 50, 100, 150, 200, 300])
-        self.detector_widget.setMotorStepsByName("Detector Y LH", ["step", 10, 20, 50, 100, 150, 200, 300])
+        cmbdetx = self.findStepCmbInMotors(self.detector_widget.motordev_widget[0])
+        self.updateStepCmb(cmbdetx, 10, 20, 50, 100, 150, 200, 300)
+
+        cmbdety = self.findStepCmbInMotors(self.detector_widget.motordev_widget[1])
+        self.updateStepCmb(cmbdety, 10, 20, 50, 100, 150, 200, 300)
 
         tab.addTab(wdgt, title)
         return
@@ -430,7 +379,7 @@ class StackForm(QMainWindow):
                     "Pinhole Z GP",
                     PINHOLEZ)
            
-        self.pinhole_widget = p3cntr.ui.MotorWidgetAdvanced([pin_y_GP, pin_z_GP])
+        self.pinhole_widget = p3cntr.ui.MotorWidget([pin_y_GP, pin_z_GP])
 
         self.pinhole_widget.setAutoFillBackground(True)
         self.pinhole_widget.setPalette(pal)
@@ -466,7 +415,7 @@ class StackForm(QMainWindow):
                     "HFM Z GP",
                     HFMZ)
            
-        self.hfm_widget = p3cntr.ui.MotorWidgetAdvanced([hfm_curv, hfm_ell, hfm_tilt, hfm_z])
+        self.hfm_widget = p3cntr.ui.MotorWidget([hfm_curv, hfm_ell, hfm_tilt, hfm_z])
 
         self.hfm_widget.setAutoFillBackground(True)
         self.hfm_widget.setPalette(pal)
@@ -477,10 +426,17 @@ class StackForm(QMainWindow):
         self.whfm = wdgt
 
         # update cmb boxes for good steps
-        self.hfm_widget.setMotorStepsByName("HFM Curvature LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
-        self.hfm_widget.setMotorStepsByName("HFM Ellipticity LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
-        self.hfm_widget.setMotorStepsByName("HFM Tilt LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
-        self.hfm_widget.setMotorStepsByName("HFM Z LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[0])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+
+        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[1])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+
+        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[2])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+
+        cmb = self.findStepCmbInMotors(self.hfm_widget.motordev_widget[3])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
 
         tab.addTab(wdgt, title)
         return
@@ -508,7 +464,7 @@ class StackForm(QMainWindow):
                     "VFM Z GP",
                     VFMZ)
            
-        self.vfm_widget = p3cntr.ui.MotorWidgetAdvanced([vfm_cur, vfm_ell, vfm_tilt, vfm_z])
+        self.vfm_widget = p3cntr.ui.MotorWidget([vfm_cur, vfm_ell, vfm_tilt, vfm_z])
 
         self.vfm_widget.setAutoFillBackground(True)
         self.vfm_widget.setPalette(pal)
@@ -519,10 +475,17 @@ class StackForm(QMainWindow):
         self.wvfm = wdgt
 
         # update cmb boxes for good steps
-        self.vfm_widget.setMotorStepsByName("VFM Curvature LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
-        self.vfm_widget.setMotorStepsByName("VFM Ellipticity LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
-        self.vfm_widget.setMotorStepsByName("VFM Tilt LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
-        self.vfm_widget.setMotorStepsByName("VFM Z LH", ["step", 1, 10, 20, 50, 100, 150, 200, 300, 500])
+        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[0])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+
+        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[1])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+
+        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[2])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
+
+        cmb = self.findStepCmbInMotors(self.vfm_widget.motordev_widget[3])
+        self.updateStepCmb(cmb, 1, 10, 20, 50, 100, 150, 200, 300, 500)
 
         tab.addTab(wdgt, title)
         return
@@ -550,12 +513,8 @@ class StackForm(QMainWindow):
                 "Omega GP",
                 SAMPLEOMEGA)
            
-        self.stack_widget = p3cntr.ui.MotorWidgetAdvanced([cenxGP,cenyGP,SamzGP,omegaGP])
-        self.stack_widget.setWindowTitle(TABSAMPLE)
-        # show button enabling to save positions
-        self.stack_widget.showBtnSavePos()
-        # enable reports from this widget on motor changes
-        self.stack_widget.processEnableReport(True)
+        self.stack_widget = p3cntr.ui.MotorWidget([cenxGP,cenyGP,SamzGP,omegaGP])
+        self.stack_widget.setWindowTitle('Sample stack GP')
 
         self.stack_widget.setAutoFillBackground(True)
         self.stack_widget.setPalette(pal)
@@ -563,29 +522,10 @@ class StackForm(QMainWindow):
         grid.addWidget(self.stack_widget, 0, 0)
 
         self.wsample = wdgt
-        
-        tab.addTab(wdgt, title)
-        return
-    
-    # ruby stack
-    def createMicroscopeStackTab(self, tab, pal):
-        title = TABMICROSCOPE
-        wdgt = QWidget()
-        grid = QGridLayout(wdgt)
-
-        wdgt.setAutoFillBackground(True)
-        wdgt.setPalette(pal)
-
-        self.micro_widget = MRubyWidget(self)
-
-        grid.addWidget(self.micro_widget, 0, 0)
-
-        self.wmicroscope = wdgt
 
         tab.addTab(wdgt, title)
         return
     
-    # SPS stack showing different filters for now
     def createSPSStackTab(self, tab, pal):
         title = TABSPS
         wdgt = QWidget()
@@ -621,7 +561,18 @@ class StackForm(QMainWindow):
 
         tab.addTab(wdgt, title)
         return
-      
+    
+    # update interface - remove unnecessary exit button,update style for the QPushButton
+    def removeExitButton(self, stack):
+        for tlist in stack.motordev_widget:
+            for w in tlist:
+                if(type(w) is QPushButton and w.text().indexOf("Exit")>-1):
+                    w.close()
+                if(type(w) is not QLabel and type(w) is not QLineEdit):
+                    pal = w.style().standardPalette()
+                    w.setPalette(pal)
+            
+    
     # creates an icon with specific color
     def createIcon(self, color, w=16, h=16):
         pixmap = QPixmap(w, h)
@@ -709,12 +660,9 @@ class StackForm(QMainWindow):
         if(not state):
             self.dockbeam.hide()
         else:
-            if(not self.dockpositions.isHidden()):
-                self.ashowpositions.toggle()
             self.dockbeam.show()
         self.maintwidget.adjustSize()
         self.adjustSize()
-        self.resize(self.minimumSizeHint())
         return
 
     # process show - hide beamline
@@ -725,33 +673,6 @@ class StackForm(QMainWindow):
             self.dockcount.show()
         self.maintwidget.adjustSize()
         self.adjustSize()
-        self.resize(self.minimumSizeHint())
-        return
-    
-    # process change of motor positions - put values into the clipboard on special mime type
-    def processReportedPositionChange(self, title, motorsdict):
-        (strfrom, strto, strvalue) = (title, "all", "")
-        
-        # enumerate through the motors
-        items = motorsdict.items()
-        # sort motors by number
-        for m in sorted(items, key=lambda k: k[1]["Number"]):
-            # get a name
-            name = m[0]
-            
-            # get motor and its position
-            (motor, pos) = (motorsdict[name], motorsdict[name]["Position"])
-            
-            # prepare a format for position data
-            format = "%0.4f"
-            if(pos>100):
-                format = "%0.2f"
-            
-            # prepare a string with motor positions
-            strvalue = strvalue + "%s: %s; " %(name, format % pos)
-        
-        if(len(strfrom)>0):
-            dataWriteToClipboard(strfrom, strto, strvalue)
         return
 
     # process show - hide expert mode
@@ -813,29 +734,12 @@ class StackForm(QMainWindow):
         elif(string.indexOf(BEAMLOPTICS)>-1):
             index = tab.indexOf(self.whfm)
             tab.setCurrentIndex(index)
-        elif(string.indexOf(BEAMLMICROSCOPE)>-1):   # clicked on microscope
-            index = tab.indexOf(self.wmicroscope)
-            tab.setCurrentIndex(index)
-        return
-
-    # process show - hide positions widget
-    def processShowHidePositions(self, state):
-        if(not state):
-            self.dockpositions.hide()
-        else:
-            if(not self.dockbeam.isHidden()):
-                self.ashowbeamline.toggle()
-            self.dockpositions.show()
-        self.maintwidget.adjustSize()
-        self.adjustSize()
-        self.resize(self.minimumSizeHint())
         return
 
     # process counters float - adjust window sizes
     def processCountersFloat(self, state):
         self.maintwidget.adjustSize()
         self.adjustSize()
-        self.resize(self.minimumSizeHint())
 
         size = self.size()
         pos = self.pos()
@@ -843,32 +747,10 @@ class StackForm(QMainWindow):
         self.dockcount.resize(400, 500)
         self.dockcount.move(self.x()+size.width(), self.y())
 
-    # save current position from sample stack
-    def processSavePosition(self, group, positions):
-        self.dockpositionswdgt.addExternalData(group, positions)
-        return
-
-    # process saved position
-    def processSavedPosition(self, group, data):
-        if(group=="Cells" or group==TABSAMPLE):
-            tlist = ("CenX", "CenY", "SamZ", "Omega")
-            for name in tlist:
-                self.stack_widget.setMotorPositionByName(name, self.checkPositionByName(name, data))
-        return
-
-    # process positions float - adjust window sizes
-    def processPositionsFloat(self, state):
-        self.resize(self.minimumSizeHint())
-
-        size = self.size()
-        pos = self.pos()
-
-        self.dockcount.resize(180, 400)
-        self.dockcount.move(self.x()+size.width(), self.y())
-
     # process tab switching
     def processTabSwitch(self, index):
-        self.resize(self.minimumSizeHint())
+        self.maintwidget.adjustSize()
+        self.adjustSize()
 
     # update combobox with steps
     def updateStepCmb(self, wdgt, *tlist):
@@ -887,6 +769,14 @@ class StackForm(QMainWindow):
             string = format%string
             strlist.append(QString(string))
         wdgt.addItems(strlist)
+
+    # finding cmb object in stack from p3cntr.ui.MotorWidget
+    def findStepCmbInMotors(self, tlist):
+        wdgt = None
+        for w in tlist:
+            if(type(w) is QComboBox):
+                wdgt = w
+        return wdgt
 
     # check system settings for file paths, convert if on linux
     def checkPath(self, path):
