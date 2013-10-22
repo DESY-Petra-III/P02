@@ -395,7 +395,7 @@ class MWorker(QThread):
                     with(QMutexLocker(self._writemutex)):
                         self._cmds[k] = None
                 else:
-                    self.processGetCommand(self, self._cmds[k])
+                    self.processGetCommand(self._cmds[k])
 
             # after full cycle - enable widgets after sending command to the LED
             if(self._wdgts is not None):
