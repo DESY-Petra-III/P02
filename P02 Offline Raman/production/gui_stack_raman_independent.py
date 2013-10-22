@@ -20,7 +20,7 @@ from PyQt4.QtGui import *
 
 # Led device
 MLEDGPDEV = "tango://haspllabcl1:10000/llab/led/llabcl1.01"
-(MLEDONOFF, MLEDINTENSITY, MLEDTEMP) = ("LEDOffOn", "Intensity", "Temperature")
+(MLEDONOFF, MLEDINTENSITY, MLEDTEMP) = ("&l", "&i", "&ct")
 
 # timer timeout for LED values update
 MLEDTIMERTIMEOUT = 3000
@@ -183,13 +183,10 @@ class MLedWidget(QWidget):
         self._ledmutex = QMutex()
 
         # single worker thread to read and write values
-        self._worker = MWorker( self.processLedRead, self.processLedWrite, self)
+        self._worker = MWorker(self)
 
         # flag to control when to update slider position and when not (no update while sliding is in progress)
         self._bslide = False
-
-        # flag to control the led light switch
-        self._bvaluechanged =  False
 
         # timer to switch LED off if running for long time without activity
         self._timeroff = QTimer(self)
@@ -270,121 +267,14 @@ class MLedWidget(QWidget):
             w.setMaximumWidth(value)
         return
 
-    # timer switching off led in case of iactivity
+    # timer switching off led in case of inactivity
     def processIdleOff(self):
         # switch LED Off
-        self.processLedWrite(MLEDONOFF, 0)
+        self._worker.addWritable(MLEDONOFF, 0)
         return
-
-    # process timer update
-    def processLedRead(self):
-        #check if value has been changed, exit from reading to initiate writing cycle
-        if(self._bvaluechanged):
-            return
-
-        # device proxy - establish connection to the device proxy
-        dev = DeviceProxy(self._dev)
-
-        # try device it, if it is Running or not, test aditionally timeouts
-        try:
-            dev.state()
-        except DevFailed:
-            self.reportErrorMessage("Error: Tango connection Failed (processLedRead - timeout)")
-            return
-        except DevError:
-            self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
-            return
-
-        # read intensity, update it if necessary
-        berror = False
-        try:
-            temp = dev.read_attribute(MLEDINTENSITY).value
-        except DevFailed:
-            self.reportErrorMessage("Error: Tango Device timeout (processLedRead)")
-            berror = True
-        except DevError:
-            berror = True       # means timeout
-            self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
-
-        # update widget if not timeout occurs and 
-        if(not berror and temp != self.slintensity.value() and not self._bslide and not self._bvaluechanged):
-            self.leintensity.setText("%i" % temp)
-            self.slintensity.setValue(temp)
-
-        # set worker on sleep
-
-        # read temperature
-        berror = False
-        try:
-            temp = dev.read_attribute(MLEDTEMP).value
-        except DevFailed:
-            self.reportErrorMessage("Error: Tango Device timeout (processLedRead)")
-            berror = True
-        except DevError:
-            berror = True       # means timeout
-            self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
-
-        if(not berror and not self._bvaluechanged):
-            self.letemp.setText("%i" % temp)
-
-        # read on/off state
-        berror = False
-        try:
-            temp = dev.read_attribute(MLEDONOFF).value
-        except DevFailed:
-            self.reportErrorMessage("Error: Tango Device timeout (processLedRead)")
-            berror = True
-        except DevError:
-            berror = True       # means timeout
-            self.reportErrorMessage("Error: Tango connection Failed (processLedRead)")
-
-        # process if no error has occured and button has not been pressed
-        if(not berror and not self._bvaluechanged):
-            if(temp>0):     # ON
-                self.btnonoff.setChecked(True)
-                self.btnonoff.setText(MLEDON)
-            else:           # OFF
-                self.btnonoff.setChecked(False)
-                self.btnonoff.setText(MLEDOFF)
-        return
-
-    # write value to a Led, set a loop which will not finish untill the thread has completed a write cycle
-    def processLedWrite(self, attribute, value):
-        # device proxy
-        dev = DeviceProxy(self._dev)
-
-        # try device
-        try:
-            dev.state()
-        except DevFailed:
-            self.reportErrorMessage("Error: Tango connection Failed (processLedRead - timeout)")
-            return
-        except DevError:
-            self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
-            return
-
-        bcomplete = False
-        while(not bcomplete):
-            try:
-                dev.write_attribute(attribute, value)
-                bcomplete = True
-            except DevFailed:
-                self.reportErrorMessage("Error: Tango Device timeout (processLedWrite)")
-                pass
-            except DevError:            # timeout error
-                self.reportErrorMessage("Error: Tango connection Failed (processLedWrite)")
-                pass
-
-        # allow reading from tango server and consequent gui updating
-        if(self._bvaluechanged):
-           self._bvaluechanged = False
-
 
     # process light switching - ON/OFF
     def processLightSwitch(self, bflag):
-        # mark the beginnign of the write cycle
-        self._bvaluechanged = True
-
         value = 0
         if(bflag):     # ON
             self.btnonoff.setText(MLEDON)
@@ -419,9 +309,6 @@ class MLedWidget(QWidget):
         self.slintensity.setValue(value)
         self.leintensity.setText("%i" % value)
 
-        # set flag indicating that value has been changed
-        self._bvaluechanged = True
-
         # add values to the write cycle
         self._worker.addWritable(MLEDINTENSITY, value)
         return
@@ -453,7 +340,7 @@ class MLedWidget(QWidget):
         event.accept()
 
         # switch LED Off
-        self.processLedWrite(MLEDONOFF, 0)
+        self._worker.addWritable(MLEDINTENSITY, 0)
 
         # cleanup LED widget, its thread update processing - read/write operation
         if(self._worker is not None and self._worker.isRunning()):
@@ -468,7 +355,7 @@ class MLedWidget(QWidget):
 ## MWorker class - QThread class for dirty work - to write and previously set data, widgets are disabled until all right commands are executed
 ###
 class MWorker(QThread):
-    def __init__(self, wdgts, parent=None):
+    def __init__(self, parent=None):
         super(MWorker, self).__init__(parent)
 
         # mutex to control exit conditions
@@ -476,10 +363,10 @@ class MWorker(QThread):
         self._stopmutex = QMutex()
 
         # function to process
-        self._wdgts = wdgts
+        self._wdgts = None
 
         # storage for data writing
-        self._cmds = {"&i" : None, "&l" : None, "&ct" : None}
+        self._cmds = {MLEDINTENSITY : None, MLEDONOFF : None, MLEDTEMP : None}
         self._writemutex = QMutex()
 
         # socket wrapper for operation
@@ -493,17 +380,28 @@ class MWorker(QThread):
             (timestart, timeend, timediffall) = (QDateTime.currentMSecsSinceEpoch() , 0, 0)
 
             # write values in the beginning of read cycle
-            with(QMutexLocker(self._writemutex)):
-                # enumerate through different keys
-                for k in self._cmds.keys():
-                    # check values, write value to the Led device (attribute and its value)
-                    if(self._cmds[k] is not None):
-                        self.processSetCommand(k, self._cmds[k])
-                        self._cmds[k] = None
             
-            # read data for all things it should be read
+                # enumerate through different keys
             for k in self._cmds.keys():
-                self.processGetCommand(self, self._cmds[k])
+                # check for stop signal every time
+                if(self._bstop):
+                    break
+                # check values, write value to the Led device (attribute and its value)
+                if(self._cmds[k] is not None):
+                    self.processSetCommand(k, self._cmds[k])
+                    with(QMutexLocker(self._writemutex)):
+                        self._cmds[k] = None
+                else:
+                    self.processGetCommand(self, self._cmds[k])
+
+            # after full cycle - enable widgets after sending command to the LED
+            if(self._wdgts is not None):
+                for w in self._wdgts:
+                    w.setDisabled(False)
+
+            # check for stop signal every time we need that
+            if(self._bstop):
+                    break
                 
             # calculate how much time we spend on one cycle
             timeend = QDateTime.currentMSecsSinceEpoch()
@@ -519,7 +417,7 @@ class MWorker(QThread):
                         bnewwritable = True
                         break
 
-                if(bnewwritable):
+                if(bnewwritable or self._bstop):
                     break
                 self.msleep(250)
 
@@ -539,7 +437,7 @@ class MWorker(QThread):
     # set command
     def processSetCommand(self, cmd, value):
         format = "%s%i"
-        if(cmd=="&i"):
+        if(cmd==MLEDINTENSITY):
             format = "%s%x"
         return self._tcp.send(format % (cmd,value) )
         
@@ -551,6 +449,18 @@ class MWorker(QThread):
     def addWritable(self, cmd, value):
         with(QMutexLocker(self._writemutex)):
             self._cmds[cmd] = value
+
+        if(self._wdgts is not None):
+            for w in self._wdgts:
+                w.setDisabled(True)
+
+    # add widgets which should be disabled in order to avoid 
+    def addWidgestDisabled(self, *wdgts):
+        t = type(wdgts[0])
+        if(t is list or t is tuple):
+            wdgts = wdgts[0]
+
+        self._wdgts = wdgts
 
 ###
 ## MWorker class End
@@ -607,15 +517,15 @@ class MTcpSocketWrapper(QObject):
         with(QMutexLocker(self._mutex):
             self._socket.connectToHost(self.host, self.port)
             # make sure we got connected to the device
-            if(self._socket.waitForConnected(3000)):
+            if(self._socket.waitForConnected(MLEDTIMERTIMEOUT)):
                 self._socket.write(cmd)
                 self._socket.flush()
 
                 # we have data to read
-                if(self.waitForReadyRead(3000)):
+                if(self.waitForReadyRead(MLEDTIMERTIMEOUT)):
                     # read data with buffer size of 10, should be enough, pass data as a signal to the tread
                     result = self._socket.readData(10)
-                    self.emit(SIGNAL("responseRecieved"), cmd, result)
+                    self.emit(SIGNAL("responseReceived"), cmd, result)
                     bsuccess = True
                     # disconnect a socket
                     self._socket.close()
