@@ -371,7 +371,7 @@ class MWorker(QThread):
         self._writemutex = QMutex()
 
         # socket wrapper for operation
-        self._tcp = MTcpSocketWrapper(parent)
+        self._tcp = MTcpSocketWrapper()
 
     # run specific operation when access mutex allows it
     def run(self):
@@ -409,6 +409,8 @@ class MWorker(QThread):
             # calculate how much time we spend on one cycle
             timeend = time.elapsed()
             timediffall = timeend - timestart
+
+            print(timeend)
 
             # check every 250 ms if we have new value to write - proceed to writing, otherwise wait for the same time it took us to read+write full setup
             for i in range(timediffall, 250):
@@ -542,7 +544,7 @@ class MTcpSocketWrapper(QObject):
         return bsuccess
 
     # cleaning up function
-    def close(self):
+    def stop(self):
         if(self._socket.isOpen()):
             self._socket(close)
 
