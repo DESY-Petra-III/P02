@@ -427,9 +427,9 @@ class MWorker(QThread):
     # stop function
     def stop(self):
         if(not self._bstop):
-        with(QMutexLocker(self._stopmutex)):
-            # set a flag for thread loop to exit
-            self._bstop = True
+            with(QMutexLocker(self._stopmutex)):
+                # set a flag for thread loop to exit
+                self._bstop = True
         
         # close any socket operations if present
         self._tcp.stop()
