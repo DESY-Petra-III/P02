@@ -483,7 +483,7 @@ class MTcpSocketWrapper(QObject):
     def initVars(self):
         self._socket = QTcpSocket()
         self._port = 50811
-        self._host = "192.168.57.243"
+        self._host = QString("192.168.57.243")
 
         self._mutex = QMutex()
         return
@@ -501,11 +501,11 @@ class MTcpSocketWrapper(QObject):
 
     @property
     def host(self):
-        return self._port
+        return self._host
 
     @host.setter
     def host(self, value="192.168.57.243"):
-        self._host = str(value)
+        self._host = QString(value)
 
     # command for blocking operation
     def send(self, cmd, signal=None):
@@ -518,7 +518,8 @@ class MTcpSocketWrapper(QObject):
 
         # read values
         with(QMutexLocker(self._mutex)):
-            self._socket.connectToHost(self.host, self.port)
+            print(self.host, self.port)
+            self._socket.connectToHost(QString(self.host), int(self.port))
             # make sure we got connected to the device
             if(self._socket.waitForConnected(MLEDTIMERTIMEOUT)):
                 self._socket.write(cmd)
