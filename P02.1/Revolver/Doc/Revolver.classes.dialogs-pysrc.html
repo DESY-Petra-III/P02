@@ -1,0 +1,813 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Revolver.classes.dialogs</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Revolver-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Revolver-module.html">Package&nbsp;Revolver</a> ::
+        <a href="Revolver.classes-module.html">Package&nbsp;classes</a> ::
+        Module&nbsp;dialogs
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Revolver.classes.dialogs-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="Revolver.classes.dialogs-module.html">Module Revolver.classes.dialogs</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-docstring">Dialogs used in widgets</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"># import from global packages </tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">PyQt4</tt> <tt class="py-keyword">import</tt> <tt class="py-name">QtGui</tt><tt class="py-op">,</tt> <tt class="py-name">Qt</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">PyQt4</tt><tt class="py-op">.</tt><tt class="py-name">QtGui</tt> <tt class="py-keyword">import</tt> <tt class="py-name">QMessageBox</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">math</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># Import from local packages</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package Revolver.UI=Revolver.UI-module.html,Package Revolver.beamline.UI=Revolver.beamline.UI-module.html,Package Revolver.classes.UI=Revolver.classes.UI-module.html,Package Revolver.macro.UI=Revolver.macro.UI-module.html"><a title="Revolver.UI
+Revolver.beamline.UI
+Revolver.classes.UI
+Revolver.macro.UI" class="py-name" href="#" onclick="return doclink('link-0', 'UI', 'link-0');">UI</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Module Revolver.classes.UI.add_macro_dialog=Revolver.classes.UI.add_macro_dialog-module.html"><a title="Revolver.classes.UI.add_macro_dialog" class="py-name" href="#" onclick="return doclink('link-1', 'add_macro_dialog', 'link-1');">add_macro_dialog</a></tt><tt class="py-op">,</tt> <tt id="link-2" class="py-name" targets="Module Revolver.classes.UI.select_device_dialog=Revolver.classes.UI.select_device_dialog-module.html"><a title="Revolver.classes.UI.select_device_dialog" class="py-name" href="#" onclick="return doclink('link-2', 'select_device_dialog', 'link-2');">select_device_dialog</a></tt><tt class="py-op">,</tt> <tt id="link-3" class="py-name" targets="Module Revolver.classes.UI.add_temperature_macro_dialog=Revolver.classes.UI.add_temperature_macro_dialog-module.html"><a title="Revolver.classes.UI.add_temperature_macro_dialog" class="py-name" href="#" onclick="return doclink('link-3', 'add_temperature_macro_dialog', 'link-3');">add_temperature_macro_dialog</a></tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name" targets="Package Revolver=Revolver-module.html"><a title="Revolver" class="py-name" href="#" onclick="return doclink('link-4', 'Revolver', 'link-4');">Revolver</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Package Revolver.classes=Revolver.classes-module.html"><a title="Revolver.classes" class="py-name" href="#" onclick="return doclink('link-5', 'classes', 'link-5');">classes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-6" class="py-name" targets="Module Revolver.classes.devices=Revolver.classes.devices-module.html"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-6', 'devices', 'link-6');">devices</a></tt><tt class="py-op">,</tt> <tt id="link-7" class="py-name" targets="Module Revolver.classes.config=Revolver.classes.config-module.html"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-7', 'config', 'link-7');">config</a></tt><tt class="py-op">,</tt> <tt id="link-8" class="py-name" targets="Module Revolver.classes.signals=Revolver.classes.signals-module.html"><a title="Revolver.classes.signals" class="py-name" href="#" onclick="return doclink('link-8', 'signals', 'link-8');">signals</a></tt><tt class="py-op">,</tt> <tt id="link-9" class="py-name" targets="Module Revolver.classes.macro=Revolver.classes.macro-module.html,Package Revolver.macro=Revolver.macro-module.html"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-9', 'macro', 'link-9');">macro</a></tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"> </tt>
+<a name="askWarnDialog"></a><div id="askWarnDialog-def"><a name="L16"></a><tt class="py-lineno"> 16</tt> <a class="py-toggle" href="#" id="askWarnDialog-toggle" onclick="return toggle('askWarnDialog');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs-module.html#askWarnDialog">askWarnDialog</a><tt class="py-op">(</tt><tt class="py-param">parent</tt><tt class="py-op">,</tt> <tt class="py-param">title</tt><tt class="py-op">,</tt> <tt class="py-param">message</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="askWarnDialog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="askWarnDialog-expanded"><a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">    <tt class="py-name">reply</tt> <tt class="py-op">=</tt> <tt class="py-name">QMessageBox</tt><tt class="py-op">.</tt><tt class="py-name">warning</tt><tt class="py-op">(</tt><tt class="py-name">parent</tt><tt class="py-op">,</tt> <tt class="py-name">title</tt><tt class="py-op">,</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">                     <tt class="py-name">message</tt><tt class="py-op">,</tt> <tt class="py-name">QMessageBox</tt><tt class="py-op">.</tt><tt class="py-name">Yes</tt><tt class="py-op">,</tt> <tt class="py-name">QMessageBox</tt><tt class="py-op">.</tt><tt class="py-name">No</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">reply</tt> <tt class="py-op">==</tt> <tt class="py-name">QMessageBox</tt><tt class="py-op">.</tt><tt class="py-name">Yes</tt><tt class="py-op">:</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">True</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">False</tt> </tt>
+</div><a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"> </tt>
+<a name="showInfoDialog"></a><div id="showInfoDialog-def"><a name="L25"></a><tt class="py-lineno"> 25</tt> <a class="py-toggle" href="#" id="showInfoDialog-toggle" onclick="return toggle('showInfoDialog');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs-module.html#showInfoDialog">showInfoDialog</a><tt class="py-op">(</tt><tt class="py-param">parent</tt><tt class="py-op">,</tt> <tt class="py-param">title</tt><tt class="py-op">,</tt> <tt class="py-param">message</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="showInfoDialog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="showInfoDialog-expanded"><a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">    <tt class="py-name">QMessageBox</tt><tt class="py-op">.</tt><tt class="py-name">information</tt><tt class="py-op">(</tt><tt class="py-name">parent</tt><tt class="py-op">,</tt> <tt class="py-name">title</tt><tt class="py-op">,</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">                     <tt class="py-name">message</tt><tt class="py-op">,</tt> <tt class="py-name">QMessageBox</tt><tt class="py-op">.</tt><tt class="py-name">Close</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"> </tt>
+<a name="AddMacroDialog"></a><div id="AddMacroDialog-def"><a name="L29"></a><tt class="py-lineno"> 29</tt> <a class="py-toggle" href="#" id="AddMacroDialog-toggle" onclick="return toggle('AddMacroDialog');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html">AddMacroDialog</a><tt class="py-op">(</tt><tt class="py-base-class">QtGui</tt><tt class="py-op">.</tt><tt class="py-base-class">QDialog</tt><tt class="py-op">,</tt> <tt class="py-base-class">add_macro_dialog</tt><tt class="py-op">.</tt><tt class="py-base-class">Ui_Dialog</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="AddMacroDialog-expanded"><a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-docstring">    Macro step dialog, emit signal </tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="AddMacroDialog.__init__"></a><div id="AddMacroDialog.__init__-def"><a name="L33"></a><tt class="py-lineno"> 33</tt> <a class="py-toggle" href="#" id="AddMacroDialog.__init__-toggle" onclick="return toggle('AddMacroDialog.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">parent</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">setDefault</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.__init__-expanded"><a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"><tt class="py-docstring">        Class constructor</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-docstring">        @type parent: DefaultWidget</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-10" class="py-name" targets="Class Revolver.classes.dialogs.AddMacroDialog=Revolver.classes.dialogs.AddMacroDialog-class.html"><a title="Revolver.classes.dialogs.AddMacroDialog" class="py-name" href="#" onclick="return doclink('link-10', 'AddMacroDialog', 'link-10');">AddMacroDialog</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Method Revolver.beamline.beam.Beamline_beam.__init__()=Revolver.beamline.beam.Beamline_beam-class.html#__init__,Method Revolver.beamline.default_beamline.Beamline.__init__()=Revolver.beamline.default_beamline.Beamline-class.html#__init__,Method Revolver.beamline.default_beamline_device.Beamline_device.__init__()=Revolver.beamline.default_beamline_device.Beamline_device-class.html#__init__,Method Revolver.beamline.device_absorber.Beamline_absorber.__init__()=Revolver.beamline.device_absorber.Beamline_absorber-class.html#__init__,Method Revolver.beamline.device_beamstop.Beamline_beamstop.__init__()=Revolver.beamline.device_beamstop.Beamline_beamstop-class.html#__init__,Method Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init__()=Revolver.beamline.device_detectorPE.Beamline_detectorPE-class.html#__init__,Method Revolver.beamline.device_diode.Beamline_diode.__init__()=Revolver.beamline.device_diode.Beamline_diode-class.html#__init__,Method Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init__()=Revolver.beamline.device_ionchamber.Beamline_ionchamber-class.html#__init__,Method Revolver.beamline.device_laser.Beamline_laser.__init__()=Revolver.beamline.device_laser.Beamline_laser-class.html#__init__,Method Revolver.beamline.device_main_shutter.Beamline_shutter.__init__()=Revolver.beamline.device_main_shutter.Beamline_shutter-class.html#__init__,Method Revolver.beamline.device_pinhole.Beamline_pinhole.__init__()=Revolver.beamline.device_pinhole.Beamline_pinhole-class.html#__init__,Method Revolver.beamline.device_samplestage.Beamline_samplestage.__init__()=Revolver.beamline.device_samplestage.Beamline_samplestage-class.html#__init__,Method Revolver.beamline.device_shutter.Beamline_shutter.__init__()=Revolver.beamline.device_shutter.Beamline_shutter-class.html#__init__,Method Revolver.beamline.device_slits.Beamline_slits.__init__()=Revolver.beamline.device_slits.Beamline_slits-class.html#__init__,Method Revolver.beamline.wall.Beamline_wall.__init__()=Revolver.beamline.wall.Beamline_wall-class.html#__init__,Method Revolver.classes.devices.Absorber.__init__()=Revolver.classes.devices.Absorber-class.html#__init__,Method Revolver.classes.devices.Detector.__init__()=Revolver.classes.devices.Detector-class.html#__init__,Method Revolver.classes.devices.DetectorController.__init__()=Revolver.classes.devices.DetectorController-class.html#__init__,Method Revolver.classes.devices.Diode.__init__()=Revolver.classes.devices.Diode-class.html#__init__,Method Revolver.classes.devices.Hotblower.__init__()=Revolver.classes.devices.Hotblower-class.html#__init__,Method Revolver.classes.devices.Laser.__init__()=Revolver.classes.devices.Laser-class.html#__init__,Method Revolver.classes.devices.MainShutter.__init__()=Revolver.classes.devices.MainShutter-class.html#__init__,Method Revolver.classes.devices.Motor.__init__()=Revolver.classes.devices.Motor-class.html#__init__,Method Revolver.classes.devices.Shutter.__init__()=Revolver.classes.devices.Shutter-class.html#__init__,Method Revolver.classes.devices.TangoDevice.__init__()=Revolver.classes.devices.TangoDevice-class.html#__init__,Method Revolver.classes.devices.VirtualDevice.__init__()=Revolver.classes.devices.VirtualDevice-class.html#__init__,Method Revolver.classes.devices.VirtualMotorCenter2D.__init__()=Revolver.classes.devices.VirtualMotorCenter2D-class.html#__init__,Method Revolver.classes.devices.VirtualMotorDistance2D.__init__()=Revolver.classes.devices.VirtualMotorDistance2D-class.html#__init__,Method Revolver.classes.dialogs.AddMacroDialog.__init__()=Revolver.classes.dialogs.AddMacroDialog-class.html#__init__,Method Revolver.classes.dialogs.AddTemperatureMacroDialog.__init__()=Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#__init__,Method Revolver.classes.dialogs.SelectDeviceDialog.__init__()=Revolver.classes.dialogs.SelectDeviceDialog-class.html#__init__,Method Revolver.classes.macro.DarkShotMacro.__init__()=Revolver.classes.macro.DarkShotMacro-class.html#__init__,Method Revolver.classes.macro.Macro.__init__()=Revolver.classes.macro.Macro-class.html#__init__,Method Revolver.classes.macro.MotorMacro.__init__()=Revolver.classes.macro.MotorMacro-class.html#__init__,Method Revolver.classes.macro.TemperatureMacro.__init__()=Revolver.classes.macro.TemperatureMacro-class.html#__init__,Method Revolver.classes.macro.TimeMacro.__init__()=Revolver.classes.macro.TimeMacro-class.html#__init__,Method Revolver.classes.widget_plot.Curve_plot.__init__()=Revolver.classes.widget_plot.Curve_plot-class.html#__init__,Method Revolver.classes.widget_plot.Image_plot.__init__()=Revolver.classes.widget_plot.Image_plot-class.html#__init__,Method Revolver.classes.widget_plot.Widget_plot.__init__()=Revolver.classes.widget_plot.Widget_plot-class.html#__init__,Method Revolver.classes.widget_plot.plot_event_filter.__init__()=Revolver.classes.widget_plot.plot_event_filter-class.html#__init__,Method Revolver.gui_P02_stage_controls_widget.controls.__init__()=Revolver.gui_P02_stage_controls_widget.controls-class.html#__init__,Method Revolver.gui_absorber_controls_widget.Controls.__init__()=Revolver.gui_absorber_controls_widget.Controls-class.html#__init__,Method Revolver.gui_beamline_P02.Beamline_P02.__init__()=Revolver.gui_beamline_P02.Beamline_P02-class.html#__init__,Method Revolver.gui_default_controls_widget.DefaultControls.__init__()=Revolver.gui_default_controls_widget.DefaultControls-class.html#__init__,Method Revolver.gui_default_controls_widget.EventSpinboxFilter.__init__()=Revolver.gui_default_controls_widget.EventSpinboxFilter-class.html#__init__,Method Revolver.gui_default_widget.DefaultMainWindow.__init__()=Revolver.gui_default_widget.DefaultMainWindow-class.html#__init__,Method Revolver.gui_default_widget.DefaultWidget.__init__()=Revolver.gui_default_widget.DefaultWidget-class.html#__init__,Method Revolver.gui_detector_controls_widget.DetectorControls.__init__()=Revolver.gui_detector_controls_widget.DetectorControls-class.html#__init__,Method Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init__()=Revolver.gui_device_status_led_widget.DeviceLedStatusWidget-class.html#__init__,Method Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init__()=Revolver.gui_device_status_value_widget.DeviceValueStatusWidget-class.html#__init__,Method Revolver.gui_device_value_graph_controls_widget.Controls.__init__()=Revolver.gui_device_value_graph_controls_widget.Controls-class.html#__init__,Method Revolver.gui_macro_widget.MacroWidget.__init__()=Revolver.gui_macro_widget.MacroWidget-class.html#__init__,Method Revolver.gui_motor_controls_widget.MotorWidget.__init__()=Revolver.gui_motor_controls_widget.MotorWidget-class.html#__init__,Method Revolver.gui_revolver_app.revolver.__init__()=Revolver.gui_revolver_app.revolver-class.html#__init__,Method Revolver.gui_scan_widget.ScanWidget.__init__()=Revolver.gui_scan_widget.ScanWidget-class.html#__init__,Method Revolver.gui_scan_widget.spinboxTable.__init__()=Revolver.gui_scan_widget.spinboxTable-class.html#__init__,Method Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init__()=Revolver.gui_stacked_motors_controls_widget.StackedMotorControls-class.html#__init__,Method Revolver.gui_status_widget.StatusWidget.__init__()=Revolver.gui_status_widget.StatusWidget-class.html#__init__,Method Revolver.macro.default_macro.MacroControls.__init__()=Revolver.macro.default_macro.MacroControls-class.html#__init__,Method Revolver.macro.gui_logging_widget.LoggingWidget.__init__()=Revolver.macro.gui_logging_widget.LoggingWidget-class.html#__init__,Method Revolver.macro.loop_macro_widget.LoopMotorMacro.__init__()=Revolver.macro.loop_macro_widget.LoopMotorMacro-class.html#__init__,Method Revolver.macro.simple_macro_widget.SimpleMotorMacro.__init__()=Revolver.macro.simple_macro_widget.SimpleMotorMacro-class.html#__init__,Method Revolver.macro.temperature_macro_widget.TemperatureMacro.__init__()=Revolver.macro.temperature_macro_widget.TemperatureMacro-class.html#__init__,Method Revolver.macro.time_macro_widget.TimeMacro.__init__()=Revolver.macro.time_macro_widget.TimeMacro-class.html#__init__"><a title="Revolver.beamline.beam.Beamline_beam.__init__
+Revolver.beamline.default_beamline.Beamline.__init__
+Revolver.beamline.default_beamline_device.Beamline_device.__init__
+Revolver.beamline.device_absorber.Beamline_absorber.__init__
+Revolver.beamline.device_beamstop.Beamline_beamstop.__init__
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init__
+Revolver.beamline.device_diode.Beamline_diode.__init__
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init__
+Revolver.beamline.device_laser.Beamline_laser.__init__
+Revolver.beamline.device_main_shutter.Beamline_shutter.__init__
+Revolver.beamline.device_pinhole.Beamline_pinhole.__init__
+Revolver.beamline.device_samplestage.Beamline_samplestage.__init__
+Revolver.beamline.device_shutter.Beamline_shutter.__init__
+Revolver.beamline.device_slits.Beamline_slits.__init__
+Revolver.beamline.wall.Beamline_wall.__init__
+Revolver.classes.devices.Absorber.__init__
+Revolver.classes.devices.Detector.__init__
+Revolver.classes.devices.DetectorController.__init__
+Revolver.classes.devices.Diode.__init__
+Revolver.classes.devices.Hotblower.__init__
+Revolver.classes.devices.Laser.__init__
+Revolver.classes.devices.MainShutter.__init__
+Revolver.classes.devices.Motor.__init__
+Revolver.classes.devices.Shutter.__init__
+Revolver.classes.devices.TangoDevice.__init__
+Revolver.classes.devices.VirtualDevice.__init__
+Revolver.classes.devices.VirtualMotorCenter2D.__init__
+Revolver.classes.devices.VirtualMotorDistance2D.__init__
+Revolver.classes.dialogs.AddMacroDialog.__init__
+Revolver.classes.dialogs.AddTemperatureMacroDialog.__init__
+Revolver.classes.dialogs.SelectDeviceDialog.__init__
+Revolver.classes.macro.DarkShotMacro.__init__
+Revolver.classes.macro.Macro.__init__
+Revolver.classes.macro.MotorMacro.__init__
+Revolver.classes.macro.TemperatureMacro.__init__
+Revolver.classes.macro.TimeMacro.__init__
+Revolver.classes.widget_plot.Curve_plot.__init__
+Revolver.classes.widget_plot.Image_plot.__init__
+Revolver.classes.widget_plot.Widget_plot.__init__
+Revolver.classes.widget_plot.plot_event_filter.__init__
+Revolver.gui_P02_stage_controls_widget.controls.__init__
+Revolver.gui_absorber_controls_widget.Controls.__init__
+Revolver.gui_beamline_P02.Beamline_P02.__init__
+Revolver.gui_default_controls_widget.DefaultControls.__init__
+Revolver.gui_default_controls_widget.EventSpinboxFilter.__init__
+Revolver.gui_default_widget.DefaultMainWindow.__init__
+Revolver.gui_default_widget.DefaultWidget.__init__
+Revolver.gui_detector_controls_widget.DetectorControls.__init__
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init__
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init__
+Revolver.gui_device_value_graph_controls_widget.Controls.__init__
+Revolver.gui_macro_widget.MacroWidget.__init__
+Revolver.gui_motor_controls_widget.MotorWidget.__init__
+Revolver.gui_revolver_app.revolver.__init__
+Revolver.gui_scan_widget.ScanWidget.__init__
+Revolver.gui_scan_widget.spinboxTable.__init__
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init__
+Revolver.gui_status_widget.StatusWidget.__init__
+Revolver.macro.default_macro.MacroControls.__init__
+Revolver.macro.gui_logging_widget.LoggingWidget.__init__
+Revolver.macro.loop_macro_widget.LoopMotorMacro.__init__
+Revolver.macro.simple_macro_widget.SimpleMotorMacro.__init__
+Revolver.macro.temperature_macro_widget.TemperatureMacro.__init__
+Revolver.macro.time_macro_widget.TimeMacro.__init__" class="py-name" href="#" onclick="return doclink('link-11', '__init__', 'link-11');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">parent</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Method Revolver.UI.layout_P02_stage_controls.Ui_Form.setupUi()=Revolver.UI.layout_P02_stage_controls.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_absorber_controls.Ui_Form.setupUi()=Revolver.UI.layout_absorber_controls.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_detector_controls.Ui_Form.setupUi()=Revolver.UI.layout_detector_controls.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_detector_image_widget.Ui_Form.setupUi()=Revolver.UI.layout_detector_image_widget.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_device_value_graph_controls.Ui_Form.setupUi()=Revolver.UI.layout_device_value_graph_controls.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_macro.Ui_Form.setupUi()=Revolver.UI.layout_macro.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_motor_widget.Ui_Form.setupUi()=Revolver.UI.layout_motor_widget.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_revolver.Ui_MainWindow.setupUi()=Revolver.UI.layout_revolver.Ui_MainWindow-class.html#setupUi,Method Revolver.UI.layout_scan.Ui_Form.setupUi()=Revolver.UI.layout_scan.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_stacked_motors_controls.Ui_Form.setupUi()=Revolver.UI.layout_stacked_motors_controls.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_stage_controls.Ui_Form.setupUi()=Revolver.UI.layout_stage_controls.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_status.Ui_Form.setupUi()=Revolver.UI.layout_status.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_status_label.Ui_Form.setupUi()=Revolver.UI.layout_status_label.Ui_Form-class.html#setupUi,Method Revolver.UI.layout_status_led.Ui_Form.setupUi()=Revolver.UI.layout_status_led.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.absorber.Ui_Form.setupUi()=Revolver.beamline.UI.absorber.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.beam.Ui_Form.setupUi()=Revolver.beamline.UI.beam.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.beamline_default.Ui_Form.setupUi()=Revolver.beamline.UI.beamline_default.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.beamline_p02.Ui_Form.setupUi()=Revolver.beamline.UI.beamline_p02.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.beamstop.Ui_Form.setupUi()=Revolver.beamline.UI.beamstop.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.detectorPE.Ui_Form.setupUi()=Revolver.beamline.UI.detectorPE.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.diode.Ui_Form.setupUi()=Revolver.beamline.UI.diode.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.ion_chamber.Ui_Form.setupUi()=Revolver.beamline.UI.ion_chamber.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.laser.Ui_Form.setupUi()=Revolver.beamline.UI.laser.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.pinhole.Ui_Form.setupUi()=Revolver.beamline.UI.pinhole.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.samplestage.Ui_Form.setupUi()=Revolver.beamline.UI.samplestage.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.shutter.Ui_Form.setupUi()=Revolver.beamline.UI.shutter.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.slits.Ui_Form.setupUi()=Revolver.beamline.UI.slits.Ui_Form-class.html#setupUi,Method Revolver.beamline.UI.wall.Ui_Form.setupUi()=Revolver.beamline.UI.wall.Ui_Form-class.html#setupUi,Method Revolver.classes.UI.add_macro_dialog.Ui_Dialog.setupUi()=Revolver.classes.UI.add_macro_dialog.Ui_Dialog-class.html#setupUi,Method Revolver.classes.UI.add_temperature_macro_dialog.Ui_Dialog.setupUi()=Revolver.classes.UI.add_temperature_macro_dialog.Ui_Dialog-class.html#setupUi,Method Revolver.classes.UI.select_device_dialog.Ui_Dialog.setupUi()=Revolver.classes.UI.select_device_dialog.Ui_Dialog-class.html#setupUi,Method Revolver.gui_default_controls_widget.DefaultControls.setupUi()=Revolver.gui_default_controls_widget.DefaultControls-class.html#setupUi,Method Revolver.gui_default_widget.DefaultWidget.setupUi()=Revolver.gui_default_widget.DefaultWidget-class.html#setupUi,Method Revolver.macro.UI.layout_loop_macro.Ui_Form.setupUi()=Revolver.macro.UI.layout_loop_macro.Ui_Form-class.html#setupUi,Method Revolver.macro.UI.layout_simple_macro.Ui_Form.setupUi()=Revolver.macro.UI.layout_simple_macro.Ui_Form-class.html#setupUi,Method Revolver.macro.UI.layout_temperature_macro.Ui_Form.setupUi()=Revolver.macro.UI.layout_temperature_macro.Ui_Form-class.html#setupUi,Method Revolver.macro.UI.layout_time_macro.Ui_Form.setupUi()=Revolver.macro.UI.layout_time_macro.Ui_Form-class.html#setupUi"><a title="Revolver.UI.layout_P02_stage_controls.Ui_Form.setupUi
+Revolver.UI.layout_absorber_controls.Ui_Form.setupUi
+Revolver.UI.layout_detector_controls.Ui_Form.setupUi
+Revolver.UI.layout_detector_image_widget.Ui_Form.setupUi
+Revolver.UI.layout_device_value_graph_controls.Ui_Form.setupUi
+Revolver.UI.layout_macro.Ui_Form.setupUi
+Revolver.UI.layout_motor_widget.Ui_Form.setupUi
+Revolver.UI.layout_revolver.Ui_MainWindow.setupUi
+Revolver.UI.layout_scan.Ui_Form.setupUi
+Revolver.UI.layout_stacked_motors_controls.Ui_Form.setupUi
+Revolver.UI.layout_stage_controls.Ui_Form.setupUi
+Revolver.UI.layout_status.Ui_Form.setupUi
+Revolver.UI.layout_status_label.Ui_Form.setupUi
+Revolver.UI.layout_status_led.Ui_Form.setupUi
+Revolver.beamline.UI.absorber.Ui_Form.setupUi
+Revolver.beamline.UI.beam.Ui_Form.setupUi
+Revolver.beamline.UI.beamline_default.Ui_Form.setupUi
+Revolver.beamline.UI.beamline_p02.Ui_Form.setupUi
+Revolver.beamline.UI.beamstop.Ui_Form.setupUi
+Revolver.beamline.UI.detectorPE.Ui_Form.setupUi
+Revolver.beamline.UI.diode.Ui_Form.setupUi
+Revolver.beamline.UI.ion_chamber.Ui_Form.setupUi
+Revolver.beamline.UI.laser.Ui_Form.setupUi
+Revolver.beamline.UI.pinhole.Ui_Form.setupUi
+Revolver.beamline.UI.samplestage.Ui_Form.setupUi
+Revolver.beamline.UI.shutter.Ui_Form.setupUi
+Revolver.beamline.UI.slits.Ui_Form.setupUi
+Revolver.beamline.UI.wall.Ui_Form.setupUi
+Revolver.classes.UI.add_macro_dialog.Ui_Dialog.setupUi
+Revolver.classes.UI.add_temperature_macro_dialog.Ui_Dialog.setupUi
+Revolver.classes.UI.select_device_dialog.Ui_Dialog.setupUi
+Revolver.gui_default_controls_widget.DefaultControls.setupUi
+Revolver.gui_default_widget.DefaultWidget.setupUi
+Revolver.macro.UI.layout_loop_macro.Ui_Form.setupUi
+Revolver.macro.UI.layout_simple_macro.Ui_Form.setupUi
+Revolver.macro.UI.layout_temperature_macro.Ui_Form.setupUi
+Revolver.macro.UI.layout_time_macro.Ui_Form.setupUi" class="py-name" href="#" onclick="return doclink('link-12', 'setupUi', 'link-12');">setupUi</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt> <tt class="py-op">=</tt> <tt class="py-name">parent</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">setDefault</tt><tt class="py-op">:</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_motor</tt><tt class="py-op">.</tt><tt class="py-name">setText</tt><tt class="py-op">(</tt><tt id="link-13" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-13', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Variable Revolver.classes.config.DEVICE_MOTOR=Revolver.classes.config-module.html#DEVICE_MOTOR"><a title="Revolver.classes.config.DEVICE_MOTOR" class="py-name" href="#" onclick="return doclink('link-14', 'DEVICE_MOTOR', 'link-14');">DEVICE_MOTOR</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Method Revolver.classes.dialogs.AddMacroDialog.action_check_device_restrictions()=Revolver.classes.dialogs.AddMacroDialog-class.html#action_check_device_restrictions,Method Revolver.classes.dialogs.AddTemperatureMacroDialog.action_check_device_restrictions()=Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#action_check_device_restrictions"><a title="Revolver.classes.dialogs.AddMacroDialog.action_check_device_restrictions
+Revolver.classes.dialogs.AddTemperatureMacroDialog.action_check_device_restrictions" class="py-name" href="#" onclick="return doclink('link-15', 'action_check_device_restrictions', 'link-15');">action_check_device_restrictions</a></tt><tt class="py-op">(</tt><tt id="link-16" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-16', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="Revolver.classes.config.DEVICE_MOTOR" class="py-name" href="#" onclick="return doclink('link-17', 'DEVICE_MOTOR', 'link-14');">DEVICE_MOTOR</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">             </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Method Revolver.beamline.beam.Beamline_beam.__init_variables()=Revolver.beamline.beam.Beamline_beam-class.html#__init_variables,Method Revolver.beamline.default_beamline.Beamline.__init_variables()=Revolver.beamline.default_beamline.Beamline-class.html#__init_variables,Method Revolver.beamline.default_beamline_device.Beamline_device.__init_variables()=Revolver.beamline.default_beamline_device.Beamline_device-class.html#__init_variables,Method Revolver.beamline.device_absorber.Beamline_absorber.__init_variables()=Revolver.beamline.device_absorber.Beamline_absorber-class.html#__init_variables,Method Revolver.beamline.device_beamstop.Beamline_beamstop.__init_variables()=Revolver.beamline.device_beamstop.Beamline_beamstop-class.html#__init_variables,Method Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init_variables()=Revolver.beamline.device_detectorPE.Beamline_detectorPE-class.html#__init_variables,Method Revolver.beamline.device_diode.Beamline_diode.__init_variables()=Revolver.beamline.device_diode.Beamline_diode-class.html#__init_variables,Method Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init_variables()=Revolver.beamline.device_ionchamber.Beamline_ionchamber-class.html#__init_variables,Method Revolver.beamline.device_laser.Beamline_laser.__init_variables()=Revolver.beamline.device_laser.Beamline_laser-class.html#__init_variables,Method Revolver.beamline.device_main_shutter.Beamline_shutter.__init_variables()=Revolver.beamline.device_main_shutter.Beamline_shutter-class.html#__init_variables,Method Revolver.beamline.device_pinhole.Beamline_pinhole.__init_variables()=Revolver.beamline.device_pinhole.Beamline_pinhole-class.html#__init_variables,Method Revolver.beamline.device_samplestage.Beamline_samplestage.__init_variables()=Revolver.beamline.device_samplestage.Beamline_samplestage-class.html#__init_variables,Method Revolver.beamline.device_shutter.Beamline_shutter.__init_variables()=Revolver.beamline.device_shutter.Beamline_shutter-class.html#__init_variables,Method Revolver.beamline.device_slits.Beamline_slits.__init_variables()=Revolver.beamline.device_slits.Beamline_slits-class.html#__init_variables,Method Revolver.beamline.wall.Beamline_wall.__init_variables()=Revolver.beamline.wall.Beamline_wall-class.html#__init_variables,Method Revolver.classes.dialogs.AddMacroDialog.__init_variables()=Revolver.classes.dialogs.AddMacroDialog-class.html#__init_variables,Method Revolver.classes.widget_plot.Image_plot.__init_variables()=Revolver.classes.widget_plot.Image_plot-class.html#__init_variables,Method Revolver.classes.widget_plot.Widget_plot.__init_variables()=Revolver.classes.widget_plot.Widget_plot-class.html#__init_variables,Method Revolver.gui_P02_stage_controls_widget.controls.__init_variables()=Revolver.gui_P02_stage_controls_widget.controls-class.html#__init_variables,Method Revolver.gui_absorber_controls_widget.Controls.__init_variables()=Revolver.gui_absorber_controls_widget.Controls-class.html#__init_variables,Method Revolver.gui_beamline_P02.Beamline_P02.__init_variables()=Revolver.gui_beamline_P02.Beamline_P02-class.html#__init_variables,Method Revolver.gui_default_controls_widget.DefaultControls.__init_variables()=Revolver.gui_default_controls_widget.DefaultControls-class.html#__init_variables,Method Revolver.gui_default_widget.DefaultWidget.__init_variables()=Revolver.gui_default_widget.DefaultWidget-class.html#__init_variables,Method Revolver.gui_detector_controls_widget.DetectorControls.__init_variables()=Revolver.gui_detector_controls_widget.DetectorControls-class.html#__init_variables,Method Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init_variables()=Revolver.gui_device_status_led_widget.DeviceLedStatusWidget-class.html#__init_variables,Method Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init_variables()=Revolver.gui_device_status_value_widget.DeviceValueStatusWidget-class.html#__init_variables,Method Revolver.gui_device_value_graph_controls_widget.Controls.__init_variables()=Revolver.gui_device_value_graph_controls_widget.Controls-class.html#__init_variables,Method Revolver.gui_macro_widget.MacroWidget.__init_variables()=Revolver.gui_macro_widget.MacroWidget-class.html#__init_variables,Method Revolver.gui_motor_controls_widget.MotorWidget.__init_variables()=Revolver.gui_motor_controls_widget.MotorWidget-class.html#__init_variables,Method Revolver.gui_revolver_app.revolver.__init_variables()=Revolver.gui_revolver_app.revolver-class.html#__init_variables,Method Revolver.gui_scan_widget.ScanWidget.__init_variables()=Revolver.gui_scan_widget.ScanWidget-class.html#__init_variables,Method Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init_variables()=Revolver.gui_stacked_motors_controls_widget.StackedMotorControls-class.html#__init_variables,Method Revolver.macro.default_macro.MacroControls.__init_variables()=Revolver.macro.default_macro.MacroControls-class.html#__init_variables,Method Revolver.macro.gui_logging_widget.LoggingWidget.__init_variables()=Revolver.macro.gui_logging_widget.LoggingWidget-class.html#__init_variables"><a title="Revolver.beamline.beam.Beamline_beam.__init_variables
+Revolver.beamline.default_beamline.Beamline.__init_variables
+Revolver.beamline.default_beamline_device.Beamline_device.__init_variables
+Revolver.beamline.device_absorber.Beamline_absorber.__init_variables
+Revolver.beamline.device_beamstop.Beamline_beamstop.__init_variables
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init_variables
+Revolver.beamline.device_diode.Beamline_diode.__init_variables
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init_variables
+Revolver.beamline.device_laser.Beamline_laser.__init_variables
+Revolver.beamline.device_main_shutter.Beamline_shutter.__init_variables
+Revolver.beamline.device_pinhole.Beamline_pinhole.__init_variables
+Revolver.beamline.device_samplestage.Beamline_samplestage.__init_variables
+Revolver.beamline.device_shutter.Beamline_shutter.__init_variables
+Revolver.beamline.device_slits.Beamline_slits.__init_variables
+Revolver.beamline.wall.Beamline_wall.__init_variables
+Revolver.classes.dialogs.AddMacroDialog.__init_variables
+Revolver.classes.widget_plot.Image_plot.__init_variables
+Revolver.classes.widget_plot.Widget_plot.__init_variables
+Revolver.gui_P02_stage_controls_widget.controls.__init_variables
+Revolver.gui_absorber_controls_widget.Controls.__init_variables
+Revolver.gui_beamline_P02.Beamline_P02.__init_variables
+Revolver.gui_default_controls_widget.DefaultControls.__init_variables
+Revolver.gui_default_widget.DefaultWidget.__init_variables
+Revolver.gui_detector_controls_widget.DetectorControls.__init_variables
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init_variables
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init_variables
+Revolver.gui_device_value_graph_controls_widget.Controls.__init_variables
+Revolver.gui_macro_widget.MacroWidget.__init_variables
+Revolver.gui_motor_controls_widget.MotorWidget.__init_variables
+Revolver.gui_revolver_app.revolver.__init_variables
+Revolver.gui_scan_widget.ScanWidget.__init_variables
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init_variables
+Revolver.macro.default_macro.MacroControls.__init_variables
+Revolver.macro.gui_logging_widget.LoggingWidget.__init_variables" class="py-name" href="#" onclick="return doclink('link-18', '__init_variables', 'link-18');">__init_variables</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name" targets="Method Revolver.beamline.beam.Beamline_beam.__init_signals()=Revolver.beamline.beam.Beamline_beam-class.html#__init_signals,Method Revolver.beamline.default_beamline.Beamline.__init_signals()=Revolver.beamline.default_beamline.Beamline-class.html#__init_signals,Method Revolver.beamline.default_beamline_device.Beamline_device.__init_signals()=Revolver.beamline.default_beamline_device.Beamline_device-class.html#__init_signals,Method Revolver.beamline.device_absorber.Beamline_absorber.__init_signals()=Revolver.beamline.device_absorber.Beamline_absorber-class.html#__init_signals,Method Revolver.beamline.device_beamstop.Beamline_beamstop.__init_signals()=Revolver.beamline.device_beamstop.Beamline_beamstop-class.html#__init_signals,Method Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init_signals()=Revolver.beamline.device_detectorPE.Beamline_detectorPE-class.html#__init_signals,Method Revolver.beamline.device_diode.Beamline_diode.__init_signals()=Revolver.beamline.device_diode.Beamline_diode-class.html#__init_signals,Method Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init_signals()=Revolver.beamline.device_ionchamber.Beamline_ionchamber-class.html#__init_signals,Method Revolver.beamline.device_laser.Beamline_laser.__init_signals()=Revolver.beamline.device_laser.Beamline_laser-class.html#__init_signals,Method Revolver.beamline.device_main_shutter.Beamline_shutter.__init_signals()=Revolver.beamline.device_main_shutter.Beamline_shutter-class.html#__init_signals,Method Revolver.beamline.device_pinhole.Beamline_pinhole.__init_signals()=Revolver.beamline.device_pinhole.Beamline_pinhole-class.html#__init_signals,Method Revolver.beamline.device_samplestage.Beamline_samplestage.__init_signals()=Revolver.beamline.device_samplestage.Beamline_samplestage-class.html#__init_signals,Method Revolver.beamline.device_shutter.Beamline_shutter.__init_signals()=Revolver.beamline.device_shutter.Beamline_shutter-class.html#__init_signals,Method Revolver.beamline.device_slits.Beamline_slits.__init_signals()=Revolver.beamline.device_slits.Beamline_slits-class.html#__init_signals,Method Revolver.beamline.wall.Beamline_wall.__init_signals()=Revolver.beamline.wall.Beamline_wall-class.html#__init_signals,Method Revolver.classes.dialogs.AddMacroDialog.__init_signals()=Revolver.classes.dialogs.AddMacroDialog-class.html#__init_signals,Method Revolver.classes.widget_plot.Image_plot.__init_signals()=Revolver.classes.widget_plot.Image_plot-class.html#__init_signals,Method Revolver.classes.widget_plot.Widget_plot.__init_signals()=Revolver.classes.widget_plot.Widget_plot-class.html#__init_signals,Method Revolver.gui_P02_stage_controls_widget.controls.__init_signals()=Revolver.gui_P02_stage_controls_widget.controls-class.html#__init_signals,Method Revolver.gui_absorber_controls_widget.Controls.__init_signals()=Revolver.gui_absorber_controls_widget.Controls-class.html#__init_signals,Method Revolver.gui_beamline_P02.Beamline_P02.__init_signals()=Revolver.gui_beamline_P02.Beamline_P02-class.html#__init_signals,Method Revolver.gui_default_controls_widget.DefaultControls.__init_signals()=Revolver.gui_default_controls_widget.DefaultControls-class.html#__init_signals,Method Revolver.gui_default_widget.DefaultWidget.__init_signals()=Revolver.gui_default_widget.DefaultWidget-class.html#__init_signals,Method Revolver.gui_detector_controls_widget.DetectorControls.__init_signals()=Revolver.gui_detector_controls_widget.DetectorControls-class.html#__init_signals,Method Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init_signals()=Revolver.gui_device_status_led_widget.DeviceLedStatusWidget-class.html#__init_signals,Method Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init_signals()=Revolver.gui_device_status_value_widget.DeviceValueStatusWidget-class.html#__init_signals,Method Revolver.gui_device_value_graph_controls_widget.Controls.__init_signals()=Revolver.gui_device_value_graph_controls_widget.Controls-class.html#__init_signals,Method Revolver.gui_macro_widget.MacroWidget.__init_signals()=Revolver.gui_macro_widget.MacroWidget-class.html#__init_signals,Method Revolver.gui_motor_controls_widget.MotorWidget.__init_signals()=Revolver.gui_motor_controls_widget.MotorWidget-class.html#__init_signals,Method Revolver.gui_revolver_app.revolver.__init_signals()=Revolver.gui_revolver_app.revolver-class.html#__init_signals,Method Revolver.gui_scan_widget.ScanWidget.__init_signals()=Revolver.gui_scan_widget.ScanWidget-class.html#__init_signals,Method Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init_signals()=Revolver.gui_stacked_motors_controls_widget.StackedMotorControls-class.html#__init_signals,Method Revolver.macro.default_macro.MacroControls.__init_signals()=Revolver.macro.default_macro.MacroControls-class.html#__init_signals,Method Revolver.macro.gui_logging_widget.LoggingWidget.__init_signals()=Revolver.macro.gui_logging_widget.LoggingWidget-class.html#__init_signals"><a title="Revolver.beamline.beam.Beamline_beam.__init_signals
+Revolver.beamline.default_beamline.Beamline.__init_signals
+Revolver.beamline.default_beamline_device.Beamline_device.__init_signals
+Revolver.beamline.device_absorber.Beamline_absorber.__init_signals
+Revolver.beamline.device_beamstop.Beamline_beamstop.__init_signals
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init_signals
+Revolver.beamline.device_diode.Beamline_diode.__init_signals
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init_signals
+Revolver.beamline.device_laser.Beamline_laser.__init_signals
+Revolver.beamline.device_main_shutter.Beamline_shutter.__init_signals
+Revolver.beamline.device_pinhole.Beamline_pinhole.__init_signals
+Revolver.beamline.device_samplestage.Beamline_samplestage.__init_signals
+Revolver.beamline.device_shutter.Beamline_shutter.__init_signals
+Revolver.beamline.device_slits.Beamline_slits.__init_signals
+Revolver.beamline.wall.Beamline_wall.__init_signals
+Revolver.classes.dialogs.AddMacroDialog.__init_signals
+Revolver.classes.widget_plot.Image_plot.__init_signals
+Revolver.classes.widget_plot.Widget_plot.__init_signals
+Revolver.gui_P02_stage_controls_widget.controls.__init_signals
+Revolver.gui_absorber_controls_widget.Controls.__init_signals
+Revolver.gui_beamline_P02.Beamline_P02.__init_signals
+Revolver.gui_default_controls_widget.DefaultControls.__init_signals
+Revolver.gui_default_widget.DefaultWidget.__init_signals
+Revolver.gui_detector_controls_widget.DetectorControls.__init_signals
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init_signals
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init_signals
+Revolver.gui_device_value_graph_controls_widget.Controls.__init_signals
+Revolver.gui_macro_widget.MacroWidget.__init_signals
+Revolver.gui_motor_controls_widget.MotorWidget.__init_signals
+Revolver.gui_revolver_app.revolver.__init_signals
+Revolver.gui_scan_widget.ScanWidget.__init_signals
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init_signals
+Revolver.macro.default_macro.MacroControls.__init_signals
+Revolver.macro.gui_logging_widget.LoggingWidget.__init_signals" class="py-name" href="#" onclick="return doclink('link-19', '__init_signals', 'link-19');">__init_signals</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name" targets="Method Revolver.beamline.beam.Beamline_beam.__main()=Revolver.beamline.beam.Beamline_beam-class.html#__main,Method Revolver.beamline.default_beamline.Beamline.__main()=Revolver.beamline.default_beamline.Beamline-class.html#__main,Method Revolver.beamline.default_beamline_device.Beamline_device.__main()=Revolver.beamline.default_beamline_device.Beamline_device-class.html#__main,Method Revolver.beamline.device_absorber.Beamline_absorber.__main()=Revolver.beamline.device_absorber.Beamline_absorber-class.html#__main,Method Revolver.beamline.device_beamstop.Beamline_beamstop.__main()=Revolver.beamline.device_beamstop.Beamline_beamstop-class.html#__main,Method Revolver.beamline.device_detectorPE.Beamline_detectorPE.__main()=Revolver.beamline.device_detectorPE.Beamline_detectorPE-class.html#__main,Method Revolver.beamline.device_diode.Beamline_diode.__main()=Revolver.beamline.device_diode.Beamline_diode-class.html#__main,Method Revolver.beamline.device_ionchamber.Beamline_ionchamber.__main()=Revolver.beamline.device_ionchamber.Beamline_ionchamber-class.html#__main,Method Revolver.beamline.device_laser.Beamline_laser.__main()=Revolver.beamline.device_laser.Beamline_laser-class.html#__main,Method Revolver.beamline.device_main_shutter.Beamline_shutter.__main()=Revolver.beamline.device_main_shutter.Beamline_shutter-class.html#__main,Method Revolver.beamline.device_pinhole.Beamline_pinhole.__main()=Revolver.beamline.device_pinhole.Beamline_pinhole-class.html#__main,Method Revolver.beamline.device_samplestage.Beamline_samplestage.__main()=Revolver.beamline.device_samplestage.Beamline_samplestage-class.html#__main,Method Revolver.beamline.device_shutter.Beamline_shutter.__main()=Revolver.beamline.device_shutter.Beamline_shutter-class.html#__main,Method Revolver.beamline.device_slits.Beamline_slits.__main()=Revolver.beamline.device_slits.Beamline_slits-class.html#__main,Method Revolver.beamline.wall.Beamline_wall.__main()=Revolver.beamline.wall.Beamline_wall-class.html#__main,Method Revolver.classes.dialogs.AddMacroDialog.__main()=Revolver.classes.dialogs.AddMacroDialog-class.html#__main,Method Revolver.classes.dialogs.SelectDeviceDialog.__main()=Revolver.classes.dialogs.SelectDeviceDialog-class.html#__main,Method Revolver.classes.widget_plot.Curve_plot.__main()=Revolver.classes.widget_plot.Curve_plot-class.html#__main,Method Revolver.classes.widget_plot.Image_plot.__main()=Revolver.classes.widget_plot.Image_plot-class.html#__main,Method Revolver.classes.widget_plot.Widget_plot.__main()=Revolver.classes.widget_plot.Widget_plot-class.html#__main,Method Revolver.gui_P02_stage_controls_widget.controls.__main()=Revolver.gui_P02_stage_controls_widget.controls-class.html#__main,Method Revolver.gui_absorber_controls_widget.Controls.__main()=Revolver.gui_absorber_controls_widget.Controls-class.html#__main,Method Revolver.gui_beamline_P02.Beamline_P02.__main()=Revolver.gui_beamline_P02.Beamline_P02-class.html#__main,Method Revolver.gui_default_controls_widget.DefaultControls.__main()=Revolver.gui_default_controls_widget.DefaultControls-class.html#__main,Method Revolver.gui_default_widget.DefaultWidget.__main()=Revolver.gui_default_widget.DefaultWidget-class.html#__main,Method Revolver.gui_detector_controls_widget.DetectorControls.__main()=Revolver.gui_detector_controls_widget.DetectorControls-class.html#__main,Method Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__main()=Revolver.gui_device_status_led_widget.DeviceLedStatusWidget-class.html#__main,Method Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__main()=Revolver.gui_device_status_value_widget.DeviceValueStatusWidget-class.html#__main,Method Revolver.gui_device_value_graph_controls_widget.Controls.__main()=Revolver.gui_device_value_graph_controls_widget.Controls-class.html#__main,Method Revolver.gui_macro_widget.MacroWidget.__main()=Revolver.gui_macro_widget.MacroWidget-class.html#__main,Method Revolver.gui_motor_controls_widget.MotorWidget.__main()=Revolver.gui_motor_controls_widget.MotorWidget-class.html#__main,Method Revolver.gui_revolver_app.revolver.__main()=Revolver.gui_revolver_app.revolver-class.html#__main,Method Revolver.gui_scan_widget.ScanWidget.__main()=Revolver.gui_scan_widget.ScanWidget-class.html#__main,Method Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__main()=Revolver.gui_stacked_motors_controls_widget.StackedMotorControls-class.html#__main,Method Revolver.gui_status_widget.StatusWidget.__main()=Revolver.gui_status_widget.StatusWidget-class.html#__main,Method Revolver.macro.default_macro.MacroControls.__main()=Revolver.macro.default_macro.MacroControls-class.html#__main,Method Revolver.macro.gui_logging_widget.LoggingWidget.__main()=Revolver.macro.gui_logging_widget.LoggingWidget-class.html#__main"><a title="Revolver.beamline.beam.Beamline_beam.__main
+Revolver.beamline.default_beamline.Beamline.__main
+Revolver.beamline.default_beamline_device.Beamline_device.__main
+Revolver.beamline.device_absorber.Beamline_absorber.__main
+Revolver.beamline.device_beamstop.Beamline_beamstop.__main
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__main
+Revolver.beamline.device_diode.Beamline_diode.__main
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__main
+Revolver.beamline.device_laser.Beamline_laser.__main
+Revolver.beamline.device_main_shutter.Beamline_shutter.__main
+Revolver.beamline.device_pinhole.Beamline_pinhole.__main
+Revolver.beamline.device_samplestage.Beamline_samplestage.__main
+Revolver.beamline.device_shutter.Beamline_shutter.__main
+Revolver.beamline.device_slits.Beamline_slits.__main
+Revolver.beamline.wall.Beamline_wall.__main
+Revolver.classes.dialogs.AddMacroDialog.__main
+Revolver.classes.dialogs.SelectDeviceDialog.__main
+Revolver.classes.widget_plot.Curve_plot.__main
+Revolver.classes.widget_plot.Image_plot.__main
+Revolver.classes.widget_plot.Widget_plot.__main
+Revolver.gui_P02_stage_controls_widget.controls.__main
+Revolver.gui_absorber_controls_widget.Controls.__main
+Revolver.gui_beamline_P02.Beamline_P02.__main
+Revolver.gui_default_controls_widget.DefaultControls.__main
+Revolver.gui_default_widget.DefaultWidget.__main
+Revolver.gui_detector_controls_widget.DetectorControls.__main
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__main
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__main
+Revolver.gui_device_value_graph_controls_widget.Controls.__main
+Revolver.gui_macro_widget.MacroWidget.__main
+Revolver.gui_motor_controls_widget.MotorWidget.__main
+Revolver.gui_revolver_app.revolver.__main
+Revolver.gui_scan_widget.ScanWidget.__main
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__main
+Revolver.gui_status_widget.StatusWidget.__main
+Revolver.macro.default_macro.MacroControls.__main
+Revolver.macro.gui_logging_widget.LoggingWidget.__main" class="py-name" href="#" onclick="return doclink('link-20', '__main', 'link-20');">__main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">     </tt>
+<a name="AddMacroDialog.__init_variables"></a><div id="AddMacroDialog.__init_variables-def"><a name="L49"></a><tt class="py-lineno"> 49</tt> <a class="py-toggle" href="#" id="AddMacroDialog.__init_variables-toggle" onclick="return toggle('AddMacroDialog.__init_variables');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#__init_variables">__init_variables</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.__init_variables-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.__init_variables-expanded"><a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-docstring">        Initialize dialog variables</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">selectedModel</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+</div><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">         </tt>
+<a name="AddMacroDialog.__init_signals"></a><div id="AddMacroDialog.__init_signals-def"><a name="L56"></a><tt class="py-lineno"> 56</tt> <a class="py-toggle" href="#" id="AddMacroDialog.__init_signals-toggle" onclick="return toggle('AddMacroDialog.__init_signals');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#__init_signals">__init_signals</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.__init_signals-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.__init_signals-expanded"><a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"><tt class="py-docstring">        Initialize dialog signals</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_motor</tt><tt class="py-op">,</tt> <tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">'textChanged(QString)'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="Revolver.classes.dialogs.AddMacroDialog.action_check_device_restrictions
+Revolver.classes.dialogs.AddTemperatureMacroDialog.action_check_device_restrictions" class="py-name" href="#" onclick="return doclink('link-21', 'action_check_device_restrictions', 'link-15');">action_check_device_restrictions</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_button_select_motor</tt><tt class="py-op">,</tt> <tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">'clicked()'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Method Revolver.classes.dialogs.AddMacroDialog.action_select_device()=Revolver.classes.dialogs.AddMacroDialog-class.html#action_select_device,Method Revolver.classes.dialogs.AddTemperatureMacroDialog.action_select_device()=Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#action_select_device"><a title="Revolver.classes.dialogs.AddMacroDialog.action_select_device
+Revolver.classes.dialogs.AddTemperatureMacroDialog.action_select_device" class="py-name" href="#" onclick="return doclink('link-22', 'action_select_device', 'link-22');">action_select_device</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">'changeDefaultMotor'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name" targets="Method Revolver.classes.dialogs.AddMacroDialog.set_device()=Revolver.classes.dialogs.AddMacroDialog-class.html#set_device"><a title="Revolver.classes.dialogs.AddMacroDialog.set_device" class="py-name" href="#" onclick="return doclink('link-23', 'set_device', 'link-23');">set_device</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">         </tt>
+<a name="AddMacroDialog.__main"></a><div id="AddMacroDialog.__main-def"><a name="L64"></a><tt class="py-lineno"> 64</tt> <a class="py-toggle" href="#" id="AddMacroDialog.__main-toggle" onclick="return toggle('AddMacroDialog.__main');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#__main">__main</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.__main-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.__main-expanded"><a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"><tt class="py-docstring">        Set dialog properties</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-24" class="py-name" targets="Method Revolver.classes.dialogs.AddMacroDialog.action_select_discrete()=Revolver.classes.dialogs.AddMacroDialog-class.html#action_select_discrete"><a title="Revolver.classes.dialogs.AddMacroDialog.action_select_discrete" class="py-name" href="#" onclick="return doclink('link-24', 'action_select_discrete', 'link-24');">action_select_discrete</a></tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">     </tt>
+<a name="AddMacroDialog.action_check_device_restrictions"></a><div id="AddMacroDialog.action_check_device_restrictions-def"><a name="L70"></a><tt class="py-lineno"> 70</tt> <a class="py-toggle" href="#" id="AddMacroDialog.action_check_device_restrictions-toggle" onclick="return toggle('AddMacroDialog.action_check_device_restrictions');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#action_check_device_restrictions">action_check_device_restrictions</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">devicePath</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.action_check_device_restrictions-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.action_check_device_restrictions-expanded"><a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt class="py-name">attr</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_from</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_to</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_position</tt><tt class="py-op">]</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-name">motor</tt> <tt class="py-op">=</tt> <tt id="link-25" class="py-name"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-25', 'devices', 'link-6');">devices</a></tt><tt class="py-op">.</tt><tt id="link-26" class="py-name" targets="Class Revolver.classes.devices.Motor=Revolver.classes.devices.Motor-class.html"><a title="Revolver.classes.devices.Motor" class="py-name" href="#" onclick="return doclink('link-26', 'Motor', 'link-26');">Motor</a></tt><tt class="py-op">(</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">devicePath</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name" targets="Method Revolver.gui_default_widget.DefaultWidget.check_device_allowed_values()=Revolver.gui_default_widget.DefaultWidget-class.html#check_device_allowed_values"><a title="Revolver.gui_default_widget.DefaultWidget.check_device_allowed_values" class="py-name" href="#" onclick="return doclink('link-27', 'check_device_allowed_values', 'link-27');">check_device_allowed_values</a></tt><tt class="py-op">(</tt><tt class="py-name">attr</tt><tt class="py-op">,</tt> <tt class="py-name">motor</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">         </tt>
+<a name="AddMacroDialog.action_select_device"></a><div id="AddMacroDialog.action_select_device-def"><a name="L75"></a><tt class="py-lineno"> 75</tt> <a class="py-toggle" href="#" id="AddMacroDialog.action_select_device-toggle" onclick="return toggle('AddMacroDialog.action_select_device');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#action_select_device">action_select_device</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.action_select_device-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.action_select_device-expanded"><a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt id="link-28" class="py-name" targets="Class Revolver.classes.dialogs.SelectDeviceDialog=Revolver.classes.dialogs.SelectDeviceDialog-class.html"><a title="Revolver.classes.dialogs.SelectDeviceDialog" class="py-name" href="#" onclick="return doclink('link-28', 'SelectDeviceDialog', 'link-28');">SelectDeviceDialog</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">exec_</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">     </tt>
+<a name="AddMacroDialog.action_select_discrete"></a><div id="AddMacroDialog.action_select_discrete-def"><a name="L78"></a><tt class="py-lineno"> 78</tt> <a class="py-toggle" href="#" id="AddMacroDialog.action_select_discrete-toggle" onclick="return toggle('AddMacroDialog.action_select_discrete');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#action_select_discrete">action_select_discrete</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">flag</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.action_select_discrete-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.action_select_discrete-expanded"><a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line"><tt class="py-docstring">        Signal handler:</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line"><tt class="py-docstring">        select discrete motor position</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_position</tt><tt class="py-op">.</tt><tt class="py-name">show</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_interval_controls</tt><tt class="py-op">.</tt><tt class="py-name">hide</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+</div><a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">     </tt>
+<a name="AddMacroDialog.action_select_interval"></a><div id="AddMacroDialog.action_select_interval-def"><a name="L87"></a><tt class="py-lineno"> 87</tt> <a class="py-toggle" href="#" id="AddMacroDialog.action_select_interval-toggle" onclick="return toggle('AddMacroDialog.action_select_interval');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#action_select_interval">action_select_interval</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">flag</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.action_select_interval-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.action_select_interval-expanded"><a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"><tt class="py-docstring">        Signal handler:</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"><tt class="py-docstring">        select interval motor position</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_position</tt><tt class="py-op">.</tt><tt class="py-name">hide</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_interval_controls</tt><tt class="py-op">.</tt><tt class="py-name">show</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+</div><a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">     </tt>
+<a name="AddMacroDialog.set_device"></a><div id="AddMacroDialog.set_device-def"><a name="L96"></a><tt class="py-lineno"> 96</tt> <a class="py-toggle" href="#" id="AddMacroDialog.set_device-toggle" onclick="return toggle('AddMacroDialog.set_device');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#set_device">set_device</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.set_device-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.set_device-expanded"><a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"><tt class="py-docstring">        Change motor, emit signal to parent widget</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_motor</tt><tt class="py-op">.</tt><tt class="py-name">setText</tt><tt class="py-op">(</tt><tt id="link-29" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-29', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="Revolver.classes.config.DEVICE_MOTOR" class="py-name" href="#" onclick="return doclink('link-30', 'DEVICE_MOTOR', 'link-14');">DEVICE_MOTOR</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">'changeDefaultMotor'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-31" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-31', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="Revolver.classes.config.DEVICE_MOTOR" class="py-name" href="#" onclick="return doclink('link-32', 'DEVICE_MOTOR', 'link-14');">DEVICE_MOTOR</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">     </tt>
+<a name="AddMacroDialog.action_add_macro"></a><div id="AddMacroDialog.action_add_macro-def"><a name="L103"></a><tt class="py-lineno">103</tt> <a class="py-toggle" href="#" id="AddMacroDialog.action_add_macro-toggle" onclick="return toggle('AddMacroDialog.action_add_macro');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddMacroDialog-class.html#action_add_macro">action_add_macro</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddMacroDialog.action_add_macro-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddMacroDialog.action_add_macro-expanded"><a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line"><tt class="py-docstring">        Signal handler:</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-docstring">        emit signal to parent widget and pass new macro step as parameter</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-name">sampleName</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_sampleName</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-name">summed</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_summed</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">        <tt class="py-name">filesafter</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_filesafter</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-name">comment</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_comment</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">        <tt class="py-name">position</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_position</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">        <tt class="py-name">intervalFrom</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_from</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt class="py-name">intervalTo</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_to</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-name">intervalStep</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_step</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-name">macro_wait_secons</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_wait_time</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-name">takeDark</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">check_take_dark</tt><tt class="py-op">.</tt><tt class="py-name">isChecked</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-name">devicePath</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_motor</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt>         </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">         </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">            <tt class="py-name">sampleName</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name" targets="Method Revolver.gui_default_widget.DefaultWidget.validate_input()=Revolver.gui_default_widget.DefaultWidget-class.html#validate_input"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-33', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Sample name"</tt><tt class="py-op">,</tt> <tt class="py-string">"string"</tt><tt class="py-op">,</tt> <tt class="py-name">sampleName</tt><tt class="py-op">)</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt><tt class="py-op">:</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">                <tt class="py-name">position</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-34" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-34', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Position"</tt><tt class="py-op">,</tt> <tt class="py-string">"float"</tt><tt class="py-op">,</tt> <tt class="py-name">position</tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name" targets="Method Revolver.gui_default_widget.DefaultWidget.validate_device_minmax_value()=Revolver.gui_default_widget.DefaultWidget-class.html#validate_device_minmax_value"><a title="Revolver.gui_default_widget.DefaultWidget.validate_device_minmax_value" class="py-name" href="#" onclick="return doclink('link-35', 'validate_device_minmax_value', 'link-35');">validate_device_minmax_value</a></tt><tt class="py-op">(</tt><tt class="py-name">position</tt><tt class="py-op">)</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">                <tt class="py-name">intervalFrom</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-36', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Position"</tt><tt class="py-op">,</tt> <tt class="py-string">"float"</tt><tt class="py-op">,</tt> <tt class="py-name">intervalFrom</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">                <tt class="py-name">intervalTo</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-37', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Position"</tt><tt class="py-op">,</tt> <tt class="py-string">"float"</tt><tt class="py-op">,</tt> <tt class="py-name">intervalTo</tt><tt class="py-op">)</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">                <tt class="py-name">intervalStep</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-38', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Position"</tt><tt class="py-op">,</tt> <tt class="py-string">"float"</tt><tt class="py-op">,</tt> <tt class="py-name">intervalStep</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-39" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_device_minmax_value" class="py-name" href="#" onclick="return doclink('link-39', 'validate_device_minmax_value', 'link-35');">validate_device_minmax_value</a></tt><tt class="py-op">(</tt><tt class="py-name">intervalFrom</tt><tt class="py-op">)</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-40" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_device_minmax_value" class="py-name" href="#" onclick="return doclink('link-40', 'validate_device_minmax_value', 'link-35');">validate_device_minmax_value</a></tt><tt class="py-op">(</tt><tt class="py-name">intervalTo</tt><tt class="py-op">)</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">intervalStep</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">math</tt><tt class="py-op">.</tt><tt class="py-name">fabs</tt><tt class="py-op">(</tt><tt class="py-name">intervalFrom</tt> <tt class="py-op">-</tt> <tt class="py-name">intervalTo</tt><tt class="py-op">)</tt><tt class="py-op">:</tt>  </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt id="link-41" class="py-name"><a title="Revolver.classes.signals" class="py-name" href="#" onclick="return doclink('link-41', 'signals', 'link-8');">signals</a></tt><tt class="py-op">.</tt><tt id="link-42" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_WARNING=Revolver.classes.signals-module.html#SIG_SHOW_WARNING"><a title="Revolver.classes.signals.SIG_SHOW_WARNING" class="py-name" href="#" onclick="return doclink('link-42', 'SIG_SHOW_WARNING', 'link-42');">SIG_SHOW_WARNING</a></tt><tt class="py-op">,</tt> <tt class="py-string">"Input error"</tt><tt class="py-op">,</tt> <tt class="py-string">"Step is bigger than maximum allowed step"</tt><tt class="py-op">)</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">intervalStep</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt>  </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt id="link-43" class="py-name"><a title="Revolver.classes.signals" class="py-name" href="#" onclick="return doclink('link-43', 'signals', 'link-8');">signals</a></tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="Revolver.classes.signals.SIG_SHOW_WARNING" class="py-name" href="#" onclick="return doclink('link-44', 'SIG_SHOW_WARNING', 'link-42');">SIG_SHOW_WARNING</a></tt><tt class="py-op">,</tt> <tt class="py-string">"Input error"</tt><tt class="py-op">,</tt> <tt class="py-string">"Step must be bigger than zero"</tt><tt class="py-op">)</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt><tt class="py-op">:</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">                <tt class="py-name">newMacro</tt> <tt class="py-op">=</tt> <tt id="link-45" class="py-name"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-45', 'macro', 'link-9');">macro</a></tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Class Revolver.classes.macro.MotorMacro=Revolver.classes.macro.MotorMacro-class.html"><a title="Revolver.classes.macro.MotorMacro" class="py-name" href="#" onclick="return doclink('link-46', 'MotorMacro', 'link-46');">MotorMacro</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">defaultMotorDevice</tt><tt class="py-op">.</tt><tt class="py-name">name</tt><tt class="py-op">,</tt> <tt class="py-name">devicePath</tt><tt class="py-op">,</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">                                            <tt class="py-name">sampleName</tt><tt class="py-op">,</tt> <tt class="py-name">summed</tt><tt class="py-op">,</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">                                            <tt class="py-name">filesafter</tt><tt class="py-op">,</tt> <tt class="py-name">position</tt><tt class="py-op">,</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">                                            <tt class="py-name">macro_wait_secons</tt><tt class="py-op">,</tt> <tt class="py-name">takeDark</tt><tt class="py-op">,</tt> <tt class="py-name">comment</tt><tt class="py-op">)</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"addMacro(macro)"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">newMacro</tt><tt class="py-op">)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">                <tt class="py-name">mrange</tt> <tt class="py-op">=</tt> <tt id="link-47" class="py-name"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-47', 'macro', 'link-9');">macro</a></tt><tt class="py-op">.</tt><tt id="link-48" class="py-name" targets="Function Revolver.classes.macro.macroRange()=Revolver.classes.macro-module.html#macroRange"><a title="Revolver.classes.macro.macroRange" class="py-name" href="#" onclick="return doclink('link-48', 'macroRange', 'link-48');">macroRange</a></tt><tt class="py-op">(</tt><tt class="py-name">intervalFrom</tt><tt class="py-op">,</tt> <tt class="py-name">intervalTo</tt><tt class="py-op">,</tt> <tt class="py-name">intervalStep</tt><tt class="py-op">)</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">position</tt> <tt class="py-keyword">in</tt> <tt class="py-name">mrange</tt><tt class="py-op">:</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">                    <tt class="py-name">newMacro</tt> <tt class="py-op">=</tt> <tt id="link-49" class="py-name"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-49', 'macro', 'link-9');">macro</a></tt><tt class="py-op">.</tt><tt id="link-50" class="py-name"><a title="Revolver.classes.macro.MotorMacro" class="py-name" href="#" onclick="return doclink('link-50', 'MotorMacro', 'link-46');">MotorMacro</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">defaultMotorDevice</tt><tt class="py-op">.</tt><tt class="py-name">name</tt><tt class="py-op">,</tt> <tt class="py-name">devicePath</tt><tt class="py-op">,</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line">                                                <tt class="py-name">sampleName</tt><tt class="py-op">,</tt> <tt class="py-name">summed</tt><tt class="py-op">,</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">                                                <tt class="py-name">filesafter</tt><tt class="py-op">,</tt> <tt class="py-name">position</tt><tt class="py-op">,</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">                                                <tt class="py-name">macro_wait_secons</tt><tt class="py-op">,</tt> <tt class="py-name">takeDark</tt><tt class="py-op">,</tt> <tt class="py-name">comment</tt><tt class="py-op">)</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"addMacro(macro)"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">newMacro</tt><tt class="py-op">)</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">            <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">error</tt><tt class="py-op">(</tt><tt class="py-string">"Macro was not added: %s"</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exc_info</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line"> </tt>
+<a name="AddTemperatureMacroDialog"></a><div id="AddTemperatureMacroDialog-def"><a name="L156"></a><tt class="py-lineno">156</tt> <a class="py-toggle" href="#" id="AddTemperatureMacroDialog-toggle" onclick="return toggle('AddTemperatureMacroDialog');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html">AddTemperatureMacroDialog</a><tt class="py-op">(</tt><tt class="py-base-class">add_temperature_macro_dialog</tt><tt class="py-op">.</tt><tt class="py-base-class">Ui_Dialog</tt><tt class="py-op">,</tt> <tt class="py-base-class">AddMacroDialog</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddTemperatureMacroDialog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="AddTemperatureMacroDialog-expanded"><a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">     </tt>
+<a name="AddTemperatureMacroDialog.__init__"></a><div id="AddTemperatureMacroDialog.__init__-def"><a name="L158"></a><tt class="py-lineno">158</tt> <a class="py-toggle" href="#" id="AddTemperatureMacroDialog.__init__-toggle" onclick="return toggle('AddTemperatureMacroDialog.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">parent</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddTemperatureMacroDialog.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddTemperatureMacroDialog.__init__-expanded"><a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-51" class="py-name" targets="Class Revolver.classes.dialogs.AddTemperatureMacroDialog=Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html"><a title="Revolver.classes.dialogs.AddTemperatureMacroDialog" class="py-name" href="#" onclick="return doclink('link-51', 'AddTemperatureMacroDialog', 'link-51');">AddTemperatureMacroDialog</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-52" class="py-name"><a title="Revolver.beamline.beam.Beamline_beam.__init__
+Revolver.beamline.default_beamline.Beamline.__init__
+Revolver.beamline.default_beamline_device.Beamline_device.__init__
+Revolver.beamline.device_absorber.Beamline_absorber.__init__
+Revolver.beamline.device_beamstop.Beamline_beamstop.__init__
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init__
+Revolver.beamline.device_diode.Beamline_diode.__init__
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init__
+Revolver.beamline.device_laser.Beamline_laser.__init__
+Revolver.beamline.device_main_shutter.Beamline_shutter.__init__
+Revolver.beamline.device_pinhole.Beamline_pinhole.__init__
+Revolver.beamline.device_samplestage.Beamline_samplestage.__init__
+Revolver.beamline.device_shutter.Beamline_shutter.__init__
+Revolver.beamline.device_slits.Beamline_slits.__init__
+Revolver.beamline.wall.Beamline_wall.__init__
+Revolver.classes.devices.Absorber.__init__
+Revolver.classes.devices.Detector.__init__
+Revolver.classes.devices.DetectorController.__init__
+Revolver.classes.devices.Diode.__init__
+Revolver.classes.devices.Hotblower.__init__
+Revolver.classes.devices.Laser.__init__
+Revolver.classes.devices.MainShutter.__init__
+Revolver.classes.devices.Motor.__init__
+Revolver.classes.devices.Shutter.__init__
+Revolver.classes.devices.TangoDevice.__init__
+Revolver.classes.devices.VirtualDevice.__init__
+Revolver.classes.devices.VirtualMotorCenter2D.__init__
+Revolver.classes.devices.VirtualMotorDistance2D.__init__
+Revolver.classes.dialogs.AddMacroDialog.__init__
+Revolver.classes.dialogs.AddTemperatureMacroDialog.__init__
+Revolver.classes.dialogs.SelectDeviceDialog.__init__
+Revolver.classes.macro.DarkShotMacro.__init__
+Revolver.classes.macro.Macro.__init__
+Revolver.classes.macro.MotorMacro.__init__
+Revolver.classes.macro.TemperatureMacro.__init__
+Revolver.classes.macro.TimeMacro.__init__
+Revolver.classes.widget_plot.Curve_plot.__init__
+Revolver.classes.widget_plot.Image_plot.__init__
+Revolver.classes.widget_plot.Widget_plot.__init__
+Revolver.classes.widget_plot.plot_event_filter.__init__
+Revolver.gui_P02_stage_controls_widget.controls.__init__
+Revolver.gui_absorber_controls_widget.Controls.__init__
+Revolver.gui_beamline_P02.Beamline_P02.__init__
+Revolver.gui_default_controls_widget.DefaultControls.__init__
+Revolver.gui_default_controls_widget.EventSpinboxFilter.__init__
+Revolver.gui_default_widget.DefaultMainWindow.__init__
+Revolver.gui_default_widget.DefaultWidget.__init__
+Revolver.gui_detector_controls_widget.DetectorControls.__init__
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init__
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init__
+Revolver.gui_device_value_graph_controls_widget.Controls.__init__
+Revolver.gui_macro_widget.MacroWidget.__init__
+Revolver.gui_motor_controls_widget.MotorWidget.__init__
+Revolver.gui_revolver_app.revolver.__init__
+Revolver.gui_scan_widget.ScanWidget.__init__
+Revolver.gui_scan_widget.spinboxTable.__init__
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init__
+Revolver.gui_status_widget.StatusWidget.__init__
+Revolver.macro.default_macro.MacroControls.__init__
+Revolver.macro.gui_logging_widget.LoggingWidget.__init__
+Revolver.macro.loop_macro_widget.LoopMotorMacro.__init__
+Revolver.macro.simple_macro_widget.SimpleMotorMacro.__init__
+Revolver.macro.temperature_macro_widget.TemperatureMacro.__init__
+Revolver.macro.time_macro_widget.TimeMacro.__init__" class="py-name" href="#" onclick="return doclink('link-52', '__init__', 'link-11');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">parent</tt><tt class="py-op">,</tt> <tt class="py-name">setDefault</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_motor</tt><tt class="py-op">.</tt><tt class="py-name">setText</tt><tt class="py-op">(</tt><tt id="link-53" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-53', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-54" class="py-name" targets="Variable Revolver.classes.config.DEVICE_HOTBLOWER=Revolver.classes.config-module.html#DEVICE_HOTBLOWER"><a title="Revolver.classes.config.DEVICE_HOTBLOWER" class="py-name" href="#" onclick="return doclink('link-54', 'DEVICE_HOTBLOWER', 'link-54');">DEVICE_HOTBLOWER</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">       </tt>
+<a name="AddTemperatureMacroDialog.action_select_device"></a><div id="AddTemperatureMacroDialog.action_select_device-def"><a name="L162"></a><tt class="py-lineno">162</tt> <a class="py-toggle" href="#" id="AddTemperatureMacroDialog.action_select_device-toggle" onclick="return toggle('AddTemperatureMacroDialog.action_select_device');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#action_select_device">action_select_device</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddTemperatureMacroDialog.action_select_device-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddTemperatureMacroDialog.action_select_device-expanded"><a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">        <tt id="link-55" class="py-name"><a title="Revolver.classes.dialogs.SelectDeviceDialog" class="py-name" href="#" onclick="return doclink('link-55', 'SelectDeviceDialog', 'link-28');">SelectDeviceDialog</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-name">defaultPath</tt><tt class="py-op">=</tt><tt id="link-56" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-56', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-57" class="py-name" targets="Variable Revolver.classes.config.PATH_HOTBLOWER_FILTER=Revolver.classes.config-module.html#PATH_HOTBLOWER_FILTER"><a title="Revolver.classes.config.PATH_HOTBLOWER_FILTER" class="py-name" href="#" onclick="return doclink('link-57', 'PATH_HOTBLOWER_FILTER', 'link-57');">PATH_HOTBLOWER_FILTER</a></tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">exec_</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">     </tt>
+<a name="AddTemperatureMacroDialog.action_check_device_restrictions"></a><div id="AddTemperatureMacroDialog.action_check_device_restrictions-def"><a name="L165"></a><tt class="py-lineno">165</tt> <a class="py-toggle" href="#" id="AddTemperatureMacroDialog.action_check_device_restrictions-toggle" onclick="return toggle('AddTemperatureMacroDialog.action_check_device_restrictions');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#action_check_device_restrictions">action_check_device_restrictions</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">devicePath</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddTemperatureMacroDialog.action_check_device_restrictions-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddTemperatureMacroDialog.action_check_device_restrictions-expanded"><a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">        <tt class="py-name">device</tt> <tt class="py-op">=</tt> <tt id="link-58" class="py-name"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-58', 'devices', 'link-6');">devices</a></tt><tt class="py-op">.</tt><tt id="link-59" class="py-name" targets="Class Revolver.classes.devices.Hotblower=Revolver.classes.devices.Hotblower-class.html"><a title="Revolver.classes.devices.Hotblower" class="py-name" href="#" onclick="return doclink('link-59', 'Hotblower', 'link-59');">Hotblower</a></tt><tt class="py-op">(</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">devicePath</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">        <tt class="py-name">attr</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_from</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_to</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_position</tt><tt class="py-op">]</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-60" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.check_device_allowed_values" class="py-name" href="#" onclick="return doclink('link-60', 'check_device_allowed_values', 'link-27');">check_device_allowed_values</a></tt><tt class="py-op">(</tt><tt class="py-name">attr</tt><tt class="py-op">,</tt> <tt class="py-name">device</tt><tt class="py-op">)</tt>  </tt>
+</div><a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">     </tt>
+<a name="AddTemperatureMacroDialog.action_add_macro"></a><div id="AddTemperatureMacroDialog.action_add_macro-def"><a name="L170"></a><tt class="py-lineno">170</tt> <a class="py-toggle" href="#" id="AddTemperatureMacroDialog.action_add_macro-toggle" onclick="return toggle('AddTemperatureMacroDialog.action_add_macro');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.AddTemperatureMacroDialog-class.html#action_add_macro">action_add_macro</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AddTemperatureMacroDialog.action_add_macro-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AddTemperatureMacroDialog.action_add_macro-expanded"><a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line"><tt class="py-docstring">        Signal handler:</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line"><tt class="py-docstring">        emit signal to parent widget and pass new macro step as parameter</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">        <tt class="py-name">sampleName</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_sampleName</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">        <tt class="py-name">summed</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_summed</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">        <tt class="py-name">filesafter</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_filesafter</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line">        <tt class="py-name">comment</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_comment</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line">        <tt class="py-name">position</tt> <tt class="py-op">=</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_position</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">        <tt class="py-name">intervalFrom</tt> <tt class="py-op">=</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_from</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">        <tt class="py-name">intervalTo</tt> <tt class="py-op">=</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_to</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">        <tt class="py-name">intervalStep</tt> <tt class="py-op">=</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_value_step</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">        <tt id="link-61" class="py-name" targets="Method Revolver.classes.devices.TangoDevice.wait_seconds()=Revolver.classes.devices.TangoDevice-class.html#wait_seconds,Method Revolver.classes.macro.Macro.wait_seconds()=Revolver.classes.macro.Macro-class.html#wait_seconds"><a title="Revolver.classes.devices.TangoDevice.wait_seconds
+Revolver.classes.macro.Macro.wait_seconds" class="py-name" href="#" onclick="return doclink('link-61', 'wait_seconds', 'link-61');">wait_seconds</a></tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_wait_time</tt><tt class="py-op">.</tt><tt class="py-name">value</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">        <tt class="py-name">macro_wait_iterations</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_wait_time_repeat</tt><tt class="py-op">.</tt><tt class="py-name">value</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">        <tt class="py-name">macro_wait_after</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_wait_after</tt><tt class="py-op">.</tt><tt class="py-name">value</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">        <tt class="py-name">takeDark</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">check_take_dark</tt><tt class="py-op">.</tt><tt class="py-name">isChecked</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">         </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">        <tt class="py-name">device</tt> <tt class="py-op">=</tt> <tt id="link-62" class="py-name"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-62', 'devices', 'link-6');">devices</a></tt><tt class="py-op">.</tt><tt id="link-63" class="py-name"><a title="Revolver.classes.devices.Hotblower" class="py-name" href="#" onclick="return doclink('link-63', 'Hotblower', 'link-59');">Hotblower</a></tt><tt class="py-op">(</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">macro_input_motor</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">                 </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">            <tt class="py-name">sampleName</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-64" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-64', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Sample name"</tt><tt class="py-op">,</tt> <tt class="py-string">"string"</tt><tt class="py-op">,</tt> <tt class="py-name">sampleName</tt><tt class="py-op">)</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt><tt class="py-op">:</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line">                <tt class="py-name">position</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt id="link-65" class="py-name"><a title="Revolver.gui_default_widget.DefaultWidget.validate_input" class="py-name" href="#" onclick="return doclink('link-65', 'validate_input', 'link-33');">validate_input</a></tt><tt class="py-op">(</tt><tt class="py-string">"Position"</tt><tt class="py-op">,</tt> <tt class="py-string">"float"</tt><tt class="py-op">,</tt> <tt class="py-name">position</tt><tt class="py-op">)</tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">intervalStep</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">math</tt><tt class="py-op">.</tt><tt class="py-name">fabs</tt><tt class="py-op">(</tt><tt class="py-name">intervalFrom</tt> <tt class="py-op">-</tt> <tt class="py-name">intervalTo</tt><tt class="py-op">)</tt><tt class="py-op">:</tt>  </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt id="link-66" class="py-name"><a title="Revolver.classes.signals" class="py-name" href="#" onclick="return doclink('link-66', 'signals', 'link-8');">signals</a></tt><tt class="py-op">.</tt><tt id="link-67" class="py-name"><a title="Revolver.classes.signals.SIG_SHOW_WARNING" class="py-name" href="#" onclick="return doclink('link-67', 'SIG_SHOW_WARNING', 'link-42');">SIG_SHOW_WARNING</a></tt><tt class="py-op">,</tt> <tt class="py-string">"Input error"</tt><tt class="py-op">,</tt> <tt class="py-string">"Step is bigger than maximum allowed step"</tt><tt class="py-op">)</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">intervalStep</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt>  </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt id="link-68" class="py-name"><a title="Revolver.classes.signals" class="py-name" href="#" onclick="return doclink('link-68', 'signals', 'link-8');">signals</a></tt><tt class="py-op">.</tt><tt id="link-69" class="py-name"><a title="Revolver.classes.signals.SIG_SHOW_WARNING" class="py-name" href="#" onclick="return doclink('link-69', 'SIG_SHOW_WARNING', 'link-42');">SIG_SHOW_WARNING</a></tt><tt class="py-op">,</tt> <tt class="py-string">"Input error"</tt><tt class="py-op">,</tt> <tt class="py-string">"Step must be bigger than zero"</tt><tt class="py-op">)</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line"> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">        <tt class="py-comment"># try:</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">positionDiscreete</tt><tt class="py-op">:</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">            <tt class="py-name">newMacro</tt> <tt class="py-op">=</tt> <tt id="link-70" class="py-name"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-70', 'macro', 'link-9');">macro</a></tt><tt class="py-op">.</tt><tt id="link-71" class="py-name" targets="Class Revolver.classes.macro.TemperatureMacro=Revolver.classes.macro.TemperatureMacro-class.html,Class Revolver.macro.temperature_macro_widget.TemperatureMacro=Revolver.macro.temperature_macro_widget.TemperatureMacro-class.html"><a title="Revolver.classes.macro.TemperatureMacro
+Revolver.macro.temperature_macro_widget.TemperatureMacro" class="py-name" href="#" onclick="return doclink('link-71', 'TemperatureMacro', 'link-71');">TemperatureMacro</a></tt><tt class="py-op">(</tt><tt class="py-name">device</tt><tt class="py-op">.</tt><tt class="py-name">name</tt><tt class="py-op">,</tt> <tt class="py-name">device</tt><tt class="py-op">.</tt><tt class="py-name">devicePath</tt><tt class="py-op">,</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">                                        <tt class="py-name">sampleName</tt><tt class="py-op">,</tt> <tt class="py-name">summed</tt><tt class="py-op">,</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">                                        <tt class="py-name">filesafter</tt><tt class="py-op">,</tt> <tt class="py-name">position</tt><tt class="py-op">,</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">                                        <tt id="link-72" class="py-name"><a title="Revolver.classes.devices.TangoDevice.wait_seconds
+Revolver.classes.macro.Macro.wait_seconds" class="py-name" href="#" onclick="return doclink('link-72', 'wait_seconds', 'link-61');">wait_seconds</a></tt><tt class="py-op">,</tt> <tt class="py-name">macro_wait_iterations</tt><tt class="py-op">,</tt> <tt class="py-name">macro_wait_after</tt><tt class="py-op">,</tt> <tt class="py-name">takeDark</tt><tt class="py-op">,</tt> <tt class="py-name">comment</tt><tt class="py-op">)</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"addMacro(macro)"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">newMacro</tt><tt class="py-op">)</tt> </tt>
+<a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line">            <tt class="py-name">mrange</tt> <tt class="py-op">=</tt> <tt id="link-73" class="py-name"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-73', 'macro', 'link-9');">macro</a></tt><tt class="py-op">.</tt><tt id="link-74" class="py-name"><a title="Revolver.classes.macro.macroRange" class="py-name" href="#" onclick="return doclink('link-74', 'macroRange', 'link-48');">macroRange</a></tt><tt class="py-op">(</tt><tt class="py-name">intervalFrom</tt><tt class="py-op">,</tt> <tt class="py-name">intervalTo</tt><tt class="py-op">,</tt> <tt class="py-name">intervalStep</tt><tt class="py-op">)</tt> </tt>
+<a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">position</tt> <tt class="py-keyword">in</tt> <tt class="py-name">mrange</tt><tt class="py-op">:</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line">                <tt class="py-name">newMacro</tt> <tt class="py-op">=</tt> <tt id="link-75" class="py-name"><a title="Revolver.classes.macro
+Revolver.macro" class="py-name" href="#" onclick="return doclink('link-75', 'macro', 'link-9');">macro</a></tt><tt class="py-op">.</tt><tt id="link-76" class="py-name"><a title="Revolver.classes.macro.TemperatureMacro
+Revolver.macro.temperature_macro_widget.TemperatureMacro" class="py-name" href="#" onclick="return doclink('link-76', 'TemperatureMacro', 'link-71');">TemperatureMacro</a></tt><tt class="py-op">(</tt><tt class="py-name">device</tt><tt class="py-op">.</tt><tt class="py-name">name</tt><tt class="py-op">,</tt> <tt class="py-name">device</tt><tt class="py-op">.</tt><tt class="py-name">devicePath</tt><tt class="py-op">,</tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line">                                            <tt class="py-name">sampleName</tt><tt class="py-op">,</tt> <tt class="py-name">summed</tt><tt class="py-op">,</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line">                                            <tt class="py-name">filesafter</tt><tt class="py-op">,</tt> <tt class="py-name">position</tt><tt class="py-op">,</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">                                            <tt id="link-77" class="py-name"><a title="Revolver.classes.devices.TangoDevice.wait_seconds
+Revolver.classes.macro.Macro.wait_seconds" class="py-name" href="#" onclick="return doclink('link-77', 'wait_seconds', 'link-61');">wait_seconds</a></tt><tt class="py-op">,</tt> <tt class="py-name">macro_wait_iterations</tt><tt class="py-op">,</tt> <tt class="py-name">macro_wait_after</tt><tt class="py-op">,</tt> <tt class="py-name">takeDark</tt><tt class="py-op">,</tt> <tt class="py-name">comment</tt><tt class="py-op">)</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"addMacro(macro)"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">newMacro</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">        <tt class="py-comment"># except:</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">        <tt class="py-comment">#    logging.error("Temperature macro was not added: %s", sys.exc_info()[0])</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">     </tt>
+<a name="SelectDeviceDialog"></a><div id="SelectDeviceDialog-def"><a name="L220"></a><tt class="py-lineno">220</tt> <a class="py-toggle" href="#" id="SelectDeviceDialog-toggle" onclick="return toggle('SelectDeviceDialog');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="Revolver.classes.dialogs.SelectDeviceDialog-class.html">SelectDeviceDialog</a><tt class="py-op">(</tt><tt class="py-base-class">QtGui</tt><tt class="py-op">.</tt><tt class="py-base-class">QDialog</tt><tt class="py-op">,</tt> <tt class="py-base-class">select_device_dialog</tt><tt class="py-op">.</tt><tt class="py-base-class">Ui_Dialog</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SelectDeviceDialog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="SelectDeviceDialog-expanded"><a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line"><tt class="py-docstring">    Dialog that can select desired device from device list</tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">     </tt>
+<a name="SelectDeviceDialog.__init__"></a><div id="SelectDeviceDialog.__init__-def"><a name="L225"></a><tt class="py-lineno">225</tt> <a class="py-toggle" href="#" id="SelectDeviceDialog.__init__-toggle" onclick="return toggle('SelectDeviceDialog.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.SelectDeviceDialog-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">parent</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">defaultSignal</tt><tt class="py-op">=</tt><tt class="py-string">"changeDefaultMotor"</tt><tt class="py-op">,</tt> <tt class="py-param">defaultPath</tt><tt class="py-op">=</tt><tt id="link-78" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-78', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-79" class="py-name" targets="Variable Revolver.classes.config.PATH_MOTOR_FILTER=Revolver.classes.config-module.html#PATH_MOTOR_FILTER"><a title="Revolver.classes.config.PATH_MOTOR_FILTER" class="py-name" href="#" onclick="return doclink('link-79', 'PATH_MOTOR_FILTER', 'link-79');">PATH_MOTOR_FILTER</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SelectDeviceDialog.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="SelectDeviceDialog.__init__-expanded"><a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line"><tt class="py-docstring">        Class constructor:</tt> </tt>
+<a name="L228"></a><tt class="py-lineno">228</tt>  <tt class="py-line"><tt class="py-docstring">        @type parent: DefaultWidget</tt> </tt>
+<a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line"><tt class="py-docstring">        @type defaultSignal: String</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line"><tt class="py-docstring">        @type defaultPath: String</tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-80" class="py-name"><a title="Revolver.classes.dialogs.SelectDeviceDialog" class="py-name" href="#" onclick="return doclink('link-80', 'SelectDeviceDialog', 'link-28');">SelectDeviceDialog</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-81" class="py-name"><a title="Revolver.beamline.beam.Beamline_beam.__init__
+Revolver.beamline.default_beamline.Beamline.__init__
+Revolver.beamline.default_beamline_device.Beamline_device.__init__
+Revolver.beamline.device_absorber.Beamline_absorber.__init__
+Revolver.beamline.device_beamstop.Beamline_beamstop.__init__
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__init__
+Revolver.beamline.device_diode.Beamline_diode.__init__
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__init__
+Revolver.beamline.device_laser.Beamline_laser.__init__
+Revolver.beamline.device_main_shutter.Beamline_shutter.__init__
+Revolver.beamline.device_pinhole.Beamline_pinhole.__init__
+Revolver.beamline.device_samplestage.Beamline_samplestage.__init__
+Revolver.beamline.device_shutter.Beamline_shutter.__init__
+Revolver.beamline.device_slits.Beamline_slits.__init__
+Revolver.beamline.wall.Beamline_wall.__init__
+Revolver.classes.devices.Absorber.__init__
+Revolver.classes.devices.Detector.__init__
+Revolver.classes.devices.DetectorController.__init__
+Revolver.classes.devices.Diode.__init__
+Revolver.classes.devices.Hotblower.__init__
+Revolver.classes.devices.Laser.__init__
+Revolver.classes.devices.MainShutter.__init__
+Revolver.classes.devices.Motor.__init__
+Revolver.classes.devices.Shutter.__init__
+Revolver.classes.devices.TangoDevice.__init__
+Revolver.classes.devices.VirtualDevice.__init__
+Revolver.classes.devices.VirtualMotorCenter2D.__init__
+Revolver.classes.devices.VirtualMotorDistance2D.__init__
+Revolver.classes.dialogs.AddMacroDialog.__init__
+Revolver.classes.dialogs.AddTemperatureMacroDialog.__init__
+Revolver.classes.dialogs.SelectDeviceDialog.__init__
+Revolver.classes.macro.DarkShotMacro.__init__
+Revolver.classes.macro.Macro.__init__
+Revolver.classes.macro.MotorMacro.__init__
+Revolver.classes.macro.TemperatureMacro.__init__
+Revolver.classes.macro.TimeMacro.__init__
+Revolver.classes.widget_plot.Curve_plot.__init__
+Revolver.classes.widget_plot.Image_plot.__init__
+Revolver.classes.widget_plot.Widget_plot.__init__
+Revolver.classes.widget_plot.plot_event_filter.__init__
+Revolver.gui_P02_stage_controls_widget.controls.__init__
+Revolver.gui_absorber_controls_widget.Controls.__init__
+Revolver.gui_beamline_P02.Beamline_P02.__init__
+Revolver.gui_default_controls_widget.DefaultControls.__init__
+Revolver.gui_default_controls_widget.EventSpinboxFilter.__init__
+Revolver.gui_default_widget.DefaultMainWindow.__init__
+Revolver.gui_default_widget.DefaultWidget.__init__
+Revolver.gui_detector_controls_widget.DetectorControls.__init__
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__init__
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__init__
+Revolver.gui_device_value_graph_controls_widget.Controls.__init__
+Revolver.gui_macro_widget.MacroWidget.__init__
+Revolver.gui_motor_controls_widget.MotorWidget.__init__
+Revolver.gui_revolver_app.revolver.__init__
+Revolver.gui_scan_widget.ScanWidget.__init__
+Revolver.gui_scan_widget.spinboxTable.__init__
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__init__
+Revolver.gui_status_widget.StatusWidget.__init__
+Revolver.macro.default_macro.MacroControls.__init__
+Revolver.macro.gui_logging_widget.LoggingWidget.__init__
+Revolver.macro.loop_macro_widget.LoopMotorMacro.__init__
+Revolver.macro.simple_macro_widget.SimpleMotorMacro.__init__
+Revolver.macro.temperature_macro_widget.TemperatureMacro.__init__
+Revolver.macro.time_macro_widget.TimeMacro.__init__" class="py-name" href="#" onclick="return doclink('link-81', '__init__', 'link-11');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">parent</tt><tt class="py-op">)</tt> </tt>
+<a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-82" class="py-name"><a title="Revolver.UI.layout_P02_stage_controls.Ui_Form.setupUi
+Revolver.UI.layout_absorber_controls.Ui_Form.setupUi
+Revolver.UI.layout_detector_controls.Ui_Form.setupUi
+Revolver.UI.layout_detector_image_widget.Ui_Form.setupUi
+Revolver.UI.layout_device_value_graph_controls.Ui_Form.setupUi
+Revolver.UI.layout_macro.Ui_Form.setupUi
+Revolver.UI.layout_motor_widget.Ui_Form.setupUi
+Revolver.UI.layout_revolver.Ui_MainWindow.setupUi
+Revolver.UI.layout_scan.Ui_Form.setupUi
+Revolver.UI.layout_stacked_motors_controls.Ui_Form.setupUi
+Revolver.UI.layout_stage_controls.Ui_Form.setupUi
+Revolver.UI.layout_status.Ui_Form.setupUi
+Revolver.UI.layout_status_label.Ui_Form.setupUi
+Revolver.UI.layout_status_led.Ui_Form.setupUi
+Revolver.beamline.UI.absorber.Ui_Form.setupUi
+Revolver.beamline.UI.beam.Ui_Form.setupUi
+Revolver.beamline.UI.beamline_default.Ui_Form.setupUi
+Revolver.beamline.UI.beamline_p02.Ui_Form.setupUi
+Revolver.beamline.UI.beamstop.Ui_Form.setupUi
+Revolver.beamline.UI.detectorPE.Ui_Form.setupUi
+Revolver.beamline.UI.diode.Ui_Form.setupUi
+Revolver.beamline.UI.ion_chamber.Ui_Form.setupUi
+Revolver.beamline.UI.laser.Ui_Form.setupUi
+Revolver.beamline.UI.pinhole.Ui_Form.setupUi
+Revolver.beamline.UI.samplestage.Ui_Form.setupUi
+Revolver.beamline.UI.shutter.Ui_Form.setupUi
+Revolver.beamline.UI.slits.Ui_Form.setupUi
+Revolver.beamline.UI.wall.Ui_Form.setupUi
+Revolver.classes.UI.add_macro_dialog.Ui_Dialog.setupUi
+Revolver.classes.UI.add_temperature_macro_dialog.Ui_Dialog.setupUi
+Revolver.classes.UI.select_device_dialog.Ui_Dialog.setupUi
+Revolver.gui_default_controls_widget.DefaultControls.setupUi
+Revolver.gui_default_widget.DefaultWidget.setupUi
+Revolver.macro.UI.layout_loop_macro.Ui_Form.setupUi
+Revolver.macro.UI.layout_simple_macro.Ui_Form.setupUi
+Revolver.macro.UI.layout_temperature_macro.Ui_Form.setupUi
+Revolver.macro.UI.layout_time_macro.Ui_Form.setupUi" class="py-name" href="#" onclick="return doclink('link-82', 'setupUi', 'link-12');">setupUi</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+<a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt> <tt class="py-op">=</tt> <tt class="py-name">parent</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">defaultPath</tt> <tt class="py-op">=</tt> <tt class="py-name">defaultPath</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">defaultSignal</tt> <tt class="py-op">=</tt> <tt class="py-name">defaultSignal</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">exchange</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-83" class="py-name"><a title="Revolver.beamline.beam.Beamline_beam.__main
+Revolver.beamline.default_beamline.Beamline.__main
+Revolver.beamline.default_beamline_device.Beamline_device.__main
+Revolver.beamline.device_absorber.Beamline_absorber.__main
+Revolver.beamline.device_beamstop.Beamline_beamstop.__main
+Revolver.beamline.device_detectorPE.Beamline_detectorPE.__main
+Revolver.beamline.device_diode.Beamline_diode.__main
+Revolver.beamline.device_ionchamber.Beamline_ionchamber.__main
+Revolver.beamline.device_laser.Beamline_laser.__main
+Revolver.beamline.device_main_shutter.Beamline_shutter.__main
+Revolver.beamline.device_pinhole.Beamline_pinhole.__main
+Revolver.beamline.device_samplestage.Beamline_samplestage.__main
+Revolver.beamline.device_shutter.Beamline_shutter.__main
+Revolver.beamline.device_slits.Beamline_slits.__main
+Revolver.beamline.wall.Beamline_wall.__main
+Revolver.classes.dialogs.AddMacroDialog.__main
+Revolver.classes.dialogs.SelectDeviceDialog.__main
+Revolver.classes.widget_plot.Curve_plot.__main
+Revolver.classes.widget_plot.Image_plot.__main
+Revolver.classes.widget_plot.Widget_plot.__main
+Revolver.gui_P02_stage_controls_widget.controls.__main
+Revolver.gui_absorber_controls_widget.Controls.__main
+Revolver.gui_beamline_P02.Beamline_P02.__main
+Revolver.gui_default_controls_widget.DefaultControls.__main
+Revolver.gui_default_widget.DefaultWidget.__main
+Revolver.gui_detector_controls_widget.DetectorControls.__main
+Revolver.gui_device_status_led_widget.DeviceLedStatusWidget.__main
+Revolver.gui_device_status_value_widget.DeviceValueStatusWidget.__main
+Revolver.gui_device_value_graph_controls_widget.Controls.__main
+Revolver.gui_macro_widget.MacroWidget.__main
+Revolver.gui_motor_controls_widget.MotorWidget.__main
+Revolver.gui_revolver_app.revolver.__main
+Revolver.gui_scan_widget.ScanWidget.__main
+Revolver.gui_stacked_motors_controls_widget.StackedMotorControls.__main
+Revolver.gui_status_widget.StatusWidget.__main
+Revolver.macro.default_macro.MacroControls.__main
+Revolver.macro.gui_logging_widget.LoggingWidget.__main" class="py-name" href="#" onclick="return doclink('link-83', '__main', 'link-20');">__main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line">         </tt>
+<a name="SelectDeviceDialog.__main"></a><div id="SelectDeviceDialog.__main-def"><a name="L240"></a><tt class="py-lineno">240</tt> <a class="py-toggle" href="#" id="SelectDeviceDialog.__main-toggle" onclick="return toggle('SelectDeviceDialog.__main');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.SelectDeviceDialog-class.html#__main">__main</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SelectDeviceDialog.__main-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="SelectDeviceDialog.__main-expanded"><a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line"><tt class="py-docstring">        Set dialog properties</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line"><tt class="py-docstring">        initialize taurusDevTree with path</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">taurusDevTree</tt><tt class="py-op">.</tt><tt class="py-name">setModel</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">defaultPath</tt><tt class="py-op">)</tt> </tt>
+<a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">        <tt class="py-name">nodes</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">taurusDevTree</tt><tt class="py-op">.</tt><tt class="py-name">getAllNodes</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L247"></a><tt class="py-lineno">247</tt>  <tt class="py-line">         </tt>
+<a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">nodeName</tt><tt class="py-op">,</tt> <tt class="py-name">nodeWidget</tt> <tt class="py-keyword">in</tt> <tt class="py-name">nodes</tt><tt class="py-op">.</tt><tt class="py-name">iteritems</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line">            <tt class="py-name">nodeNameLower</tt> <tt class="py-op">=</tt> <tt class="py-name">nodeName</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt id="link-84" class="py-name"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-84', 'devices', 'link-6');">devices</a></tt><tt class="py-op">.</tt><tt id="link-85" class="py-name" targets="Variable Revolver.classes.config.DEVICE_NAMES=Revolver.classes.config-module.html#DEVICE_NAMES,Variable Revolver.classes.devices.DEVICE_NAMES=Revolver.classes.devices-module.html#DEVICE_NAMES"><a title="Revolver.classes.config.DEVICE_NAMES
+Revolver.classes.devices.DEVICE_NAMES" class="py-name" href="#" onclick="return doclink('link-85', 'DEVICE_NAMES', 'link-85');">DEVICE_NAMES</a></tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-name">nodeNameLower</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">exchange</tt><tt class="py-op">[</tt><tt id="link-86" class="py-name"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-86', 'devices', 'link-6');">devices</a></tt><tt class="py-op">.</tt><tt id="link-87" class="py-name"><a title="Revolver.classes.config.DEVICE_NAMES
+Revolver.classes.devices.DEVICE_NAMES" class="py-name" href="#" onclick="return doclink('link-87', 'DEVICE_NAMES', 'link-85');">DEVICE_NAMES</a></tt><tt class="py-op">[</tt><tt class="py-name">nodeNameLower</tt><tt class="py-op">]</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">nodeName</tt><tt class="py-op">;</tt> </tt>
+<a name="L252"></a><tt class="py-lineno">252</tt>  <tt class="py-line">                <tt class="py-name">nodeWidget</tt><tt class="py-op">.</tt><tt class="py-name">setText</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt id="link-88" class="py-name"><a title="Revolver.classes.devices" class="py-name" href="#" onclick="return doclink('link-88', 'devices', 'link-6');">devices</a></tt><tt class="py-op">.</tt><tt id="link-89" class="py-name"><a title="Revolver.classes.config.DEVICE_NAMES
+Revolver.classes.devices.DEVICE_NAMES" class="py-name" href="#" onclick="return doclink('link-89', 'DEVICE_NAMES', 'link-85');">DEVICE_NAMES</a></tt><tt class="py-op">[</tt><tt class="py-name">nodeNameLower</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L253"></a><tt class="py-lineno">253</tt>  <tt class="py-line">         </tt>
+<a name="SelectDeviceDialog.action_select_motor"></a><div id="SelectDeviceDialog.action_select_motor-def"><a name="L254"></a><tt class="py-lineno">254</tt> <a class="py-toggle" href="#" id="SelectDeviceDialog.action_select_motor-toggle" onclick="return toggle('SelectDeviceDialog.action_select_motor');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Revolver.classes.dialogs.SelectDeviceDialog-class.html#action_select_motor">action_select_motor</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">model</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SelectDeviceDialog.action_select_motor-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="SelectDeviceDialog.action_select_motor-expanded"><a name="L255"></a><tt class="py-lineno">255</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L256"></a><tt class="py-lineno">256</tt>  <tt class="py-line"><tt class="py-docstring">        Signal handler:</tt> </tt>
+<a name="L257"></a><tt class="py-lineno">257</tt>  <tt class="py-line"><tt class="py-docstring">        emit signal to parent widget with selected motor devicePath</tt> </tt>
+<a name="L258"></a><tt class="py-lineno">258</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L259"></a><tt class="py-lineno">259</tt>  <tt class="py-line">        <tt class="py-name">selected</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">taurusDevTree</tt><tt class="py-op">.</tt><tt class="py-name">getSelectedNodes</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L260"></a><tt class="py-lineno">260</tt>  <tt class="py-line">         </tt>
+<a name="L261"></a><tt class="py-lineno">261</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">selected</tt><tt class="py-op">:</tt> </tt>
+<a name="L262"></a><tt class="py-lineno">262</tt>  <tt class="py-line">            <tt class="py-name">retDevice</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">selected</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">text</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L263"></a><tt class="py-lineno">263</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">exchange</tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-name">retDevice</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L264"></a><tt class="py-lineno">264</tt>  <tt class="py-line">                <tt class="py-name">retDevice</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">exchange</tt><tt class="py-op">[</tt><tt class="py-name">retDevice</tt><tt class="py-op">]</tt> </tt>
+<a name="L265"></a><tt class="py-lineno">265</tt>  <tt class="py-line">            <tt class="py-name">selectedMotor</tt> <tt class="py-op">=</tt> <tt id="link-90" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-90', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-91" class="py-name" targets="Variable Revolver.classes.config.DEVICE_SERVER=Revolver.classes.config-module.html#DEVICE_SERVER"><a title="Revolver.classes.config.DEVICE_SERVER" class="py-name" href="#" onclick="return doclink('link-91', 'DEVICE_SERVER', 'link-91');">DEVICE_SERVER</a></tt> <tt class="py-op">+</tt> <tt class="py-name">retDevice</tt> </tt>
+<a name="L266"></a><tt class="py-lineno">266</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">defaultSignal</tt> <tt class="py-op">==</tt> <tt class="py-string">"changeDefaultMotor"</tt><tt class="py-op">:</tt> </tt>
+<a name="L267"></a><tt class="py-lineno">267</tt>  <tt class="py-line">                <tt id="link-92" class="py-name"><a title="Revolver.classes.config" class="py-name" href="#" onclick="return doclink('link-92', 'config', 'link-7');">config</a></tt><tt class="py-op">.</tt><tt id="link-93" class="py-name"><a title="Revolver.classes.config.DEVICE_MOTOR" class="py-name" href="#" onclick="return doclink('link-93', 'DEVICE_MOTOR', 'link-14');">DEVICE_MOTOR</a></tt> <tt class="py-op">=</tt> <tt class="py-name">selectedMotor</tt> </tt>
+<a name="L268"></a><tt class="py-lineno">268</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">parent</tt><tt class="py-op">.</tt><tt class="py-name">emit</tt><tt class="py-op">(</tt><tt class="py-name">Qt</tt><tt class="py-op">.</tt><tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">defaultSignal</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">selectedMotor</tt><tt class="py-op">)</tt> </tt>
+<a name="L269"></a><tt class="py-lineno">269</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-94" class="py-name" targets="Method Revolver.classes.devices.MainShutter.close()=Revolver.classes.devices.MainShutter-class.html#close,Method Revolver.classes.devices.Shutter.close()=Revolver.classes.devices.Shutter-class.html#close"><a title="Revolver.classes.devices.MainShutter.close
+Revolver.classes.devices.Shutter.close" class="py-name" href="#" onclick="return doclink('link-94', 'close', 'link-94');">close</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L270"></a><tt class="py-lineno">270</tt>  <tt class="py-line"> </tt>
+<a name="L271"></a><tt class="py-lineno">271</tt>  <tt class="py-line"><tt class="py-string">"""</tt> </tt>
+<a name="L272"></a><tt class="py-lineno">272</tt>  <tt class="py-line"><tt class="py-string">class AboutUI(QtGui.QDialog, aboutUI.Ui_Dialog):</tt> </tt>
+<a name="L273"></a><tt class="py-lineno">273</tt>  <tt class="py-line"><tt class="py-string">    </tt> </tt>
+<a name="L274"></a><tt class="py-lineno">274</tt>  <tt class="py-line"><tt class="py-string">    def __init__(self, parent=None):</tt> </tt>
+<a name="L275"></a><tt class="py-lineno">275</tt>  <tt class="py-line"><tt class="py-string">        super(AboutUI, self).__init__(parent)</tt> </tt>
+<a name="L276"></a><tt class="py-lineno">276</tt>  <tt class="py-line"><tt class="py-string">        self.setupUi(self)</tt> </tt>
+<a name="L277"></a><tt class="py-lineno">277</tt>  <tt class="py-line"><tt class="py-string">        self.banner.setPixmap(QtGui.QPixmap(config.ICON_ABOUT))</tt> </tt>
+<a name="L278"></a><tt class="py-lineno">278</tt>  <tt class="py-line"><tt class="py-string">        self.layout().setSizeConstraint(Qt.QLayout.SetFixedSize)</tt> </tt>
+<a name="L279"></a><tt class="py-lineno">279</tt>  <tt class="py-line"><tt class="py-string">        self.parent = parent</tt> </tt>
+<a name="L280"></a><tt class="py-lineno">280</tt>  <tt class="py-line"><tt class="py-string">"""</tt> </tt>
+<a name="L281"></a><tt class="py-lineno">281</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Revolver-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Oct 26 20:43:25 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

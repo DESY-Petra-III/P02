@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1161</width>
+    <height>694</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Macro</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>5</number>
+   </property>
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <item row="4" column="0">
+    <widget class="QWidget" name="macro_main_controls" native="true">
+     <layout class="QGridLayout" name="gridLayout_4">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="button_save_macro">
+        <property name="text">
+         <string>Save macro</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="button_load_macro">
+        <property name="text">
+         <string>Load macro</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>255</width>
+          <height>24</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="button_add_macro">
+        <property name="text">
+         <string>Add macro step</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="button_run_macros">
+        <property name="text">
+         <string>Start macro</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="button_macro_reset">
+        <property name="text">
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QGroupBox" name="macro_wait_controls">
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    margin-top: 0.5em;
+ font-weight:bold
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+ font-weight:bold
+   
+}</string>
+     </property>
+     <property name="title">
+      <string>Waiting</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_9">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QProgressBar" name="macro_waiting_progressbar">
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="format">
+         <string>Waiting progress: %p%</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QGroupBox" name="macro_steps_controls">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    margin-top: 0.5em;
+ font-weight:bold
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+ font-weight:bold
+   
+}</string>
+     </property>
+     <property name="title">
+      <string>Macro progress and status</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLabel" name="current_operation_status">
+        <property name="styleSheet">
+         <string notr="true">background:orange;padding:5</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QProgressBar" name="macro_progressbar">
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="format">
+           <string>Macro progress: %p%</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="input_macro_halt">
+          <property name="styleSheet">
+           <string notr="true">background:purple;font-weight:bold;color:#fff</string>
+          </property>
+          <property name="text">
+           <string>Stop macro</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QWidget" name="repaet_macro_layout" native="true">
+     <layout class="QGridLayout" name="gridLayout_8">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <item row="0" column="0">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="label_8">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Execute macro steps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QSpinBox" name="repeat_macro">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Error threshold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QDoubleSpinBox" name="error_threshold">
+        <property name="decimals">
+         <number>4</number>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>2.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="widget_select" native="true">
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QWidget" name="macro_controls_loop" native="true">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">b</string>
+        </property>
+        <layout class="QGridLayout" name="loop_macro_controls">
+         <property name="horizontalSpacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QTableWidget" name="table">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::DoubleClicked</set>
+        </property>
+        <property name="showGrid">
+         <bool>true</bool>
+        </property>
+        <property name="gridStyle">
+         <enum>Qt::SolidLine</enum>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Sample name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Device</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Device path</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Temperature</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Summed</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Post trigger</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Holding time</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Repat holding</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Wait</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Comment</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Dark</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Action</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <layout class="QGridLayout" name="status_plot"/>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>button_macro_reset</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_reset_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>529</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_save_macro</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_save_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>529</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>131</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_load_macro</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_load_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>529</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Form</sender>
+   <signal>created()</signal>
+   <receiver>macro_steps_controls</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>4</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>676</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Form</sender>
+   <signal>created()</signal>
+   <receiver>macro_wait_controls</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>668</x>
+     <y>2</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>681</x>
+     <y>585</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>input_macro_halt</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_halt_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1121</x>
+     <y>663</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>865</x>
+     <y>693</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_add_macro</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_open_dialog_add_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>989</x>
+     <y>518</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>754</x>
+     <y>466</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_run_macros</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_start_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1131</x>
+     <y>534</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>456</x>
+     <y>467</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>table</sender>
+   <signal>itemChanged(QTableWidgetItem*)</signal>
+   <receiver>Form</receiver>
+   <slot>action_macro_edited()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>373</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>created()</signal>
+  <slot>action_macro_edited()</slot>
+  <slot>action_macro_type_changed()</slot>
+  <slot>action_reset_macro()</slot>
+  <slot>action_halt_macro()</slot>
+  <slot>action_start_macro()</slot>
+  <slot>action_save_macro()</slot>
+  <slot>action_load_macro()</slot>
+  <slot>action_add_macro()</slot>
+  <slot>action_halt_all_devices()</slot>
+  <slot>action_open_dialog_add_macro()</slot>
+ </slots>
+</ui>

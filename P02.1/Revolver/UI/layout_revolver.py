@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file '/tmp/tmppkPX1q.ui'
+#
+# Created: Tue Oct 22 13:21:02 2013
+#      by: PyQt4 UI code generator 4.6.2
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(871, 663)
+        self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setMinimumSize(QtCore.QSize(500, 0))
+        self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout = QtGui.QGridLayout(self.centralwidget)
+        self.gridLayout.setMargin(5)
+        self.gridLayout.setSpacing(0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.tabWidget = QtGui.QTabWidget(self.centralwidget)
+        self.tabWidget.setMinimumSize(QtCore.QSize(0, 0))
+        self.tabWidget.setObjectName("tabWidget")
+        self.Macro = QtGui.QWidget()
+        self.Macro.setObjectName("Macro")
+        self.gridLayout_3 = QtGui.QGridLayout(self.Macro)
+        self.gridLayout_3.setMargin(0)
+        self.gridLayout_3.setSpacing(0)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.macro_layout = QtGui.QGridLayout()
+        self.macro_layout.setSpacing(0)
+        self.macro_layout.setObjectName("macro_layout")
+        self.gridLayout_3.addLayout(self.macro_layout, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.Macro, "")
+        self.Scan = QtGui.QWidget()
+        self.Scan.setObjectName("Scan")
+        self.gridLayout_5 = QtGui.QGridLayout(self.Scan)
+        self.gridLayout_5.setMargin(0)
+        self.gridLayout_5.setSpacing(0)
+        self.gridLayout_5.setObjectName("gridLayout_5")
+        self.scan_layout = QtGui.QGridLayout()
+        self.scan_layout.setSpacing(0)
+        self.scan_layout.setObjectName("scan_layout")
+        self.gridLayout_5.addLayout(self.scan_layout, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.Scan, "")
+        self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 871, 25))
+        self.menubar.setObjectName("menubar")
+        self.menuFile = QtGui.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        self.dockWidget = QtGui.QDockWidget(MainWindow)
+        self.dockWidget.setMinimumSize(QtCore.QSize(79, 41))
+        self.dockWidget.setFloating(False)
+        self.dockWidget.setObjectName("dockWidget")
+        self.dockWidgetContents = QtGui.QWidget()
+        self.dockWidgetContents.setObjectName("dockWidgetContents")
+        self.dockWidget.setWidget(self.dockWidgetContents)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidget)
+        self.actionQuit = QtGui.QAction(MainWindow)
+        self.actionQuit.setIconVisibleInMenu(True)
+        self.actionQuit.setObjectName("actionQuit")
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setIconVisibleInMenu(True)
+        self.actionAbout.setObjectName("actionAbout")
+        self.actionSet_logfile = QtGui.QAction(MainWindow)
+        self.actionSet_logfile.setObjectName("actionSet_logfile")
+        self.menuFile.addAction(self.actionSet_logfile)
+        self.menuFile.addAction(self.actionQuit)
+        self.menubar.addAction(self.menuFile.menuAction())
+
+        self.retranslateUi(MainWindow)
+        self.tabWidget.setCurrentIndex(0)
+        QtCore.QObject.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(QWidget*)"), MainWindow.action_tab_changed)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Revolver", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.Macro), QtGui.QApplication.translate("MainWindow", "Macro", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.Scan), QtGui.QApplication.translate("MainWindow", "Scan", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSet_logfile.setText(QtGui.QApplication.translate("MainWindow", "Set logfile", None, QtGui.QApplication.UnicodeUTF8))
+
