@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>620</width>
+    <height>214</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Trend control</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="graph_layout"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="controls" native="true">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
+      <item row="0" column="3">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Show values</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QWidget" name="polling_controls" native="true">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="input_polling_time">
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="minimum">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>999999.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Polling time (s)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+        <zorder>input_polling_time</zorder>
+        <zorder>input_polling_time</zorder>
+        <zorder>label</zorder>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QSpinBox" name="input_values_number">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+        <property name="value">
+         <number>600</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Export as ascii</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Export as image</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_save_ascii()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>50</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_save_image()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>169</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>251</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>input_values_number</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Form</receiver>
+   <slot>action_check_settings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>502</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>7</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>input_polling_time</sender>
+   <signal>editingFinished()</signal>
+   <receiver>Form</receiver>
+   <slot>action_check_settings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>686</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>input_polling_time</sender>
+   <signal>editingFinished()</signal>
+   <receiver>Form</receiver>
+   <slot>action_polling_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>730</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>8</x>
+     <y>-6</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>action_check_settings()</slot>
+  <slot>action_save_image()</slot>
+  <slot>action_save_ascii()</slot>
+  <slot>action_polling_changed()</slot>
+ </slots>
+</ui>
