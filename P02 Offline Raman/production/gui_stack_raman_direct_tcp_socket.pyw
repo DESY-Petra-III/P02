@@ -7,10 +7,8 @@
 import sys
 
 from  PyTango import *
-import pylab
-import numpy
+
 import p3cntr
-reload(p3cntr)
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -111,7 +109,11 @@ class MRamanWidget(QMainWindow):
 
     # reading settings
     def readSettings(self):
-        value = self._settings.value("Position").toPoint()
+        # check for Qt version
+        if(PYQT_VERSION < 0x40a00):
+            value = self._settings.value("Position").toPoint()
+        else:
+            value = self._settings.value("Position")
         self.move(value)
 
         return
@@ -337,7 +339,7 @@ class MLedWidget(QWidget):
             # discriminate between different commands - responses
                 # led on off button
             if(cmdtemplate==MLEDONOFF):
-                value = int(value)
+                value = int(str(value))
                 if(value>0):
                     value = True
                 else:
@@ -345,12 +347,12 @@ class MLedWidget(QWidget):
                 self.btnonoff.setChecked(value)
                 # led intensity
             elif(cmdtemplate==MLEDINTENSITY):
-                value = int(value, 16)
+                value = int(str(value), 16)
                 self.leintensity.setText("%i"%value)
                 self.slintensity.setValue(value)
                 # led temperature
             elif(cmdtemplate==MLEDTEMP):
-                value = int(value)
+                value = int(str(value))
                 self.letemp.setText("%i"%value)
             return
 
@@ -385,7 +387,7 @@ class MLedWidget(QWidget):
         value = self.leintensity.text()
 
         try:
-            value = int(value)
+            value = int(str(value))
         except ValueError:
             value = 0
 
