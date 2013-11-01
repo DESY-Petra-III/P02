@@ -363,6 +363,8 @@ class MLedWidget(QWidget):
     def processIdleOff(self):
         # switch LED Off
         self._worker.addWritable(MLEDONOFF, 0)
+        self.btnonoff.setChecked(False)
+        self.btnonoff.setText(MLEDOFF)
         return
 
     # process light switching - ON/OFF
