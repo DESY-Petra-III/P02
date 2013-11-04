@@ -541,7 +541,7 @@ class MWorker(QThread):
         format = "%s%i"
         if(cmd=="&i"):
             format = "%s%x"
-        return self._tcp.send(format % (cmd,value) )
+        return self._tcp.send(format % (cmd, int(value)) )
         
     # get command
     def processGetCommand(self, cmd):
