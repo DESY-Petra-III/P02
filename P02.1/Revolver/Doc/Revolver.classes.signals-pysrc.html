@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Revolver.classes.signals</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Revolver-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Revolver-module.html">Package&nbsp;Revolver</a> ::
+        <a href="Revolver.classes-module.html">Package&nbsp;classes</a> ::
+        Module&nbsp;signals
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Revolver.classes.signals-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="Revolver.classes.signals-module.html">Module Revolver.classes.signals</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-docstring">'''</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">Created on Oct 21, 2013</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring">@author: Martin Domaracky</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">'''</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">PyQt4</tt><tt class="py-op">.</tt><tt class="py-name">Qt</tt> <tt class="py-keyword">import</tt> <tt class="py-name">SIGNAL</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-comment"># Generic public signals                     #</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable Revolver.classes.signals.SIG_ENABLE_CONTROLS=Revolver.classes.signals-module.html#SIG_ENABLE_CONTROLS"><a title="Revolver.classes.signals.SIG_ENABLE_CONTROLS" class="py-name" href="#" onclick="return doclink('link-0', 'SIG_ENABLE_CONTROLS', 'link-0');">SIG_ENABLE_CONTROLS</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"enableControls()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt id="link-1" class="py-name" targets="Variable Revolver.classes.signals.SIG_DISABLE_CONTROLS=Revolver.classes.signals-module.html#SIG_DISABLE_CONTROLS"><a title="Revolver.classes.signals.SIG_DISABLE_CONTROLS" class="py-name" href="#" onclick="return doclink('link-1', 'SIG_DISABLE_CONTROLS', 'link-1');">SIG_DISABLE_CONTROLS</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"disableControls()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt id="link-2" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_CONTROLS=Revolver.classes.signals-module.html#SIG_SHOW_CONTROLS"><a title="Revolver.classes.signals.SIG_SHOW_CONTROLS" class="py-name" href="#" onclick="return doclink('link-2', 'SIG_SHOW_CONTROLS', 'link-2');">SIG_SHOW_CONTROLS</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"enableControls()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt id="link-3" class="py-name" targets="Variable Revolver.classes.signals.SIG_HIDE_CONTROLS=Revolver.classes.signals-module.html#SIG_HIDE_CONTROLS"><a title="Revolver.classes.signals.SIG_HIDE_CONTROLS" class="py-name" href="#" onclick="return doclink('link-3', 'SIG_HIDE_CONTROLS', 'link-3');">SIG_HIDE_CONTROLS</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"disableControls()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt id="link-4" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_ERROR=Revolver.classes.signals-module.html#SIG_SHOW_ERROR"><a title="Revolver.classes.signals.SIG_SHOW_ERROR" class="py-name" href="#" onclick="return doclink('link-4', 'SIG_SHOW_ERROR', 'link-4');">SIG_SHOW_ERROR</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"showError"</tt><tt class="py-op">)</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt id="link-5" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_WARNING=Revolver.classes.signals-module.html#SIG_SHOW_WARNING"><a title="Revolver.classes.signals.SIG_SHOW_WARNING" class="py-name" href="#" onclick="return doclink('link-5', 'SIG_SHOW_WARNING', 'link-5');">SIG_SHOW_WARNING</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"showWarning(QString, QString)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt id="link-6" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_INFO=Revolver.classes.signals-module.html#SIG_SHOW_INFO"><a title="Revolver.classes.signals.SIG_SHOW_INFO" class="py-name" href="#" onclick="return doclink('link-6', 'SIG_SHOW_INFO', 'link-6');">SIG_SHOW_INFO</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"showInfo(QString, QString)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt id="link-7" class="py-name" targets="Variable Revolver.classes.signals.SIG_SET_PROGRESSBAR=Revolver.classes.signals-module.html#SIG_SET_PROGRESSBAR"><a title="Revolver.classes.signals.SIG_SET_PROGRESSBAR" class="py-name" href="#" onclick="return doclink('link-7', 'SIG_SET_PROGRESSBAR', 'link-7');">SIG_SET_PROGRESSBAR</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"changeProgress(QProgressBar*, int)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt id="link-8" class="py-name" targets="Variable Revolver.classes.signals.SIG_HALT_DEVICES=Revolver.classes.signals-module.html#SIG_HALT_DEVICES"><a title="Revolver.classes.signals.SIG_HALT_DEVICES" class="py-name" href="#" onclick="return doclink('link-8', 'SIG_HALT_DEVICES', 'link-8');">SIG_HALT_DEVICES</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"haltDevices()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt id="link-9" class="py-name" targets="Variable Revolver.classes.signals.SIG_ABOUT_QUIT=Revolver.classes.signals-module.html#SIG_ABOUT_QUIT"><a title="Revolver.classes.signals.SIG_ABOUT_QUIT" class="py-name" href="#" onclick="return doclink('link-9', 'SIG_ABOUT_QUIT', 'link-9');">SIG_ABOUT_QUIT</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"aboutToQuit()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt id="link-10" class="py-name" targets="Variable Revolver.classes.signals.SIG_STOP=Revolver.classes.signals-module.html#SIG_STOP"><a title="Revolver.classes.signals.SIG_STOP" class="py-name" href="#" onclick="return doclink('link-10', 'SIG_STOP', 'link-10');">SIG_STOP</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"stop()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt id="link-11" class="py-name" targets="Variable Revolver.classes.signals.SIG_START=Revolver.classes.signals-module.html#SIG_START"><a title="Revolver.classes.signals.SIG_START" class="py-name" href="#" onclick="return doclink('link-11', 'SIG_START', 'link-11');">SIG_START</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"start()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt id="link-12" class="py-name" targets="Variable Revolver.classes.signals.SIG_PLOT_SIGNAL=Revolver.classes.signals-module.html#SIG_PLOT_SIGNAL"><a title="Revolver.classes.signals.SIG_PLOT_SIGNAL" class="py-name" href="#" onclick="return doclink('link-12', 'SIG_PLOT_SIGNAL', 'link-12');">SIG_PLOT_SIGNAL</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"plotSignal()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt id="link-13" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOWN=Revolver.classes.signals-module.html#SIG_SHOWN"><a title="Revolver.classes.signals.SIG_SHOWN" class="py-name" href="#" onclick="return doclink('link-13', 'SIG_SHOWN', 'link-13');">SIG_SHOWN</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"shown()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt id="link-14" class="py-name" targets="Variable Revolver.classes.signals.SIG_HIDDEN=Revolver.classes.signals-module.html#SIG_HIDDEN"><a title="Revolver.classes.signals.SIG_HIDDEN" class="py-name" href="#" onclick="return doclink('link-14', 'SIG_HIDDEN', 'link-14');">SIG_HIDDEN</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"hidden()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt id="link-15" class="py-name" targets="Variable Revolver.classes.signals.SIG_CHANGE_DEFAULT_MOTOR=Revolver.classes.signals-module.html#SIG_CHANGE_DEFAULT_MOTOR"><a title="Revolver.classes.signals.SIG_CHANGE_DEFAULT_MOTOR" class="py-name" href="#" onclick="return doclink('link-15', 'SIG_CHANGE_DEFAULT_MOTOR', 'link-15');">SIG_CHANGE_DEFAULT_MOTOR</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">'changeDefaultMotor'</tt><tt class="py-op">)</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt id="link-16" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_ELEMENT=Revolver.classes.signals-module.html#SIG_SHOW_ELEMENT"><a title="Revolver.classes.signals.SIG_SHOW_ELEMENT" class="py-name" href="#" onclick="return doclink('link-16', 'SIG_SHOW_ELEMENT', 'link-16');">SIG_SHOW_ELEMENT</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">'showElement'</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"><tt class="py-comment"># Macro signals                              #</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"><tt class="py-comment"># emit signal when macro started</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-comment"># int - macroType</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"><tt id="link-17" class="py-name" targets="Variable Revolver.classes.signals.SIG_MACRO_STARTED=Revolver.classes.signals-module.html#SIG_MACRO_STARTED"><a title="Revolver.classes.signals.SIG_MACRO_STARTED" class="py-name" href="#" onclick="return doclink('link-17', 'SIG_MACRO_STARTED', 'link-17');">SIG_MACRO_STARTED</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"macroStarted(int)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt class="py-comment"># emit signal when macro ended</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"><tt class="py-comment"># int - macroType</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt id="link-18" class="py-name" targets="Variable Revolver.classes.signals.SIG_MACRO_ENDED=Revolver.classes.signals-module.html#SIG_MACRO_ENDED"><a title="Revolver.classes.signals.SIG_MACRO_ENDED" class="py-name" href="#" onclick="return doclink('link-18', 'SIG_MACRO_ENDED', 'link-18');">SIG_MACRO_ENDED</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"macroEnded(int)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"><tt class="py-comment"># emit signal when want to load macro</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt class="py-comment"># int - macroType</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"><tt class="py-comment"># value - unpickled data</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"><tt id="link-19" class="py-name" targets="Variable Revolver.classes.signals.SIG_LOAD_MACRO=Revolver.classes.signals-module.html#SIG_LOAD_MACRO"><a title="Revolver.classes.signals.SIG_LOAD_MACRO" class="py-name" href="#" onclick="return doclink('link-19', 'SIG_LOAD_MACRO', 'link-19');">SIG_LOAD_MACRO</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"loadMacro(int, value)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"><tt id="link-20" class="py-name" targets="Variable Revolver.classes.signals.SIG_MACRO_STEP_COMPLETED=Revolver.classes.signals-module.html#SIG_MACRO_STEP_COMPLETED"><a title="Revolver.classes.signals.SIG_MACRO_STEP_COMPLETED" class="py-name" href="#" onclick="return doclink('link-20', 'SIG_MACRO_STEP_COMPLETED', 'link-20');">SIG_MACRO_STEP_COMPLETED</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"stepCompleted()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line"><tt class="py-comment"># emit private signal when add macro step</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-comment"># macro - classes.macro.*</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt id="link-21" class="py-name" targets="Variable Revolver.classes.signals._SIG_ADD_MACRO=Revolver.classes.signals-module.html#_SIG_ADD_MACRO"><a title="Revolver.classes.signals._SIG_ADD_MACRO" class="py-name" href="#" onclick="return doclink('link-21', '_SIG_ADD_MACRO', 'link-21');">_SIG_ADD_MACRO</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"addMacro(macro)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt id="link-22" class="py-name" targets="Variable Revolver.classes.signals._SIG_START_LOGGING=Revolver.classes.signals-module.html#_SIG_START_LOGGING"><a title="Revolver.classes.signals._SIG_START_LOGGING" class="py-name" href="#" onclick="return doclink('link-22', '_SIG_START_LOGGING', 'link-22');">_SIG_START_LOGGING</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"startLogging"</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt id="link-23" class="py-name" targets="Variable Revolver.classes.signals._SIG_STOP_LOGGING=Revolver.classes.signals-module.html#_SIG_STOP_LOGGING"><a title="Revolver.classes.signals._SIG_STOP_LOGGING" class="py-name" href="#" onclick="return doclink('link-23', '_SIG_STOP_LOGGING', 'link-23');">_SIG_STOP_LOGGING</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"stopLogging"</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-comment"># Status signals                             #</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"><tt id="link-24" class="py-name" targets="Variable Revolver.classes.signals.SIG_DEVICE_WORKING=Revolver.classes.signals-module.html#SIG_DEVICE_WORKING"><a title="Revolver.classes.signals.SIG_DEVICE_WORKING" class="py-name" href="#" onclick="return doclink('link-24', 'SIG_DEVICE_WORKING', 'link-24');">SIG_DEVICE_WORKING</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"deviceWorking()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"><tt id="link-25" class="py-name" targets="Variable Revolver.classes.signals.SIG_DEVICE_IDLE=Revolver.classes.signals-module.html#SIG_DEVICE_IDLE"><a title="Revolver.classes.signals.SIG_DEVICE_IDLE" class="py-name" href="#" onclick="return doclink('link-25', 'SIG_DEVICE_IDLE', 'link-25');">SIG_DEVICE_IDLE</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"deviceIdle(bool)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line"><tt id="link-26" class="py-name" targets="Variable Revolver.classes.signals.SIG_DEVICE_STATUS_CHANGED=Revolver.classes.signals-module.html#SIG_DEVICE_STATUS_CHANGED"><a title="Revolver.classes.signals.SIG_DEVICE_STATUS_CHANGED" class="py-name" href="#" onclick="return doclink('link-26', 'SIG_DEVICE_STATUS_CHANGED', 'link-26');">SIG_DEVICE_STATUS_CHANGED</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"deviceStatusChanged(bool)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line"><tt id="link-27" class="py-name" targets="Variable Revolver.classes.signals.SIG_DEVICE_STATUS_ERROR=Revolver.classes.signals-module.html#SIG_DEVICE_STATUS_ERROR"><a title="Revolver.classes.signals.SIG_DEVICE_STATUS_ERROR" class="py-name" href="#" onclick="return doclink('link-27', 'SIG_DEVICE_STATUS_ERROR', 'link-27');">SIG_DEVICE_STATUS_ERROR</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"deviceStatusError()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line"><tt id="link-28" class="py-name" targets="Variable Revolver.classes.signals._SIG_SET_LED_COLOR=Revolver.classes.signals-module.html#_SIG_SET_LED_COLOR"><a title="Revolver.classes.signals._SIG_SET_LED_COLOR" class="py-name" href="#" onclick="return doclink('link-28', '_SIG_SET_LED_COLOR', 'link-28');">_SIG_SET_LED_COLOR</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"setLedColor"</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line"> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line"><tt class="py-comment"># Logging signals                            #</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line"><tt id="link-29" class="py-name" targets="Variable Revolver.classes.signals.SIG_LOG_INIT=Revolver.classes.signals-module.html#SIG_LOG_INIT"><a title="Revolver.classes.signals.SIG_LOG_INIT" class="py-name" href="#" onclick="return doclink('link-29', 'SIG_LOG_INIT', 'link-29');">SIG_LOG_INIT</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"logInit(String, String)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line"><tt id="link-30" class="py-name" targets="Variable Revolver.classes.signals.SIG_LOG_LINE=Revolver.classes.signals-module.html#SIG_LOG_LINE"><a title="Revolver.classes.signals.SIG_LOG_LINE" class="py-name" href="#" onclick="return doclink('link-30', 'SIG_LOG_LINE', 'link-30');">SIG_LOG_LINE</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"logLine(String)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line"><tt id="link-31" class="py-name" targets="Variable Revolver.classes.signals.SIG_LOG_DEVICE_PROFILING=Revolver.classes.signals-module.html#SIG_LOG_DEVICE_PROFILING"><a title="Revolver.classes.signals.SIG_LOG_DEVICE_PROFILING" class="py-name" href="#" onclick="return doclink('link-31', 'SIG_LOG_DEVICE_PROFILING', 'link-31');">SIG_LOG_DEVICE_PROFILING</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"logProfiling"</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line"><tt id="link-32" class="py-name" targets="Variable Revolver.classes.signals.SIG_LOG_POINT_DATA=Revolver.classes.signals-module.html#SIG_LOG_POINT_DATA"><a title="Revolver.classes.signals.SIG_LOG_POINT_DATA" class="py-name" href="#" onclick="return doclink('link-32', 'SIG_LOG_POINT_DATA', 'link-32');">SIG_LOG_POINT_DATA</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"logPointData"</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line"> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line"><tt class="py-comment"># Beamline signals                           #</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line"><tt class="py-comment">##############################################</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line"><tt id="link-33" class="py-name" targets="Variable Revolver.classes.signals.SIG_BLOCK_BEAM=Revolver.classes.signals-module.html#SIG_BLOCK_BEAM"><a title="Revolver.classes.signals.SIG_BLOCK_BEAM" class="py-name" href="#" onclick="return doclink('link-33', 'SIG_BLOCK_BEAM', 'link-33');">SIG_BLOCK_BEAM</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"action_block_beam(bool)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line"><tt id="link-34" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW_BEAMLINE_DEVICE_CONTROLS=Revolver.classes.signals-module.html#SIG_SHOW_BEAMLINE_DEVICE_CONTROLS"><a title="Revolver.classes.signals.SIG_SHOW_BEAMLINE_DEVICE_CONTROLS" class="py-name" href="#" onclick="return doclink('link-34', 'SIG_SHOW_BEAMLINE_DEVICE_CONTROLS', 'link-34');">SIG_SHOW_BEAMLINE_DEVICE_CONTROLS</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"action_show_controls(int)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line"><tt class="py-comment"># emit this signal if beam blocking should be checked</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line"><tt id="link-35" class="py-name" targets="Variable Revolver.classes.signals.SIG_CHECK_BEAM=Revolver.classes.signals-module.html#SIG_CHECK_BEAM"><a title="Revolver.classes.signals.SIG_CHECK_BEAM" class="py-name" href="#" onclick="return doclink('link-35', 'SIG_CHECK_BEAM', 'link-35');">SIG_CHECK_BEAM</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"action_check_beam()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line"><tt id="link-36" class="py-name" targets="Variable Revolver.classes.signals.SIG_BUTTON_CHANGE_ICON=Revolver.classes.signals-module.html#SIG_BUTTON_CHANGE_ICON"><a title="Revolver.classes.signals.SIG_BUTTON_CHANGE_ICON" class="py-name" href="#" onclick="return doclink('link-36', 'SIG_BUTTON_CHANGE_ICON', 'link-36');">SIG_BUTTON_CHANGE_ICON</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"changeIcon"</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line"><tt id="link-37" class="py-name" targets="Variable Revolver.classes.signals.SIG_CHANGE_MODE=Revolver.classes.signals-module.html#SIG_CHANGE_MODE"><a title="Revolver.classes.signals.SIG_CHANGE_MODE" class="py-name" href="#" onclick="return doclink('link-37', 'SIG_CHANGE_MODE', 'link-37');">SIG_CHANGE_MODE</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"change_mode(int)"</tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line"><tt id="link-38" class="py-name" targets="Variable Revolver.classes.signals.SIG_SHOW=Revolver.classes.signals-module.html#SIG_SHOW"><a title="Revolver.classes.signals.SIG_SHOW" class="py-name" href="#" onclick="return doclink('link-38', 'SIG_SHOW', 'link-38');">SIG_SHOW</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"show()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line"><tt id="link-39" class="py-name" targets="Variable Revolver.classes.signals.SIG_HIDE=Revolver.classes.signals-module.html#SIG_HIDE"><a title="Revolver.classes.signals.SIG_HIDE" class="py-name" href="#" onclick="return doclink('link-39', 'SIG_HIDE', 'link-39');">SIG_HIDE</a></tt> <tt class="py-op">=</tt> <tt class="py-name">SIGNAL</tt><tt class="py-op">(</tt><tt class="py-string">"hide()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Revolver-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Oct 26 20:43:23 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

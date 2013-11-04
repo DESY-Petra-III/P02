@@ -1,0 +1,26 @@
+<RCC>
+  <qresource prefix="devices">
+    <file>icons/beamstop.png</file>
+    <file>icons/laser_out.png</file>
+    <file>icons/laser_in.png</file>
+    <file>icons/diode_reverse_closed.png</file>
+    <file>icons/diode_reverse_open.png</file>
+    <file>icons/expert_mode.png</file>
+    <file>icons/slits.png</file>
+    <file>icons/wall.png</file>
+    <file>icons/diode_closed.png</file>
+    <file>icons/diode_open.png</file>
+    <file>icons/sps_closed.png</file>
+    <file>icons/sps_open.png</file>
+    <file>icons/shutter_open.png</file>
+    <file>icons/shutter_closed.png</file>
+    <file>icons/microscope_open.png</file>
+    <file>icons/microscope_closed.png</file>
+    <file>icons/ion_chamber.png</file>
+    <file>icons/detector.png</file>
+    <file>icons/optics.png</file>
+    <file>icons/pinhole.png</file>
+    <file>icons/x-ray.png</file>
+    <file>icons/stage.png</file>
+  </qresource>
+</RCC>

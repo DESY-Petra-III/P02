@@ -1,0 +1,1 @@
+from p3cntr.ui.MotorWidgetAdvanced import MotorWidgetAdvanced
