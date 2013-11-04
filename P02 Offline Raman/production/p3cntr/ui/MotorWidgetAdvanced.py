@@ -408,7 +408,7 @@ class MotorWidgetAdvanced(QtGui.QWidget):
             wcmb.setCurrentIndex(0)
             # set step for motor
             try:
-                self._motorsdict[name]["Step"] = float(strvalue)
+                self._motorsdict[name]["Step"] = float(str(strvalue))
             except ValueError:
                 print("Error: Value error in MotorWidgetAdvanced.processStepSelection()")
         return
@@ -424,14 +424,14 @@ class MotorWidgetAdvanced(QtGui.QWidget):
     # process new step value
     def processNewStep(self, name, wdgt):
         # value length check - do nothing if length is 0
-        text = str(wdgt.text())
+        text = wdgt.text()
         if(len(text)==0):
             return
 
         # set step
         step = 0.00
         try:
-            step = float(text)
+            step = float(str(text))
         except ValueError:
             print("Error: Value error in MotorWidgetAdvanced.processNewStep()")
 
@@ -441,13 +441,13 @@ class MotorWidgetAdvanced(QtGui.QWidget):
     # process new position
     def processNewPosition(self, name, wdgt):
         # value length check - do nothing if length is 0
-        text = str(wdgt.text())
+        text = wdgt.text()
         if(len(text)==0):
             return
 
         position = 0.00
         try:
-            position = float(text)
+            position = float(str(text))
             # movement occurs only if float conversion was successful
             motor = self._motorsdict[name]["Motor"]
             self.absoluteMovement(motor, position)
@@ -531,6 +531,9 @@ class MotorWidgetAdvanced(QtGui.QWidget):
             if(number == extnumber):
                 (pos, format) = (0.0, "%.04f")
                 try:
+                    t = type(value)
+                    if(t is not str or t is not float or t is not int):
+                        value = str(value)
                     pos = float(value)
                 except ValueError:
                     print("Error: Value error in MotorWidgetAdvanced.setMotorPositionByRowNumber()")
@@ -553,6 +556,9 @@ class MotorWidgetAdvanced(QtGui.QWidget):
             if(name.find(extname)>=0): 
                 (pos, format) = (0.0, "%.04f")
                 try:
+                    t = type(value)
+                    if(t is not str or t is not float or t is not int):
+                        value = str(value)
                     pos = float(value)
                 except ValueError:
                     print("Error: Value error in MotorWidgetAdvanced.setMotorPositionByName()")
