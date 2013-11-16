@@ -59,7 +59,8 @@ CTRL+Left/Right/Up/Down - move additional cursorwindow (when visible) with small
 CTRL+ALT+Left/Right/Up/Down - move additional cursorwindow (when visible) with large step
 
     # style adjustment for the additional cursor
-CTRL-c - switch ON or OFF visibility of the additional cursor
+CTRL+c - switch ON or OFF visibility of the additional cursor
+SHIFT+c - change color for the additional cursor
 
 -------------------------------
 -------------------------------
