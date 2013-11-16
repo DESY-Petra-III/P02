@@ -1,5 +1,6 @@
 Markers - program to simplify putting markers, visible bounds and a grid on your screen if your camera software does not allow that by default
 Code was tested on Python 3.2.3 with PyQt 4.10 (Qt 4.8.4) library
+code by Konstantin Glazyrin (lorcat at do no evil google)
 
 License:
 The source code license is GPL v.3 license in agreement with PyQt restrictions.
