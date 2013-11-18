@@ -6,6 +6,7 @@
 ### This programs is licensed under a commercial and open source license (GNU Lesser General Public License version 2.1)
 ###
 ### latest coding - Konstantin Glazyrin for the needs of P02.2 beamline PETRAIII - DESY (coded under Python 2.7, PyQt version 4.10, Qt version 4.8.4)
+### contact - lorcat at do no evil google gmail
 #############
 import sip
 sip.setapi('QString', 1)
@@ -2397,7 +2398,11 @@ class MarkerControl(QMainWindow):
                 le =  self.lelstepmarker
 
                 i = cmb.currentIndex()
-                v = cmb.itemData(i).toInt()[0]
+
+                v = cmb.itemData(i)
+                t = type(v)
+                if(t is not int):
+                    v = cmb.itemData(i).toInt()[0]
 
                 if(v!= self.marker.getSetMoveStep()):
                     le.setText(cmb.currentText())
@@ -2409,7 +2414,10 @@ class MarkerControl(QMainWindow):
                 le =  self.lesstepmarker
 
                 i = cmb.currentIndex()
-                v = cmb.itemData(i).toInt()[0]
+                v = cmb.itemData(i)
+                t = type(v)
+                if(t is not int):
+                    v = cmb.itemData(i).toInt()[0]
 
                 if(v!= self.marker.getSetMoveStepSmall()):
                     le.setText(cmb.currentText())
@@ -2463,7 +2471,10 @@ class MarkerControl(QMainWindow):
                 le =  self.lelsresizemarker
 
                 i = cmb.currentIndex()
-                v = cmb.itemData(i).toInt()[0]
+                v = cmb.itemData(i)
+                t = type(v)
+                if(t is not int):
+                    v = cmb.itemData(i).toInt()[0]
 
                 if(v!= self.marker.getSetResizeStep()):
                     le.setText(cmb.currentText())
@@ -2475,7 +2486,10 @@ class MarkerControl(QMainWindow):
                 le =  self.lessresizemarker
 
                 i = cmb.currentIndex()
-                v = cmb.itemData(i).toInt()[0]
+                v = cmb.itemData(i)
+                t = type(v)
+                if(t is not int):
+                    v = cmb.itemData(i).toInt()[0]
 
                 if(v!= self.marker.getSetResizeStepSmall()):
                     le.setText(cmb.currentText())
@@ -2508,7 +2522,10 @@ class MarkerControl(QMainWindow):
                 le =  self.lelstepcursor
 
                 i = cmb.currentIndex()
-                v = cmb.itemData(i).toInt()[0]
+                v = cmb.itemData(i)
+                t = type(v)
+                if(t is not int):
+                    v = cmb.itemData(i).toInt()[0]
 
                 if(v!= self.marker.moveCursorGetSetMoveStep()):
                     le.setText(cmb.currentText())
@@ -2520,8 +2537,11 @@ class MarkerControl(QMainWindow):
                 le =  self.lesstepcursor
 
                 i = cmb.currentIndex()
-                v = cmb.itemData(i).toInt()[0]
-
+                v = cmb.itemData(i)
+                t = type(v)
+                if(t is not int):
+                    v = cmb.itemData(i).toInt()[0]
+                
                 if(v!= self.marker.moveCursorGetSetMoveStepSmall()):
                     le.setText(cmb.currentText())
                     self.marker.moveCursorGetSetMoveStepSmall(v)
@@ -2603,7 +2623,7 @@ class MarkerControl(QMainWindow):
     def getIntWdgtText(self, wdgt):
         v = 0
         try:
-            v = int(wdgt.text())
+            v = int(str(wdgt.text()))
         except ValueError:
             self.showLongMsg(" widget text type coversion error (int)", True)
         return v
@@ -2612,7 +2632,7 @@ class MarkerControl(QMainWindow):
     def getFloatWdgtText(self, wdgt):
         v = 0
         try:
-            v = float(wdgt.text())
+            v = float(str(wdgt.text()))
         except ValueError:
             self.showLongMsg(" widget text type coversion error (float) ", True)
         return v
