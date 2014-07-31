@@ -41,9 +41,10 @@ class Controls(layout_absorber_controls.Ui_Form, default_gui.DefaultControls):
     
     def reset_absorber_value(self):
         self.absorber_value.setValue(0)
-        self.absorber.set_value(0)
-        
+        self.set_absorber_value(0)
+    
     def set_absorber_value(self, value=None):
+        value = int(self.absorber_value.value())
         self.absorber.set_value(value)
         
 # MAIN PROGRAM #################################################################################

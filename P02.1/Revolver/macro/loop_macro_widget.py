@@ -10,7 +10,7 @@ import pickle
 import time
 
 from Revolver.gui_default_widget import DefaultMainWindow
-from Revolver.classes import devices, macro, dialogs, threads, signals
+from Revolver.classes import devices, macro, dialogs, threads, signals, config
 from Revolver.macro import default_macro, simple_macro_widget, gui_logging_widget
 from Revolver.macro.UI import layout_loop_macro
 
@@ -98,7 +98,7 @@ class LoopMotorMacro(layout_loop_macro.Ui_Form, simple_macro_widget.SimpleMotorM
                 values = {"type":self.macroType, "steps":self.steps, "repeatSteps":self.repeatSteps, "loop":self.loop}
                 pickle.dump(values, macroFile)
                 macroFile.close()
-                logging.info("Loop macro was succesfully saved into file: %s", filename)
+                logging.info("Loop macro was successfully saved into file: %s", filename)
         else:
             QtGui.QMessageBox.question(self, 'Add macro waringn', "No macro to save !", QtGui.QMessageBox.Ok)
         
@@ -119,15 +119,22 @@ class LoopMotorMacro(layout_loop_macro.Ui_Form, simple_macro_widget.SimpleMotorM
             self.logWidget.setFloating(True)
             self.logWidget.reset()
             params = []
-            for devicePath in self.macroDevices:
+            deviceStatuses = []
+            for index,devicePath in enumerate(self.macroDevices):
                 device = devices.Motor(str(devicePath))
-                params.append({"device":device, "value":"Position", "description":"Motor %s position" % device.name}) 
+                if index == 0:
+                    logComment = "# Inner loop motor device: %s" % (device.name)
+                else:
+                    logComment += "\n# Outer loop motor device: %s" % (device.name)
+                params.append({"device":device, "value":"Position", "description":"%s" % device.name, "lock":self.threadLock}) 
+                deviceStatuses.append( {"device":device, "params":[{"deviceValue":"Position", "description":"position"}]})
             graphOptions = {"title":"Motor position log", "xlabel":"Macro step", "ylabel":"Motor position"}
-            
-            logComment = "# Outer loop motor device: %s" % (self.loop["motor"])
-            logComment += "\n# Inner loop motor device: %s" % (device.devicePath)
+            detectorController = devices.DetectorController(config.DEVICE_DETECTOR_CONTROLLER)
+            params.append({"device":detectorController, "method":"take_filename", "description":"Filename", "lock":self.threadLock, "noGraph":True})
+            #logComment = "# Outer loop motor device: %s" % (self.macroDevices[1])
+            #logComment += "\n# Inner loop motor device: %s" % (self.macroDevices[0])
             self.logWidget.start_log_signals(self, signals.SIG_MACRO_STEP_COMPLETED,
-                                             params, graphOptions, logComment=logComment)
+                                             params, graphOptions, logComment=logComment, deviceStatuses=deviceStatuses)
             self.logWidget.set_kill_all_permissions(False)
             self.logWidget.show()
     
@@ -189,6 +196,8 @@ class LoopMotorMacro(layout_loop_macro.Ui_Form, simple_macro_widget.SimpleMotorM
 
 if __name__ == '__main__':
     
+    config.DEVICE_ALLOW_RETRY = False
+    
     # create main window
     app = QtGui.QApplication(sys.argv)
     win = DefaultMainWindow()
@@ -196,6 +205,9 @@ if __name__ == '__main__':
 
     # init widget
     widget = LoopMotorMacro()
+    
+    
+    
     widget.logWidget = gui_logging_widget.LoggingWidget(win)
     win.addDockWidget(QtCore.Qt.DockWidgetArea(4), widget.logWidget)
     widget.logWidget.hide()

@@ -5,7 +5,7 @@ import signal
 
 from Revolver.macro import default_macro, gui_logging_widget
 from Revolver.UI import layout_macro
-from Revolver.classes import signals
+from Revolver.classes import signals, config
 from Revolver.gui_default_widget import DefaultWidget, DefaultMainWindow
 from Revolver.macro import loop_macro_widget, simple_macro_widget, time_macro_widget
 
@@ -70,10 +70,12 @@ class MacroWidget(layout_macro.Ui_Form, DefaultWidget):
 if __name__ == '__main__':
     
     # create main window
+    config.DEVICE_ALLOW_RETRY = False
+    
     app = QtGui.QApplication(sys.argv)
     win = DefaultMainWindow()
     win.setMinimumSize(900, 600)
-
+    
     # init widget
     widget = MacroWidget()
     logWidget = gui_logging_widget.LoggingWidget(win)

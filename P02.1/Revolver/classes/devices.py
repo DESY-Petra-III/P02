@@ -3,22 +3,37 @@ Device wrappers
 """
 
 # import from global packages 
-from PyTango import DeviceProxy, DevState
+from PyTango import DeviceProxy, DevState, ConnectionFailed, DevFailed
 from time import sleep
 from sys import exc_info
 import logging
 import socket
 import numpy
 import collections
-
+from threading import Thread
+import ntpath
+import time
+from PyTango import DeviceProxy, Database
 
 # Import from local packages
-from Revolver.classes import threads, config
+from Revolver.classes import threads, config, signals
 
 # global variables definitions
 stopDevices = False
 runningDevices = set()
 DEVICE_NAMES = dict((y, x) for x, y in config.DEVICE_NAMES.iteritems())
+
+def getSubDevice(filter):
+        exportedDevices = dict()
+        db = Database()
+        eDevices = db.get_device_exported(filter).value_string
+        for eDevice in eDevices:
+            sd = db.get_device_property(eDevice,"__SubDevices")["__SubDevices"]
+            for s in sd:
+                exportedDevices[s] = eDevice
+        return exportedDevices
+        
+SUB_MOTOR_DEVICES = getSubDevice("*motor*")
 
 def halt_all_running_devices():
     """
@@ -47,6 +62,7 @@ class TangoDevice(object):
     It provides registering device, halting device and executing commands
     """
     POLL_STATE_TIME = 0.5
+    TEST_MODE = False
     
     def __init__(self, devicePath):
         """
@@ -59,17 +75,60 @@ class TangoDevice(object):
         self.name = "Generic device"
         self.output = {}
         self.profiling = False
+        self.deviceError = False
+        self.defaultClass = self.__class__
         
         try:
-            self.device = DeviceProxy(self.devicePath)
-            info = self.device.import_info()
-            self.name = info.name
-            if(DEVICE_NAMES.has_key(self.name)):
-                self.name = DEVICE_NAMES[self.name]
-            
+            self.__device_init()
         except:
-            raise Exception(str("Device %s could not be connected" % self.devicePath))
+            logging.error(str("Device %s could not be connected" % self.devicePath))
+            self.name = self.devicePath
+            if config.DEVICE_ALLOW_RETRY:
+                self._retry_device()
+                #raise Exception(str("Device %s could not be connected" % self.devicePath))
+                # logging.error(str("Device %s could not be connected" % self.devicePath))
+                #else: 
+                
+                #raise Exception(str("Device %s could not be connected" % self.devicePath))
+
+    def __postInit__(self):
+        pass
     
+    def __device_init(self):
+        self.device = DeviceProxy(self.devicePath)
+        info = self.device.import_info()
+        self.name = info.name
+        if(DEVICE_NAMES.has_key(self.name)):
+            self.name = DEVICE_NAMES[self.name]
+        self.deviceError = False
+        self.__postInit__()
+                
+    def _retry_device(self, callback=None):
+        self.deviceError = True
+        thread = Thread(target=self.__retry_routine, args=([callback]))
+        threads.add_thread(thread)
+        thread.start()
+        self.__class__ = DummyDevice
+    
+    def __retry_routine(self, callback):
+        retrySleep = [True]
+        while(retrySleep[0] and threads.THREAD_KEEP_ALIVE):
+            try:
+                DeviceProxy(self.devicePath).state()
+                logging.error("Device online: %s" % (self.devicePath) )
+                retrySleep = [False]
+            except:
+                logging.error("Device offline, retrying: %s" % (self.devicePath) )
+            threads.thread_sleep(config.DEVICE_RETRY_INTERVAL, sleepFlags=retrySleep)
+        if threads.THREAD_KEEP_ALIVE == True:
+            self.__class__ = self.defaultClass
+            self.__device_init()
+            if callback: callback()
+        return True        
+    
+    def isDeviceError(self):
+        return self.deviceError
+        
     def halt(self, callBack=None):
         """
         Stop device
@@ -99,6 +158,27 @@ class TangoDevice(object):
         if self.device is None: return False
         else: return True
     
+    def read_attributes(self, attributes):
+        try:
+            return self.device.read_attributes(attributes)
+        except:
+            logging.error("Device read attribute error: retrying device")
+            if not config.DEVICE_ALLOW_RETRY: 
+                raise Exception(str("Device %s could not be connected" % self.devicePath))
+            else: 
+                self._retry_device()
+                return self.read_attributes(attributes)
+    
+    def read_attribute(self, attribute):
+        try:
+            return self.device.read_attribute(attribute)
+        except:
+            if not config.DEVICE_ALLOW_RETRY: 
+                raise Exception(str("Device %s could not be connected" % self.devicePath))
+            else: 
+                self._retry_device()
+                return self.read_attribute(attribute)
+    
     def write_attributes(self, attributes):
         """
         Write attribute to device
@@ -123,8 +203,16 @@ class TangoDevice(object):
         @type commandParam: String
         @rtype: String
         """
-        if self.device:
-            return self.device.command_inout(commandName, commandParam)
+        try:
+            if self.device:
+                return self.device.command_inout(commandName, commandParam)
+        except:
+            if not config.DEVICE_ALLOW_RETRY: 
+                raise Exception(str("Device %s could not be connected" % self.devicePath))
+            else: 
+                self._retry_device()
+                return self.execute_command(commandName, commandParam)
+            
         
     def wait_for_state(self, state, callback=None):
         """
@@ -138,12 +226,16 @@ class TangoDevice(object):
     def wait_seconds(self, duration=1):
         """
         Wait for a time duration
-        @type duration: float
+        @type duration: float if not config.DEVICE_ALLOW_RETRY: 
+                raise Exception(str("Device %s could not be connected" % self.devicePath))
+            else: 
+                self._retry_device()
+                return self.execute_command(commandName, commandParam)
         """
         if self.device:
             sleep(duration)
     
-    def poll(self, commandName, duration=0.1, callback=None, commandParam=None):
+    def poll(self, commandName, duration=0.1, commandResult = True, callback=None, commandParam=None):
         """
         Poll device with command
         @type commandName: String
@@ -151,7 +243,7 @@ class TangoDevice(object):
         @type callback: fun
         @type commandParam: String  
         """
-        while (self.execute_command(commandName, commandParam) and threads.THREAD_KEEP_ALIVE):
+        while (self.execute_command(commandName, commandParam) == commandResult and threads.THREAD_KEEP_ALIVE):
             self.wait_seconds(duration)
         if not (callback is None): callback(self)
         
@@ -175,11 +267,112 @@ class TangoDevice(object):
         self.profiling = False
     
     def current_value(self, value):
-        return self.device.read_attribute(value).value
+        return self.read_attribute(value).value
         
     def __profiling_routine(self):
         pass
+
+class DummyDevice(object):
+    """
+    Wrapper for basic Tango device.
+    It provides registering device, halting device and executing commands
+    """
     
+    TEST_MODE = False
+    
+    def __init__(self, devicePath):
+        """
+        Class constructor
+        @type devicePath: String
+        """
+        return
+    
+    def __device_init(self):
+        return False
+                
+    def _retry_device(self):
+        return False
+    
+    def isDeviceError(self):
+        return True    
+        
+    def halt(self, callBack=None):
+        """
+        Stop device
+        """
+        return False
+    
+    def running_remove(self, *args):
+        """
+        Remove device from all running devices set
+        """
+        return False
+    
+    def running_add(self):
+        """
+        Add device to all runing devices set
+        """
+        return False
+    
+    def is_connected(self):
+        """
+        Return true if device is connected
+        @rtype: bool
+        """
+        return False
+    
+    def read_attributes(self, attributes):
+        output = []
+        for attribute in attributes:
+            struct = collections.namedtuple(attribute, "value")
+            struct.value = 0 
+            output.append(struct)
+        return output
+    
+    def read_attribute(self, attribute):
+        struct = collections.namedtuple("struct", "value")
+        struct.value = 0
+        return struct
+    
+    def write_attributes(self, attributes):
+        return False
+    
+    def write_attributes_async(self, attributes, callback=None):
+        return False
+        
+    def execute_command(self, commandName, commandParam=None):
+        return False
+        
+    def wait_for_state(self, state, callback=None):
+        return False
+    
+    def wait_seconds(self, duration=1):
+        return False
+    
+    def poll(self, commandName, duration=0.1, callback=None, commandParam=None):
+        return False
+        
+    def check_idle(self):
+        return False
+
+    def is_idle(self):
+        return False
+    
+    def start_profiling(self):
+        return False
+    
+    def stop_profiling(self):
+        return False
+    
+    def current_value(self, *args):
+        return False
+        
+    def __profiling_routine(self):
+        return False
+    
+    def get_value(self):
+        return 0
+
 class Shutter(TangoDevice):
     """
     Class that define Shutter device
@@ -197,7 +390,7 @@ class Shutter(TangoDevice):
         Reimplement TangoDevice.halt
         Close shutter
         """
-        status = self.device.read_attribute("value").value
+        status = self.read_attribute("value").value
         if status == 0:
             self.close()
             logging.warn("Shutter closed")
@@ -232,7 +425,7 @@ class MainShutter(TangoDevice):
         Close shutter
         """
         return
-        status = self.device.read_attribute("value").value
+        status = self.read_attribute("value").value
         if status == 0:
             self.close()
             logging.warn("Shutter closed")
@@ -241,7 +434,7 @@ class MainShutter(TangoDevice):
         """
         Main shutter is opened when BS0OffenDisplayState and BSA1OffenDisplayState states are set to 0
         """
-        states = self.device.read_attributes(("BS0OffenDisplayState","BSA1OffenDisplayState"))
+        states = self.read_attributes(("BS0OffenDisplayState","BSA1OffenDisplayState"))
         if states[0].value == 0 and states[1].value == 0:
             return True
         else:
@@ -288,7 +481,7 @@ class Diode(TangoDevice):
             #  time.sleep(0.001)
             devt.device.command_inout("StartAndWaitForTimer")
             #  time.sleep(0.001)
-            attr = devc.device.read_attribute("Counts")
+            attr = devc.read_attribute("Counts")
             #  time.sleep(0.001)
             self.output["current"][0] = float(attr.value)
         logging.info("Profiling of device %s ended" % self.devicePath)
@@ -298,7 +491,7 @@ class Diode(TangoDevice):
         Reimplement TangoDevice.halt
         Close shutter
         """
-        status = self.device.read_attribute("value").value
+        status = self.read_attribute("value").value
         if status == 1:
             self.put_out()
         
@@ -334,7 +527,7 @@ class Laser(TangoDevice):
         """
         Close shutter
         """
-        status = self.device.read_attribute("value").value
+        status = self.read_attribute("value").value
         if status == 1:
             self.put_out()
         
@@ -384,14 +577,13 @@ class Absorber(TangoDevice):
         register3 & 4
         regitser4 & bits[n]
         """
-        if not value: value = self.get_value()
         bits = [1,2,4,8,16,32,64,128,256,512,1024,2048]
         set_value = []
         for index,register in enumerate(self.registers):
             bitValue = 0
             if value & bits[index]: bitValue = 1
             set_value.append((register, bitValue))
-        self.absorber.write_attributes(set_value)
+        self.device.write_attributes(set_value)
     
     def get_value(self):
         """
@@ -399,7 +591,7 @@ class Absorber(TangoDevice):
         Count value from defined registers
         int(bin(register1+register2+register3+register...))
         """
-        states = self.device.read_attributes(self.registers)
+        states = self.read_attributes(tuple(reversed(self.registers)))
         att_bin = ""
         for state in states:
             att_bin += str(state.value)
@@ -441,9 +633,21 @@ class Detector(TangoDevice):
             else:
                 return True
         except:
-            return None
+            if not config.DEVICE_ALLOW_RETRY: 
+                raise Exception(str("Device %s could not be connected" % self.devicePath))
+            else: 
+                self._retry_device()
+                return self.is_idle()
     
-    def take_dark(self, Shutter, summed):
+    def set_file_index(self, fileIndex=1):
+        """
+        Set file index, usually before new macro fires up
+        """
+        self.check_idle()
+        self.write_attributes([("FileIndex", int(fileIndex))])
+        
+    
+    def take_dark(self, Shutter, summed, filename=None):
         """
         Take dark shot
         @type Shutter: Shutter
@@ -453,6 +657,8 @@ class Detector(TangoDevice):
         Shutter.close()
         self.wait_seconds(1)
         attributes = [("ExposureTime", 1.0), ("SummedDarkImages", int(summed))]
+        if filename is not None:
+            attributes.append(("FilePattern", str("%s" % filename)))
         self.write_attributes(attributes)
         self.execute_command("AcquireDarkImagesAndSave")
         self.running_add()
@@ -513,11 +719,13 @@ class DetectorController(TangoDevice):
         @type devicePath: String
         """
         super(DetectorController, self).__init__(devicePath)
+    
+    def __postInit__(self):
         device_property = self.device.get_property(["IpAddr", "PortNb"])
         self.address = str(device_property["IpAddr"][0])
         self.port = int(device_property["PortNb"][0])
         self.socket = None
-  
+    
     def halt(self):
         """
         Reimplement TangoDevice.halt
@@ -582,6 +790,9 @@ class DetectorController(TangoDevice):
       
         return {"data": numpy.asarray(readData), "width":dataWidth, "height":dataHeight, "filename": filename}
     
+    def take_filename(self):
+        return ntpath.split(self.execute_command("WriteReadSocket", "processor.fileName"))[1]
+    
     def take_readout(self, X0=0, Y0=0, X1=2047, Y1=2047):
         """
         Read average value of pixels from detector.
@@ -606,20 +817,22 @@ class Motor(TangoDevice):
         @type devicePath: String
         """
         super(Motor, self).__init__(devicePath)
-        self.maxValue = self.device.read_attribute("UnitLimitMax").value
-        self.minValue = self.device.read_attribute("UnitLimitMin").value
-            
+        
+    def __postInit__(self):
+        self.maxValue = self.read_attribute("UnitLimitMax").value
+        self.minValue = self.read_attribute("UnitLimitMin").value
+
     def __moved__(self):
         """
         This method is automatically called after motor stops
         """
         self.running_remove()
-        position = self.device.read_attribute("Position").value
+        position = self.read_attribute("Position").value
         logging.info("Motor: %s changed position to: %.5f", self.devicePath, position)
     
     def is_idle(self):
         try:
-            if self.execute_command("CheckMove"):
+            if self.device.state() == DevState.MOVING:
                 return False
             else:
                 return True
@@ -631,7 +844,7 @@ class Motor(TangoDevice):
         Check if motor is not moving. 
         If it's moving raise exception.
         """
-        if self.execute_command("CheckMove"):
+        if self.device.state() == DevState.MOVING:
             raise Exception("Motor is moving")
     
     def halt(self, callBack=None):
@@ -639,7 +852,7 @@ class Motor(TangoDevice):
         Reimplement TangoDevice.halt
         Stop all motor motions if motor is moving
         """
-        if self.execute_command("CheckMove"):
+        if self.execute_command("CheckMove") == True:
             self.execute_command("StopMove")
             logging.warn("Motor %s halted", self.devicePath)
         if callBack: callBack()
@@ -671,25 +884,31 @@ class Hotblower(TangoDevice):
     Class that define motor device
     """
     
-    # Minimum waiting time in stabilization loop
-    MIN_STABILIZATION_TIME = 30
-    # Maximum waiting time in stabilization loop
-    MAX_STABILIZATION_TIME = 120
+    HOMING_POINTS = 4
         
-    def __init__(self, devicePath, threshold=2):
+    def __init__(self, devicePath, threshold=2, initSelf=True):
         """
         Class constructor
         @type devicePath: String
         """
         super(Hotblower, self).__init__(devicePath)
-        self.maxValue = 1000
-        self.minValue = 20
-        self.threshold = threshold
-        self.rampingThreshold = 2
-        self.__idle = True
-        actualTemperature = self.device.read_attribute("Temperature").value
-        self.output["movingAverage"] = [actualTemperature]
-        self.output["temperature"] = [actualTemperature]
+        self.waitForHoming = False
+        self.rampingThreshold = config.SETTINGS_RAMPING_ERROR_THRESHOLD
+        self.ramping = False
+        
+        if initSelf:
+            self.maxValue = config.SETTINGS_HOTBLOVER_TEMPERATURE_MAX
+            self.minValue = config.SETTINGS_HOTBLOVER_TEMPERATURE_MIN
+            self.safeValue = config.SETTINGS_HOTBLOVER_TEMPERATURE_SAFE
+            self.threshold = threshold
+            self.idle = True
+            
+            self.setpointValue = "Setpoint"
+            self.readoutValue = "Temperature"
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            self.output["movingAverage"] = [actualTemperature]
+            self.output["temperature"] = [actualTemperature]
+            self.output["statusString"] = ["Idle"]
     
     def __stop_stabilization__(self):
         """
@@ -697,20 +916,23 @@ class Hotblower(TangoDevice):
         """
         self.waitForStabilization = False
     
+    def __stop_homing__(self):
+        self.waitForHoming = False
+    
     def __set_idle(self, flag):
         """
         Set hotblower to idle position by flag
         @type flag: bool
         """
         if flag: self.running_remove()
-        self.__idle = flag
+        self.idle = flag
             
     def is_idle(self):
         """
         Return true if device is on stabilized temperature
         @rtype: bool
         """
-        if self.__idle == True:
+        if self.idle == True:
             return True
         else:
             return False
@@ -720,8 +942,8 @@ class Hotblower(TangoDevice):
         Is device stabilized on setpoint temperature?
         @rtype: bool 
         """
-        actualTemperature = self.device.read_attribute("Temperature").value
-        actualSetpoint = self.device.read_attribute("Setpoint").value
+        actualTemperature = self.read_attribute(self.readoutValue).value
+        actualSetpoint = self.read_attribute(self.setpointValue).value
         diffTemperature = abs(actualSetpoint - actualTemperature)
         if diffTemperature <= self.threshold:
             return True
@@ -745,11 +967,40 @@ class Hotblower(TangoDevice):
         """
         if force or not self.is_idle():
             self.__stop_stabilization__()
-            attributes = [("Setpoint", self.minValue)]
+            attributes = [(self.setpointValue, self.safeValue)]
             self.write_attributes(attributes)
-            logging.info("Hotblower halted, setpoint set to temperature %.5f", self.minValue)
+            logging.info("Hotblower halted, setpoint set to temperature %.5f", self.safeValue)
         if callBack: callBack()
+    '''
+        
+    def halt(self, force=False, callBack=None):
+        """
+        Stop actual stabilization or ramping loop.
+        Set new setpoint to minimum value, dont wait to stabilization. 
+        @type force: bool
+        @type callBack: function
+        """
+        if force or not self.is_idle():
+            self.__stop_stabilization__()
+            logging.info("Hotblower halted, start homing to value %.5f", self.safeValue)
+            thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
+            threads.add_thread(thread)
+            thread.start()
     
+    def __homing(self, callBack):
+        actualTemperature = self.read_attribute(self.readoutValue).value
+        oneHomingStep = (actualTemperature - self.safeValue) / self.HOMING_POINTS
+        actualHomingStep = actualTemperature - oneHomingStep
+        steps = self.HOMING_POINTS
+        while steps != 0 or self.waitForHoming or threads.THREAD_KEEP_ALIVE: 
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            if actualHomingStep-self.rampingThreshold <= actualTemperature or actualHomingStep-self.rampingThreshold >= actualTemperature:
+                actualHomingStep = actualTemperature - oneHomingStep
+                steps -= 1
+            sleep(self.POLL_STATE_TIME)
+        logging.info("Homing ended")
+        if callBack: callBack()
+    '''
     def start_profiling(self):
         """
         Start profiling of device
@@ -764,15 +1015,20 @@ class Hotblower(TangoDevice):
         Profiling routine
         put movingAverage and actual temperature into profiling output
         """
-        minStabilizeCount = self.MIN_STABILIZATION_TIME / self.POLL_STATE_TIME
-        measuredPoints = collections.deque(maxlen=minStabilizeCount)
+        #minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
+        measuredPoints = collections.deque(maxlen=60)
         
         while self.profiling and threads.THREAD_KEEP_ALIVE:
-            actualTemperature = self.device.read_attribute("Temperature").value
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            actualSetpoint = self.read_attribute(self.setpointValue).value
             measuredPoints.append(actualTemperature)
             averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
             self.output["movingAverage"][0] = averageStabilization
             self.output["temperature"][0] = actualTemperature
+            if abs(abs(actualSetpoint) - abs(averageStabilization)) > config.SETTINGS_RAMPING_ERROR_THRESHOLD:
+                self.output["statusString"][0] = "Ramping"
+            else:
+                self.output["statusString"][0] = "Stabilizing"
             sleep(self.POLL_STATE_TIME)
         logging.info("Profiling of device %s ended" % self.devicePath)
                 
@@ -785,36 +1041,42 @@ class Hotblower(TangoDevice):
         """
         self.__set_idle(False)
         self.waitForStabilization = True
-        stabilizeCount = self.MIN_STABILIZATION_TIME / self.POLL_STATE_TIME
-        minStabilizeCount = self.MIN_STABILIZATION_TIME / self.POLL_STATE_TIME
-        maxStabilizeCount = self.MAX_STABILIZATION_TIME / self.POLL_STATE_TIME
+        stabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
+        minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
+        maxStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MAX / self.POLL_STATE_TIME
+        maxRampingCount = config.SETTINGS_RAMPING_MAXIMUM_TIME / self.POLL_STATE_TIME
         count = 0
+        actualSetpoint = self.read_attribute(self.setpointValue).value
+        measuredPoints = collections.deque(maxlen=60)
+        self.ramping = True
         
-        actualSetpoint = self.device.read_attribute("Setpoint").value
-        measuredPoints = collections.deque(maxlen=minStabilizeCount)
-        ramping = True
-        
-        while (ramping or count != stabilizeCount and count < maxStabilizeCount and threads.THREAD_KEEP_ALIVE) and self.waitForStabilization:
-            actualTemperature = self.device.read_attribute("Temperature").value
+        while (self.ramping or (count < stabilizeCount and count < maxStabilizeCount) ) and threads.THREAD_KEEP_ALIVE and self.waitForStabilization:
+            
+            actualTemperature = self.read_attribute(self.readoutValue).value
             measuredPoints.append(actualTemperature)
             averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
             
-            if ramping and abs(actualSetpoint - averageStabilization) <= self.rampingThreshold: 
+            if self.ramping and count >= maxRampingCount:
+                return None
+                break
+            if self.ramping and abs(abs(actualSetpoint) - abs(averageStabilization)) <= config.SETTINGS_RAMPING_ERROR_THRESHOLD: 
                 logging.info("Ramping end")
                 count = 0
-                ramping = False
-            if not ramping and count >= minStabilizeCount - 1:
+                self.ramping = False
+            if not self.ramping and count >= minStabilizeCount - 1:
                 if abs(actualSetpoint - averageStabilization) <= self.threshold:
-                    logging.info("Hotblower: %s stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
+                    logging.info("%s stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
                     self.__set_idle(True)
                     return True
                 else:
                     stabilizeCount += 1
             sleep(self.POLL_STATE_TIME)
             count += 1
-            
+        
+        if self.ramping == True:
+            logging.info("Device %s could not be ramped to temperature: %.5fC", self.devicePath, actualSetpoint)
         if self.waitForStabilization:
-            logging.info("Hotblower: %s could not be stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
+            logging.info("Device %s could not be stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
         self.__set_idle(True)
         return False
         
@@ -825,10 +1087,290 @@ class Hotblower(TangoDevice):
         @type callback: fun
         """
         self.check_idle()
-        attributes = [("Setpoint", temperature)]
+        attributes = [(self.setpointValue, temperature)]
         self.write_attributes(attributes)
+        while self.read_attribute(self.setpointValue).value != temperature:
+            sleep(0.1)
         self.running_add()
-        self.wait_temperature_stabilized()
+        return self.wait_temperature_stabilized()
+        
+    def current_value(self, value="Temperature"):
+        """
+        Return value defined in value parameter
+        @rtype: mixed
+        @type value: String
+        """
+        return TangoDevice.current_value(self, value)
+
+class Cryostreamer(Hotblower):
+    
+    def __init__(self, devicePath, threshold=2):
+        """
+        Class constructor
+        @type devicePath: String
+        """
+        super(Cryostreamer, self).__init__(devicePath, initSelf=False)
+        self.maxValue = config.SETTINGS_CRYOSTREAMER_TEMPERATURE_MAX
+        self.minValue = config.SETTINGS_CRYOSTREAMER_TEMPERATURE_MIN
+        self.safeValue = config.SETTINGS_CRYOSTREAMER_TEMPERATURE_SAFE
+        self.threshold = threshold
+        self.idle = True
+        
+        self.setpointValue = "SetTempLoop1"
+        self.readoutValue = "TempChannelA"
+        actualTemperature = self.read_attribute(self.readoutValue).value
+        self.output["movingAverage"] = [actualTemperature]
+        self.output["temperature"] = [actualTemperature]
+        self.output["statusString"] = ["Idle"]
+        
+    '''
+    def halt(self, force=False, callBack=None):
+        """
+        Stop actual stabilization or ramping loop.
+        Set new setpoint to minimum value, dont wait to stabilization. 
+        @type force: bool
+        @type callBack: function
+        """
+        if force or not self.is_idle():
+            self.__stop_stabilization__()
+            logging.info("Cryostreamer halted, start homing to value %.5f", self.safeValue)
+            thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
+            threads.add_thread(thread)
+            thread.start()
+    
+    def __homing(self, callBack):
+        actualTemperature = self.read_attribute(self.readoutValue).value
+        oneHomingStep = (self.safeValue - actualTemperature) / self.HOMING_POINTS
+        actualHomingStep = actualTemperature + oneHomingStep
+        steps = self.HOMING_POINTS
+        while steps != 0 or self.waitForHoming or threads.THREAD_KEEP_ALIVE: 
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            if actualHomingStep+self.rampingThreshold <= actualTemperature or actualHomingStep+self.rampingThreshold >= actualTemperature:
+                actualHomingStep = actualTemperature + oneHomingStep
+                steps -= 1
+            sleep(self.POLL_STATE_TIME)
+        logging.info("Homing ended")
+        if callBack: callBack()
+    '''
+    def current_value(self, value="TempChannelA"):
+        """
+        Return value defined in value parameter
+        @rtype: mixed
+        @type value: String
+        """
+        return TangoDevice.current_value(self, value)
+
+class TemperatureDevice(TangoDevice):
+    
+    HOMING_POINTS = 4
+        
+    def __init__(self, devicePath, threshold=2, initSelf=True):
+        """
+        Class constructor
+        @type devicePath: String
+        """
+        super(TemperatureDevice, self).__init__(devicePath)
+        self.waitForHoming = False
+        self.rampingThreshold = config.SETTINGS_RAMPING_ERROR_THRESHOLD
+        self.ramping = False
+        
+        if initSelf:
+            self.maxValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["MAX"]
+            self.minValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["MIN"]
+            self.safeValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["SAFE"]
+            self.threshold = threshold
+            self.idle = True
+            
+            self.setpointValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["setpoint"]
+            self.readoutValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["readout"]
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            self.output["movingAverage"] = [actualTemperature]
+            self.output["temperature"] = [actualTemperature]
+            self.output["statusString"] = ["Idle"]
+    
+    def __stop_stabilization__(self):
+        """
+        Set flag to False and stop stabilization wait loop
+        """
+        self.waitForStabilization = False
+    
+    def __stop_homing__(self):
+        self.waitForHoming = False
+    
+    def __set_idle(self, flag):
+        """
+        Set hotblower to idle position by flag
+        @type flag: bool
+        """
+        if flag: self.running_remove()
+        self.idle = flag
+            
+    def is_idle(self):
+        """
+        Return true if device is on stabilized temperature
+        @rtype: bool
+        """
+        if self.idle == True:
+            return True
+        else:
+            return False
+    
+    def is_stabilized(self):
+        """
+        Is device stabilized on setpoint temperature?
+        @rtype: bool 
+        """
+        actualTemperature = self.read_attribute(self.readoutValue).value
+        actualSetpoint = self.read_attribute(self.setpointValue).value
+        diffTemperature = abs(actualSetpoint - actualTemperature)
+        if diffTemperature <= self.threshold:
+            return True
+        else:
+            return False
+    
+    def check_idle(self):
+        """
+        Check if hotblower is working. 
+        If yes than raise exception.
+        """
+        if not(self.is_idle()):
+            raise Exception("Hotblower is running on setpoint")
+    
+    def halt(self, force=False, callBack=None):
+        """
+        Stop actual stabilization or ramping loop.
+        Set new setpoint to minimum value, dont wait to stabilization. 
+        @type force: bool
+        @type callBack: function
+        """
+        if force or not self.is_idle():
+            self.__stop_stabilization__()
+            attributes = [(self.setpointValue, self.safeValue)]
+            self.write_attributes(attributes)
+            logging.info("Hotblower halted, setpoint set to temperature %.5f", self.safeValue)
+        if callBack: callBack()
+    '''
+        
+    def halt(self, force=False, callBack=None):
+        """
+        Stop actual stabilization or ramping loop.
+        Set new setpoint to minimum value, dont wait to stabilization. 
+        @type force: bool
+        @type callBack: function
+        """
+        if force or not self.is_idle():
+            self.__stop_stabilization__()
+            logging.info("Hotblower halted, start homing to value %.5f", self.safeValue)
+            thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
+            threads.add_thread(thread)
+            thread.start()
+    
+    def __homing(self, callBack):
+        actualTemperature = self.read_attribute(self.readoutValue).value
+        oneHomingStep = (actualTemperature - self.safeValue) / self.HOMING_POINTS
+        actualHomingStep = actualTemperature - oneHomingStep
+        steps = self.HOMING_POINTS
+        while steps != 0 or self.waitForHoming or threads.THREAD_KEEP_ALIVE: 
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            if actualHomingStep-self.rampingThreshold <= actualTemperature or actualHomingStep-self.rampingThreshold >= actualTemperature:
+                actualHomingStep = actualTemperature - oneHomingStep
+                steps -= 1
+            sleep(self.POLL_STATE_TIME)
+        logging.info("Homing ended")
+        if callBack: callBack()
+    '''
+    def start_profiling(self):
+        """
+        Start profiling of device
+        """
+        TangoDevice.start_profiling(self)
+        thread = threads.threading.Thread(target=self.__profiling_routine, args=([]))
+        threads.add_thread(thread)
+        thread.start()
+    
+    def __profiling_routine(self):
+        """
+        Profiling routine
+        put movingAverage and actual temperature into profiling output
+        """
+        #minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
+        measuredPoints = collections.deque(maxlen=60)
+        
+        while self.profiling and threads.THREAD_KEEP_ALIVE:
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            actualSetpoint = self.read_attribute(self.setpointValue).value
+            measuredPoints.append(actualTemperature)
+            averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
+            self.output["movingAverage"][0] = averageStabilization
+            self.output["temperature"][0] = actualTemperature
+            if abs(abs(actualSetpoint) - abs(averageStabilization)) > config.SETTINGS_RAMPING_ERROR_THRESHOLD:
+                self.output["statusString"][0] = "Ramping"
+            else:
+                self.output["statusString"][0] = "Stabilizing"
+            sleep(self.POLL_STATE_TIME)
+        logging.info("Profiling of device %s ended" % self.devicePath)
+                
+    def wait_temperature_stabilized(self):
+        """
+        Wait in loop until hotblower was stabilized.
+        Stop stabilization routine with self.waitForStabilization flag
+        Wait until ramping threshold was reached, than start stabilization loop
+        @rtype: bool
+        """
+        self.__set_idle(False)
+        self.waitForStabilization = True
+        stabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
+        minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
+        maxStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MAX / self.POLL_STATE_TIME
+        maxRampingCount = config.SETTINGS_RAMPING_MAXIMUM_TIME / self.POLL_STATE_TIME
+        count = 0
+        actualSetpoint = self.read_attribute(self.setpointValue).value
+        measuredPoints = collections.deque(maxlen=60)
+        self.ramping = True
+        
+        while (self.ramping or (count < stabilizeCount and count < maxStabilizeCount) ) and threads.THREAD_KEEP_ALIVE and self.waitForStabilization:
+            
+            actualTemperature = self.read_attribute(self.readoutValue).value
+            measuredPoints.append(actualTemperature)
+            averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
+            
+            if self.ramping and count >= maxRampingCount:
+                return None
+                break
+            if self.ramping and abs(abs(actualSetpoint) - abs(averageStabilization)) <= config.SETTINGS_RAMPING_ERROR_THRESHOLD: 
+                logging.info("Ramping end")
+                count = 0
+                self.ramping = False
+            if not self.ramping and count >= minStabilizeCount - 1:
+                if abs(actualSetpoint - averageStabilization) <= self.threshold:
+                    logging.info("%s stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
+                    self.__set_idle(True)
+                    return True
+                else:
+                    stabilizeCount += 1
+            sleep(self.POLL_STATE_TIME)
+            count += 1
+        
+        if self.ramping == True:
+            logging.info("Device %s could not be ramped to temperature: %.5fC", self.devicePath, actualSetpoint)
+        if self.waitForStabilization:
+            logging.info("Device %s could not be stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
+        self.__set_idle(True)
+        return False
+        
+    def set_temperature(self, temperature, callback=None):
+        """
+        Set hotblower setpoint to new temperature
+        @type temperature: float
+        @type callback: fun
+        """
+        self.check_idle()
+        attributes = [(self.setpointValue, temperature)]
+        self.write_attributes(attributes)
+        while self.read_attribute(self.setpointValue).value != temperature:
+            sleep(0.1)
+        self.running_add()
+        return self.wait_temperature_stabilized()
         
     def current_value(self, value="Temperature"):
         """
@@ -853,7 +1395,15 @@ class VirtualDevice(object):
         self.output = {}
         self.profiling = False
         self.devices = devices
-                
+        self.deviceError = False
+        self.defaultClass = self.__class__
+    
+    def isDeviceError(self):
+        for device in self.devices:
+            if device.isDeviceError():
+                return True
+        return False
+        
     def halt(self, callBack=None):
         """
         Halt connected devices
@@ -868,9 +1418,17 @@ class VirtualDevice(object):
         Chcek if all connected devices are idle
         @rtype: bool
         """
-        for device in self.devices:
-            if not device.is_idle(): return False
-        return True
+        if self.deviceError == True:
+            for device in self.devices:
+                if device.deviceError:
+                    return False
+            self.deviceError = False
+        else: 
+            for device in self.devices:
+                if device.deviceError:
+                    self.deviceError = True
+                if not device.is_idle(): return False
+            return True
     
     def check_idle(self):
         """
@@ -887,7 +1445,7 @@ class VirtualDevice(object):
     def stop_profiling(self):
         self.profiling = False
     
-    def current_value(self, value):
+    def current_value(self, *args):
         """
         Imitate tango request to get current value
         """
@@ -935,10 +1493,10 @@ class VirtualMotorDistance2D(VirtualDevice):
         rightMotorPosition = self.rightMotor.current_value() + half_position
         
         # check motor limits
-        leftMinimum = self.leftMotor.device.read_attribute("UnitLimitMin").value
-        rightMinimum = self.rightMotor.device.read_attribute("UnitLimitMin").value
-        leftMaximum = self.leftMotor.device.read_attribute("UnitLimitMax").value
-        rightMaximum = self.rightMotor.device.read_attribute("UnitLimitMax").value
+        leftMinimum = self.leftMotor.read_attribute("UnitLimitMin").value
+        rightMinimum = self.rightMotor.read_attribute("UnitLimitMin").value
+        leftMaximum = self.leftMotor.read_attribute("UnitLimitMax").value
+        rightMaximum = self.rightMotor.read_attribute("UnitLimitMax").value
         
         if(leftMotorPosition < leftMinimum or rightMotorPosition < rightMinimum):
             raise Exception("Minimum motor position was exceeded")
@@ -986,10 +1544,10 @@ class VirtualMotorCenter2D(VirtualDevice):
         leftMotorPosition = self.leftMotor.current_value() + center_position
         rightMotorPosition = self.rightMotor.current_value() + center_position
         
-        leftMinimum = self.leftMotor.device.read_attribute("UnitLimitMin").value
-        rightMinimum = self.rightMotor.device.read_attribute("UnitLimitMin").value
-        leftMaximum = self.leftMotor.device.read_attribute("UnitLimitMax").value
-        rightMaximum = self.rightMotor.device.read_attribute("UnitLimitMax").value
+        leftMinimum = self.leftMotor.read_attribute("UnitLimitMin").value
+        rightMinimum = self.rightMotor.read_attribute("UnitLimitMin").value
+        leftMaximum = self.leftMotor.read_attribute("UnitLimitMax").value
+        rightMaximum = self.rightMotor.read_attribute("UnitLimitMax").value
         
         if(leftMotorPosition < leftMinimum or rightMotorPosition < rightMinimum):
             raise Exception("Minimum motor position was exceeded")
@@ -1006,3 +1564,29 @@ class VirtualMotorCenter2D(VirtualDevice):
     def execute_command(self, commandName, commandParam=None):
         if commandName == "GetPosition": return self.get_actual_position()
         return 0
+    
+class counter(TangoDevice):
+    """
+    Class that define Shutter device
+    """
+    
+    def __init__(self, devicePath, timer):
+        """
+        Class constructor
+        @type devicePath: String
+        """
+        super(counter, self).__init__(devicePath)
+        self.timer = TangoDevice(timer)
+    
+    def get_counts(self, sampleTime):
+        
+        self.timer.device.SampleTime = sampleTime
+        self.device.Reset()
+        
+        self.timer.Start()
+        
+        while self.timer.state() == DevState.MOVING:
+            time.sleep(0.1)
+            
+        return self.device.Counts
+        

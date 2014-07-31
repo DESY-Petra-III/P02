@@ -10,9 +10,14 @@ from PyQt4.Qt import SIGNAL
 import logging
 import sys
 import signal
+from os import listdir
+from os.path import isfile, join, splitext, basename, dirname
+import re
 
 # Import local classes
-from Revolver.classes import devices, config, signals, threads, macro
+from Revolver.macro.UI import layout_settings
+from Revolver.classes import devices, config, signals, threads, macro, dialogs
+from string import replace
 
 # Every widget derived from this widget will get internal identity number
 GLOBAL_WIDGET_ID = 1
@@ -25,6 +30,8 @@ class DefaultWidget(QWidget):
     DefaultWidget class definition.
     It implements all basic methods for every widget.
     """
+    EXPERT_SETTINGS_PIN = str(2501)
+    
     def __init__(self, parent=False):
         """
         Class constructor
@@ -51,7 +58,7 @@ class DefaultWidget(QWidget):
         """
         global GLOBAL_WIDGET_ID
         self.widget_id = GLOBAL_WIDGET_ID
-        self.defaultMotorDevice = devices.Motor(config.DEVICE_MOTOR)
+        #self.defaultMotorDevice = devices.Motor(config.DEVICE_MOTOR)
         self.killall = True
         self.widgets = []
         GLOBAL_WIDGET_ID += 1
@@ -190,7 +197,7 @@ class DefaultWidget(QWidget):
         """
         Signal handler:
         check minimum and maximum value for loop motor
-        attr variable contain list of all Spinboxes, that should be limited by maximum and minum
+        attr variable contain list of all Spinboxes, that should be limited by maximum and minimum
         motor position
         @type attr: list
         @type device: tangoDevice
@@ -204,8 +211,9 @@ class DefaultWidget(QWidget):
         """
         Get exception from application environment
         """
-        if sys.exc_info()[0] is None: return "Unspecified exception"
-        return str("Exception %s with message: %s" % (sys.exc_info()[0], sys.exc_info()[1]))
+        exception_info = sys.exc_info()
+        if exception_info[0] is None: return "Unspecified exception"
+        return str("Exception %s with message: %s" % (exception_info[0], exception_info[1]))
     
     def validate_input(self, name, inputType, value):
         """
@@ -218,7 +226,7 @@ class DefaultWidget(QWidget):
             if (value is None) or (value == ""): raise Exception("Input error")
             elif inputType == 'string': return str(value)
             elif inputType == 'int': return int(value)
-            elif inputType == 'float': return float(value)
+            elif inputType == 'float': return float(value.replace(',', '.'))
         except:
             message = name + " value must be non empty " + inputType
             QMessageBox.question(self, 'Input error', message, QMessageBox.Ok)
@@ -286,7 +294,35 @@ class DefaultWidget(QWidget):
         self.widgets.append(widget)
         # else:
         #    raise Exception("Widget is not of type DefaultWidget")
-  
+    
+    def set_startup_logfile(self):
+        """
+        Set new logfile file, when file exists append .x (1,2,3,...) 
+        and save new logfile
+        """
+        newLogNumber = 0
+        currentFile =  splitext(config.DEFAULT_LOG_FILE)
+        fileExtension = currentFile[1]
+        
+        filePath = dirname(config.DEFAULT_LOG_FILE)
+        fileName = currentFile[0].replace(filePath+"/","").replace("\\","")
+        
+        regex = re.compile('^%s_(\d*)%s$'%(fileName,fileExtension))
+        for f in listdir(filePath):
+            fileName_actual = join(filePath,f)
+            if isfile(fileName_actual):
+                try:
+                    logParsed = regex.findall(f)
+                    logNumber = int(logParsed[0])
+                    if logNumber > newLogNumber: 
+                        newLogNumber = int(logNumber)
+                        logPattern = str(logParsed[0])
+                except:
+                    pass
+        newLogNumber += 1
+        config.ACTUAL_LOG_FILE = filePath + "/%s_%05d%s" % (fileName, newLogNumber, fileExtension)
+        return config.ACTUAL_LOG_FILE
+    
     def action_disable_controls(self):
         """
         Disable controls
@@ -297,7 +333,7 @@ class DefaultWidget(QWidget):
         """
         Enable controls
         """
-        pass
+        actualFile = config.DEFAULT_LOG_FILE
     
     def action_change_logfile(self):
         """
@@ -310,9 +346,7 @@ class DefaultWidget(QWidget):
         if filename:
             logging.info("Logfile changed to: %s" % filename)
             config.DEFAULT_LOG_FILE = filename
-            logFile = open(config.DEFAULT_LOG_FILE, 'a+')
-            logFile.close()
-
+            
     def action_show_controls(self):
         """
         Signal handler:
@@ -326,7 +360,15 @@ class DefaultWidget(QWidget):
         Override this function to hide widget controls
         """
         pass
-
+    
+    def action_add_settings_menu(self):
+        self.menuSettings = QtGui.QMenu(self.menubar)
+        self.actionSettingsUser = QtGui.QAction(self)
+        self.menuSettings.addAction(self.actionSettingsUser)
+        self.menubar.addActions([self.menuFile.menuAction(), self.menuSettings.menuAction()])
+        self.actionSettingsUser.triggered.connect(lambda:self.emit(signals.SIG_SHOW_SETTINGS))
+        self.menuSettings.setTitle(QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSettingsUser.setText(QtGui.QApplication.translate("MainWindow", "User settings", None, QtGui.QApplication.UnicodeUTF8))
 
 class DefaultMainWindow(QMainWindow, DefaultWidget):
     """
@@ -338,13 +380,14 @@ class DefaultMainWindow(QMainWindow, DefaultWidget):
         super(DefaultMainWindow, self).__init__()
         
         self.menubar = QtGui.QMenuBar(self)
-        self.menuFile = QtGui.QMenu(self.menubar)
         self.setMenuBar(self.menubar)
+        
+        self.menuFile = QtGui.QMenu(self.menubar)
+        
         self.actionSet_logfile = QtGui.QAction(self)
         self.actionQuit = QtGui.QAction(self)
-        self.menuFile.addAction(self.actionSet_logfile)
-        self.menuFile.addAction(self.actionQuit)
-        self.menubar.addAction(self.menuFile.menuAction())
+        
+        self.menuFile.addActions([self.actionSet_logfile, self.actionQuit])
         
         self.actionQuit.triggered.connect(self.close)
         self.actionSet_logfile.triggered.connect(self.action_change_logfile)
@@ -353,7 +396,7 @@ class DefaultMainWindow(QMainWindow, DefaultWidget):
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSet_logfile.setText(QtGui.QApplication.translate("MainWindow", "Set logfile", None, QtGui.QApplication.UnicodeUTF8))
 
-
+        
 # MAIN PROGRAM #################################################################################
         
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ Created on Oct 3, 2013
 
 @author: Martin Domaracky
 '''
-
+import logging
 # import global classes 
 import default_beamline_device as default_device
 from UI import shutter
@@ -21,7 +21,7 @@ class Beamline_shutter(shutter.Ui_Form, default_device.Beamline_device):
         self.__main()
         
     def __init_variables(self):
-        self.shutter = devices.Shutter(self.devicePath)
+        self.device = self.shutter = devices.Shutter(self.devicePath)
     
     def __init_signals(self):
         pass
@@ -42,7 +42,8 @@ class Beamline_shutter(shutter.Ui_Form, default_device.Beamline_device):
         self._is_block_state_changed(state)
         
     def check_state(self):
-        state = self.shutter.device.read_attribute("value").value
+        state = self.shutter.read_attribute("value").value
+        if self.check_device_error(): return state
         if not(self._is_block_state_changed(state)): return state
         
         self.device_button.blockSignals(True)

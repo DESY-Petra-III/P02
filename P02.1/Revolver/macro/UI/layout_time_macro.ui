@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>533</width>
-    <height>476</height>
+    <height>504</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -513,6 +513,16 @@ QGroupBox::title {
               </item>
              </layout>
             </item>
+            <item row="3" column="1">
+             <widget class="QCheckBox" name="macro_reset_fileindex">
+              <property name="text">
+               <string>Reset detector fileindex</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
@@ -637,7 +647,10 @@ QGroupBox::title {
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <property name="spacing">
+      <property name="horizontalSpacing">
+       <number>5</number>
+      </property>
+      <property name="verticalSpacing">
        <number>0</number>
       </property>
       <item row="0" column="1">
@@ -669,6 +682,10 @@ QGroupBox::title {
       </item>
       <item row="0" column="4">
        <widget class="QPushButton" name="button_run_macros">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{background:#80FF9F}
+QPushButton:disabled{ background:silver;color:grey }</string>
+        </property>
         <property name="text">
          <string>Start macro</string>
         </property>
@@ -797,7 +814,8 @@ QGroupBox::title {
         <item>
          <widget class="QPushButton" name="input_macro_halt">
           <property name="styleSheet">
-           <string notr="true">background:purple;font-weight:bold;color:#fff</string>
+           <string notr="true">QPushButton{background:purple;font-weight:bold;color:#fff;}
+QPushButton:disabled{ background:silver;color:grey }</string>
           </property>
           <property name="text">
            <string>Stop macro</string>

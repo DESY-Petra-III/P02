@@ -5,7 +5,7 @@ import signal
  
 # Import local classes
 from  gui_default_widget import DefaultWidget
-from Revolver.classes import config, signals
+from Revolver.classes import config, signals, dialogs, macro
 from UI import layout_revolver
 import gui_macro_widget
 import gui_scan_widget
@@ -43,6 +43,15 @@ class revolver(layout_revolver.Ui_MainWindow, QtGui.QMainWindow, DefaultWidget):
         self.addDockWidget(QtCore.Qt.DockWidgetArea(4), logWidget)
         logWidget.hide()
         self.macroWidget.set_log_widget(logWidget)
+    
+    def action_show_settings(self):
+        """
+        Set logifle
+        """
+        settings = dialogs.SettingsDialog(self)
+        settings.toggle_expert_mode_show(False)
+        settings.option_dark_timeout.setValue(macro.MACRO_DARK_WAIT)
+        settings.exec_()
         
     def action_tab_changed(self, widget):
         size = widget.sizeHint()
@@ -53,11 +62,14 @@ class revolver(layout_revolver.Ui_MainWindow, QtGui.QMainWindow, DefaultWidget):
 if __name__ == '__main__':
     
     # create main window
+    #config.DEVICE_ALLOW_RETRY = False
     app = QtGui.QApplication(sys.argv)
     
     # init widget
     widget = revolver()
-
+    widget.connect(widget, signals.SIG_SHOW_SETTINGS, widget.action_show_settings)
+    widget.action_add_settings_menu()
+    
     # connect signal from window "x" button to close the application correctly
     app.connect(app, signals.SIG_ABOUT_QUIT, widget.close_widget)
     

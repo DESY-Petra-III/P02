@@ -21,7 +21,7 @@ class Beamline_absorber(absorber.Ui_Form, default_device.Beamline_device):
         
     def __init_variables(self):
         self.allowBlockBeam = False
-        self.absorber = devices.Absorber(self.devicePath)
+        self.device = self.absorber = devices.Absorber(self.devicePath)
     
     def __init_signals(self):
         pass
@@ -34,6 +34,8 @@ class Beamline_absorber(absorber.Ui_Form, default_device.Beamline_device):
     
     def check_state(self):
         state = self.absorber.get_value()
+        if self.check_device_error(): return state
+        
         if not(self._is_block_state_changed(state)): return state
         
         self.device_button.blockSignals(True)

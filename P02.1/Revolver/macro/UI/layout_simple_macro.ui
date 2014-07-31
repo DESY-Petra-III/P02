@@ -35,7 +35,10 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <property name="spacing">
+      <property name="horizontalSpacing">
+       <number>5</number>
+      </property>
+      <property name="verticalSpacing">
        <number>0</number>
       </property>
       <item row="0" column="1">
@@ -67,6 +70,10 @@
       </item>
       <item row="0" column="4">
        <widget class="QPushButton" name="button_add_macro">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{background:#80DFFF}
+QPushButton:disabled{ background:silver;color:grey }</string>
+        </property>
         <property name="text">
          <string>Add macro step</string>
         </property>
@@ -74,6 +81,10 @@
       </item>
       <item row="0" column="5">
        <widget class="QPushButton" name="button_run_macros">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{background:#80FF9F}
+QPushButton:disabled{ background:silver;color:grey }</string>
+        </property>
         <property name="text">
          <string>Start macro</string>
         </property>
@@ -202,7 +213,8 @@ QGroupBox::title {
         <item>
          <widget class="QPushButton" name="input_macro_halt">
           <property name="styleSheet">
-           <string notr="true">background:purple;font-weight:bold;color:#fff</string>
+           <string notr="true">QPushButton{background:purple;font-weight:bold;color:#fff;}
+QPushButton:disabled{ background:silver;color:grey }</string>
           </property>
           <property name="text">
            <string>Stop macro</string>
@@ -223,7 +235,7 @@ QGroupBox::title {
       <property name="topMargin">
        <number>5</number>
       </property>
-      <item row="0" column="0">
+      <item row="0" column="1">
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -236,7 +248,7 @@ QGroupBox::title {
         </property>
        </spacer>
       </item>
-      <item row="0" column="1">
+      <item row="0" column="3">
        <widget class="QLabel" name="label_8">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -249,13 +261,23 @@ QGroupBox::title {
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="4">
        <widget class="QSpinBox" name="repeat_macro">
         <property name="minimum">
          <number>1</number>
         </property>
         <property name="maximum">
          <number>999999999</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="macro_reset_fileindex">
+        <property name="text">
+         <string>Reset detector fileindex</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

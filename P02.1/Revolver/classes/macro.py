@@ -41,7 +41,7 @@ class Macro(object):
         
     def run(self):
         """
-        Main macro execution rutine
+        Main macro execution routine
         """
         pass
     
@@ -49,6 +49,7 @@ class Macro(object):
         """
         Wait for specified time.
         Break if stopMacro changes to True.
+        @type seconds: float
         """
         if not seconds: seconds = self.wait
         if seconds <= 0: return
@@ -57,30 +58,36 @@ class Macro(object):
         self.emit("setWaitProgress", 0)
         self.emit("macroOperation", "Waiting %i seconds" % seconds)
         for i in range(seconds):
-            if STOP == True: break
+            if STOP: return
             sleep(1)
             self.emit("setWaitProgress", (i + 1) * step)   
         self.emit("showTimeProgress", flag=False)    
 
 class DarkShotMacro(Macro):
-    def __init__(self, summed):
+    """
+    Macro for the dark shot
+    """
+    def __init__(self, summed, filename=None):
         """
         Class constructor:
         @type summed: int
+        @type filename: String
         """
         super(DarkShotMacro, self).__init__()
         self.summed = summed
+        self.filename = filename
         
     def run(self, substractTime=0):
         """
         Execute macro step
+        @type substractTime: float
         """
         detector = devices.Detector(config.DEVICE_DETECTOR)
         shutter = devices.Shutter(config.DEVICE_SHUTTER)
         self.wait_seconds(MACRO_DARK_WAIT - substractTime)
         
         self.emit("macroOperation", "Taking dark")
-        detector.take_dark(shutter, self.summed)
+        detector.take_dark(shutter, self.summed, self.filename)
         
 class MotorMacro(Macro):
     """
@@ -113,21 +120,24 @@ class MotorMacro(Macro):
     def run(self, lastStepStart=0):
         """
         Execute macro step
+        @type lastStepStart: float
         """
         motor = devices.Motor(str(self.motorDevice))
         detector = devices.Detector(config.DEVICE_DETECTOR)
         shutter = devices.Shutter(config.DEVICE_SHUTTER)
         self.emit("macroOperation", "Moving motor: %s to position %f" % (motor.name, float(self.position)))
         motor.move(float(self.position))
-        comment2 = "Motor position at: %.3f" % self.position
-        
+        comment2 = "Motor %s at: %.3f" % (motor.name, self.position)
+        if STOP: return
         lastStepTook = int(round(time() - lastStepStart))
         if self.takeDark:
+            if STOP: return
             if lastStepTook < MACRO_DARK_WAIT:
                 self.wait_seconds(MACRO_DARK_WAIT - lastStepTook)
             self.emit("macroOperation","Taking dark")
-            detector.take_dark(shutter, self.summed)
-        
+            if STOP: return
+            detector.take_dark(shutter, self.summed, filename=self.sampleName)
+        if STOP: return
         self.emit("macroOperation","Taking shot")
         detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
 
@@ -135,8 +145,7 @@ class TimeMacro(Macro):
     """
     Time macro.
     Take shot, wait for specified time and repeat
-    """
-    
+    """  
     def __init__(self, sampleName, summed, filesafter, wait, repeat, takeDark, comment=None):
         """
         Class constructor:
@@ -159,6 +168,7 @@ class TimeMacro(Macro):
     def run(self, lastStepStart=0):
         """
         Execute macro step
+        @type lastStepStart: float
         """
         detector = devices.Detector(config.DEVICE_DETECTOR)
         shutter = devices.Shutter(config.DEVICE_SHUTTER)
@@ -167,7 +177,7 @@ class TimeMacro(Macro):
             if lastStepTook < MACRO_DARK_WAIT:
                 self.wait_seconds(MACRO_DARK_WAIT - lastStepTook)
             self.emit("macroOperation", "Taking dark")
-            detector.take_dark(shutter, self.summed)
+            detector.take_dark(shutter, self.summed, filename=self.sampleName)
         self.emit("macroOperation", "Taking shot")
         detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment))
 
@@ -204,29 +214,29 @@ class TemperatureMacro(Macro):
         """
         Execute macro step
         """
-        if not device: device = devices.Hotblower(str(self.devicePath))
+        if not device: device = devices.TemperatureDevice(str(self.devicePath))
         device.threshold = threshold
-        detector = devices.Detector(config.DEVICE_DETECTOR)
-        shutter = devices.Shutter(config.DEVICE_SHUTTER)
+        #detector = devices.Detector(config.DEVICE_DETECTOR)
+        #shutter = devices.Shutter(config.DEVICE_SHUTTER)
         self.emit("macroOperation", "Setpoint changed to temperature %f (stabilizing)" % (float(self.temperature)))
-        device.set_temperature(self.temperature)
-
+        if device.set_temperature(self.temperature) is None:
+            raise Exception("Macro error temperature could not be set")
+        if STOP: return
+        
         lastStepTook = int(round(time() - lastStepStart))
         if self.takeDark:
             if lastStepTook < MACRO_DARK_WAIT:
                 self.wait_seconds(MACRO_DARK_WAIT - lastStepTook)
             self.emit("macroOperation","Taking dark")
-            detector.take_dark(shutter, self.summed)
-        
+        #    detector.take_dark(shutter, self.summed, filename=self.sampleName)
+        if STOP: return
         self.emit("macroOperation","Taking shot")
-        comment2 = "Hotblower T_avg.: %.3f" % device.output["movingAverage"][0]
-        detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
-
+        comment2 = "%s T_avg.: %.3f" % (device.name, device.output["movingAverage"][0])
+        #detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
+        if STOP: return
         if self.holdingCount > 0:
             for i in range(0, self.holdingCount):
-                self.emit("macroOperation", "Taking shot")
-                comment2 = "Hotblower T_avg.: %.3f" % device.output["movingAverage"][0]
-                detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
                 self.wait_seconds(self.holdingTime)
-                
-                
+                self.emit("macroOperation", "Taking shot")
+                comment2 = "%s T_avg.: %.3f" % (device.name, device.output["movingAverage"][0])
+        #        detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)

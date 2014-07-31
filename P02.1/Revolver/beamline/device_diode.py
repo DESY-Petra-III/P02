@@ -21,7 +21,7 @@ class Beamline_diode(diode.Ui_Form, default_device.Beamline_device):
         self.__main()
         
     def __init_variables(self):
-        self.diode = devices.Diode(self.devicePath)
+        self.device = self.diode = devices.Diode(self.devicePath)
     
     def __init_signals(self):
         pass
@@ -43,7 +43,8 @@ class Beamline_diode(diode.Ui_Form, default_device.Beamline_device):
         self.emit(signals.SIG_SHOW_BEAMLINE_DEVICE_CONTROLS, self.controlIndex)
         
     def check_state(self):
-        state = self.diode.device.read_attribute("Valve1").value
+        state = self.diode.read_attribute("Valve1").value
+        if self.check_device_error(): return state
         if not(self._is_block_state_changed(state)): return state
         
         self.device_button.blockSignals(True)

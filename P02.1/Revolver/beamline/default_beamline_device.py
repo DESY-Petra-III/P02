@@ -4,6 +4,7 @@ Created on Oct 3, 2013
 @author: Martin Domaracky
 '''
 from PyQt4.QtGui import QIcon, QWidget
+import logging
 
 # import global classes 
 from Revolver import gui_default_widget
@@ -26,8 +27,10 @@ class Beamline_device(gui_default_widget.DefaultWidget):
         """
         super(Beamline_device, self).__init__(parent)
         self.devicePath = devicePath
+        self.deviceError = False
+        self.device = None
         
-        self.controlIndex = 0
+        self.controlIndex = -1
         self.__init_variables()
         self.__init_signals()
         self.__main()
@@ -40,6 +43,8 @@ class Beamline_device(gui_default_widget.DefaultWidget):
         self.allowBlockBeam = True
         self._beamBlocked = None
         self.highlighter = QWidget()
+        self.highlightColor = "210,226,237"
+        self.beamlineControls = None
     
     def __init_signals(self):
         """
@@ -48,6 +53,8 @@ class Beamline_device(gui_default_widget.DefaultWidget):
         Specify icon path as a parameter
         """
         self.connect(self, signals.SIG_BUTTON_CHANGE_ICON, lambda path:self.device_button.setIcon(QIcon(path)))
+        self.connect(self, signals.SIG_DEVICE_STATUS_OK, self.set_device_ok)
+        self.connect(self, signals.SIG_DEVICE_STATUS_ERROR, self.set_device_error)
     
     def __main(self):
         """
@@ -70,7 +77,8 @@ class Beamline_device(gui_default_widget.DefaultWidget):
                 self.action_block_beam(newBlockState)
             return True
     
-    def set_highlight_color(self, color):
+    def set_highlight_color(self, color, saveColor=True):
+        if saveColor: self.highlightColor = color
         self.highlighter.setStyleSheet("background-color: rgba("+color+",50%)")
     
     def set_controls_index(self, index=0):
@@ -97,7 +105,8 @@ class Beamline_device(gui_default_widget.DefaultWidget):
         if flag:
             self.highlighter.show()
         else:
-            self.highlighter.hide()
+            if not self.deviceError:
+                self.highlighter.hide()
         pass
     
     def action_block_beam(self, state):
@@ -120,6 +129,35 @@ class Beamline_device(gui_default_widget.DefaultWidget):
         This routine should check device state.
         """
         pass
+    
+    def check_device_error(self):
+        if self.device.deviceError and not self.deviceError: 
+            self.emit(signals.SIG_DEVICE_STATUS_ERROR)
+            self.deviceError = True
+            return True
+        elif not self.device.deviceError and self.deviceError:
+            self.deviceError = False
+            self.emit(signals.SIG_DEVICE_STATUS_OK)
+            self.emit(signals.SIG_ENABLE_CONTROLS_INDEX, self.controlIndex,True)
+            return False
+        elif self.device.deviceError:
+            if self.controlIndex != -1:
+                self.emit(signals.SIG_ENABLE_CONTROLS_INDEX, self.controlIndex,False)
+            return True
+        else:
+            return False
+    
+    def set_device_error(self):
+        self.device_button.blockSignals(True)
+        self.device_button.setDisabled(True)
+        self.set_highlight_color("255,0,0", False)
+        self.set_highlight(True)
+    
+    def set_device_ok(self):
+        self.device_button.blockSignals(False)
+        self.device_button.setDisabled(False)
+        self.set_highlight_color(self.highlightColor, False)
+        self.set_highlight(False)
     
     def set_beamline(self, beamline):
         self.beamline = beamline

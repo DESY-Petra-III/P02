@@ -4,6 +4,7 @@ import threading
 import sys
 import time
 import signal
+import logging
  
 # Import local classes
 from UI import layout_status_led
@@ -17,7 +18,8 @@ class DeviceLedStatusWidget(layout_status_led.Ui_Form, DefaultWidget):
     
     def __init__(self, device, parent=None):
         super(DeviceLedStatusWidget, self).__init__()
-        self.device = device        
+        self.device = device
+        self.deviceError = False
         self.__init_variables()
         self.__init_signals()
         self.__main()
@@ -48,7 +50,17 @@ class DeviceLedStatusWidget(layout_status_led.Ui_Form, DefaultWidget):
         """
         while threads.THREAD_KEEP_ALIVE and not self.STOP:
             try:
+                if self.device.deviceError == True:
+                    raise Exception('Device', 'errorState')
+                if self.deviceError == True:
+                    self.deviceError = False
+                    self.emit(signals.SIG_DEVICE_STATUS_OK)
+                    self.emit(signals._SIG_SET_LED_COLOR, "green")
+                    self.emit(signals.SIG_DEVICE_IDLE, True)
+                    continue
                 idle = self.device.is_idle()
+                if not idle:
+                    self.emit(signals.SIG_DEVICE_WORKING)
                 if self.status_changed_check(idle):
                     if idle: 
                         self.emit(signals._SIG_SET_LED_COLOR, "green")
@@ -61,8 +73,10 @@ class DeviceLedStatusWidget(layout_status_led.Ui_Form, DefaultWidget):
             except RuntimeError:
                 return
             except:
-                self.emit(signals._SIG_SET_LED_COLOR, "red")
-                self.emit(signals.SIG_DEVICE_STATUS_ERROR)
+                if self.deviceError == False:
+                    self.emit(signals._SIG_SET_LED_COLOR, "red")
+                    self.emit(signals.SIG_DEVICE_STATUS_ERROR)
+                    self.deviceError = True
             
             time.sleep(self.POLLING_TIME)
     

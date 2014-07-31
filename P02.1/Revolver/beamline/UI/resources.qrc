@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="devices">
+    <file>icons/mgrp.png</file>
     <file>icons/beamstop.png</file>
     <file>icons/laser_out.png</file>
     <file>icons/laser_in.png</file>
@@ -18,6 +19,7 @@
     <file>icons/microscope_closed.png</file>
     <file>icons/ion_chamber.png</file>
     <file>icons/detector.png</file>
+    <file>icons/macro_mode.png</file>
     <file>icons/optics.png</file>
     <file>icons/pinhole.png</file>
     <file>icons/x-ray.png</file>

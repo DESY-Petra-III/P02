@@ -11,9 +11,11 @@ from threading import Thread
 from time import sleep
 import logging
 import sys
+from taurus.qt.qtgui.extra_sardana import ExpDescriptionEditor
 
 # import global classes 
-from Revolver.classes import threads, signals
+from Revolver.classes import threads, signals, config
+from Revolver.macro import taurus_sequencer
 from Revolver import gui_default_widget
 from UI import beamline_default
 
@@ -43,6 +45,9 @@ class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
         self.previousMode = DEFAULT_MODE
         self.currentMode = DEFAULT_MODE
         self.currentControlsId = None
+        self.mgrpEditor = ExpDescriptionEditor(door=config.BL_DEFAULT_DOOR)
+        self.macroExecutor = taurus_sequencer.TaurusSequencer(doorName=config.BL_DEFAULT_DOOR)
+        self.macroExecutor.set_kill_all_permissions(False)
     
     def __init_signals(self):
         self.connect(self, signals.SIG_CHECK_BEAM, self.action_check_beam)
@@ -100,6 +105,12 @@ class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
         """
         self.controls_frame.setStyleSheet("#controls_frame{background-color:rgba("+color+",100%);}")
     
+    def action_open_sardana_macro(self):
+        self.macroExecutor.show()
+    
+    def action_open_mgrp_editor(self):
+        self.mgrpEditor.show()
+    
     def action_controls_changed(self, controls_id):
         """
         Invoke this method when controls was changed
@@ -127,6 +138,9 @@ class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
     def set_current_controls(self, index):
         if self.beamline_device_controls.tabBar().isTabEnabled(index):
             self.beamline_device_controls.setCurrentIndex(index)
+    
+    def action_set_controls_enabled(self, controlsIndex, flag):
+        self.beamline_device_controls.tabBar().setTabEnabled(controlsIndex,flag)
         
     def action_set_expert_mode(self, flag):
         """
@@ -155,11 +169,11 @@ class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
         return True
             
 # MAIN PROGRAM #################################################################################
-
+from taurus.qt.qtgui.application import TaurusApplication
 if __name__ == '__main__':
     
     # create main window
-    app = QApplication(sys.argv)
+    app = TaurusApplication(sys.argv)
     
     # init widget
     widget = Beamline()

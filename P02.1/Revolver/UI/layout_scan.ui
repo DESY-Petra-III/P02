@@ -135,6 +135,10 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton{background:#FFDF80}
+QPushButton:disabled{ background:silver;color:grey }</string>
+              </property>
               <property name="text">
                <string>Repeat scan</string>
               </property>
@@ -142,6 +146,10 @@
             </item>
             <item>
              <widget class="QPushButton" name="button_stop_scan">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{background:purple;font-weight:bold;color:#fff;}
+QPushButton:disabled{ background:silver;color:grey }</string>
+              </property>
               <property name="text">
                <string>Stop scan</string>
               </property>
@@ -516,7 +524,7 @@ QGroupBox::title {
              <item row="1" column="0">
               <layout class="QHBoxLayout" name="horizontalLayout_15">
                <property name="spacing">
-                <number>0</number>
+                <number>5</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
@@ -557,8 +565,12 @@ QGroupBox::title {
                </item>
                <item>
                 <widget class="QPushButton" name="button_scan_start">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
                  <property name="styleSheet">
-                  <string notr="true"/>
+                  <string notr="true">QPushButton{background:#80FF9F}
+QPushButton:disabled{ background:silver;color:grey }</string>
                  </property>
                  <property name="text">
                   <string>Start scan</string>
@@ -605,8 +617,12 @@ QGroupBox::title {
             </item>
             <item>
              <widget class="QPushButton" name="button_refresh_detector_image">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="styleSheet">
-               <string notr="true"/>
+               <string notr="true">QPushButton{background:#FFDF80}
+QPushButton:disabled{ background:silver;color:grey }</string>
               </property>
               <property name="text">
                <string>Refresh image from detector</string>

@@ -1,0 +1,8 @@
+############################ Log - Start ############################
+# Log initialized at: 07/29/14 16:04:19
+# Temperature device: tango://haspp02oh1:10000/p02/eurotherm/exp.01
+# Error threshold: 2.000
+Time	Real temperature	Average temperature	Setpoint temperature	Filename	Timestamp	Datetime
+
+# Log finished at: 07/29/14 16:04:28
+############################# Log - End #############################

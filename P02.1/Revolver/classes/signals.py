@@ -20,11 +20,13 @@ SIG_HALT_DEVICES = SIGNAL("haltDevices()")
 SIG_ABOUT_QUIT = SIGNAL("aboutToQuit()")
 SIG_STOP = SIGNAL("stop()")
 SIG_START = SIGNAL("start()")
+SIG_START_MODE = SIGNAL("start(int)")
 SIG_PLOT_SIGNAL = SIGNAL("plotSignal()")
 SIG_SHOWN = SIGNAL("shown()")
 SIG_HIDDEN = SIGNAL("hidden()")
 SIG_CHANGE_DEFAULT_MOTOR = SIGNAL('changeDefaultMotor')
 SIG_SHOW_ELEMENT = SIGNAL('showElement')
+SIG_SHOW_SETTINGS = SIGNAL('showSettings')
 
 ##############################################
 # Macro signals                              #
@@ -53,6 +55,9 @@ SIG_DEVICE_WORKING = SIGNAL("deviceWorking()")
 SIG_DEVICE_IDLE = SIGNAL("deviceIdle(bool)")
 SIG_DEVICE_STATUS_CHANGED = SIGNAL("deviceStatusChanged(bool)")
 SIG_DEVICE_STATUS_ERROR = SIGNAL("deviceStatusError()")
+SIG_DEVICE_STATUS_OK = SIGNAL("deviceStatusOk()")
+SIG_DEVICE_RAMPING = SIGNAL("deviceRamping()")
+SIG_DEVICE_STABILIZING = SIGNAL("deviceStabilizing()")
 _SIG_SET_LED_COLOR = SIGNAL("setLedColor")
 
 ##############################################
@@ -74,3 +79,4 @@ SIG_BUTTON_CHANGE_ICON = SIGNAL("changeIcon")
 SIG_CHANGE_MODE = SIGNAL("change_mode(int)")
 SIG_SHOW = SIGNAL("show()")
 SIG_HIDE = SIGNAL("hide()")
+SIG_ENABLE_CONTROLS_INDEX = SIGNAL("action_set_controls_enabled(int, bool)")

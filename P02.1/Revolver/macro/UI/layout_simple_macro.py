@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmp39Skip.ui'
+# Form implementation generated from reading ui file '/tmp/tmpwGjyZH.ui'
 #
-# Created: Thu Oct 17 16:32:23 2013
+# Created: Thu Jan 23 15:09:09 2014
 #      by: PyQt4 UI code generator 4.6.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,8 +20,9 @@ class Ui_Form(object):
         self.macro_main_controls = QtGui.QWidget(Form)
         self.macro_main_controls.setObjectName("macro_main_controls")
         self.gridLayout_4 = QtGui.QGridLayout(self.macro_main_controls)
-        self.gridLayout_4.setSpacing(0)
         self.gridLayout_4.setContentsMargins(0, 5, 0, 0)
+        self.gridLayout_4.setHorizontalSpacing(5)
+        self.gridLayout_4.setVerticalSpacing(0)
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.button_save_macro = QtGui.QPushButton(self.macro_main_controls)
         self.button_save_macro.setObjectName("button_save_macro")
@@ -32,15 +33,19 @@ class Ui_Form(object):
         spacerItem = QtGui.QSpacerItem(255, 24, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout_4.addItem(spacerItem, 0, 3, 1, 1)
         self.button_add_macro = QtGui.QPushButton(self.macro_main_controls)
+        self.button_add_macro.setStyleSheet("QPushButton{background:#80DFFF}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_add_macro.setObjectName("button_add_macro")
         self.gridLayout_4.addWidget(self.button_add_macro, 0, 4, 1, 1)
         self.button_run_macros = QtGui.QPushButton(self.macro_main_controls)
+        self.button_run_macros.setStyleSheet("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_run_macros.setObjectName("button_run_macros")
         self.gridLayout_4.addWidget(self.button_run_macros, 0, 5, 1, 1)
         self.button_macro_reset = QtGui.QPushButton(self.macro_main_controls)
         self.button_macro_reset.setObjectName("button_macro_reset")
         self.gridLayout_4.addWidget(self.button_macro_reset, 0, 0, 1, 1)
-        self.gridLayout.addWidget(self.macro_main_controls, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.macro_main_controls, 2, 0, 1, 1)
         self.macro_wait_controls = QtGui.QGroupBox(Form)
         self.macro_wait_controls.setStyleSheet("QGroupBox {\n"
 "    border: 1px solid gray;\n"
@@ -64,7 +69,7 @@ class Ui_Form(object):
         self.macro_waiting_progressbar.setProperty("value", 0)
         self.macro_waiting_progressbar.setObjectName("macro_waiting_progressbar")
         self.gridLayout_9.addWidget(self.macro_waiting_progressbar, 0, 0, 1, 1)
-        self.gridLayout.addWidget(self.macro_wait_controls, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.macro_wait_controls, 3, 0, 1, 1)
         self.macro_steps_controls = QtGui.QGroupBox(Form)
         self.macro_steps_controls.setEnabled(True)
         self.macro_steps_controls.setStyleSheet("QGroupBox {\n"
@@ -96,11 +101,12 @@ class Ui_Form(object):
         self.macro_progressbar.setObjectName("macro_progressbar")
         self.horizontalLayout_3.addWidget(self.macro_progressbar)
         self.input_macro_halt = QtGui.QPushButton(self.macro_steps_controls)
-        self.input_macro_halt.setStyleSheet("background:purple;font-weight:bold;color:#fff")
+        self.input_macro_halt.setStyleSheet("QPushButton{background:purple;font-weight:bold;color:#fff;}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.input_macro_halt.setObjectName("input_macro_halt")
         self.horizontalLayout_3.addWidget(self.input_macro_halt)
         self.gridLayout_6.addLayout(self.horizontalLayout_3, 1, 0, 1, 2)
-        self.gridLayout.addWidget(self.macro_steps_controls, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.macro_steps_controls, 4, 0, 1, 1)
         self.repaet_macro_layout = QtGui.QWidget(Form)
         self.repaet_macro_layout.setObjectName("repaet_macro_layout")
         self.gridLayout_8 = QtGui.QGridLayout(self.repaet_macro_layout)
@@ -108,7 +114,7 @@ class Ui_Form(object):
         self.gridLayout_8.setContentsMargins(-1, 5, -1, -1)
         self.gridLayout_8.setObjectName("gridLayout_8")
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_8.addItem(spacerItem1, 0, 0, 1, 1)
+        self.gridLayout_8.addItem(spacerItem1, 0, 1, 1, 1)
         self.label_8 = QtGui.QLabel(self.repaet_macro_layout)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -116,13 +122,17 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
         self.label_8.setSizePolicy(sizePolicy)
         self.label_8.setObjectName("label_8")
-        self.gridLayout_8.addWidget(self.label_8, 0, 1, 1, 1)
+        self.gridLayout_8.addWidget(self.label_8, 0, 3, 1, 1)
         self.repeat_macro = QtGui.QSpinBox(self.repaet_macro_layout)
         self.repeat_macro.setMinimum(1)
         self.repeat_macro.setMaximum(999999999)
         self.repeat_macro.setObjectName("repeat_macro")
-        self.gridLayout_8.addWidget(self.repeat_macro, 0, 2, 1, 1)
-        self.gridLayout.addWidget(self.repaet_macro_layout, 2, 0, 1, 1)
+        self.gridLayout_8.addWidget(self.repeat_macro, 0, 4, 1, 1)
+        self.macro_reset_fileindex = QtGui.QCheckBox(self.repaet_macro_layout)
+        self.macro_reset_fileindex.setChecked(True)
+        self.macro_reset_fileindex.setObjectName("macro_reset_fileindex")
+        self.gridLayout_8.addWidget(self.macro_reset_fileindex, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.repaet_macro_layout, 1, 0, 1, 1)
         self.widget_select = QtGui.QWidget(Form)
         self.widget_select.setObjectName("widget_select")
         self.gridLayout_2 = QtGui.QGridLayout(self.widget_select)
@@ -171,7 +181,7 @@ class Ui_Form(object):
         self.table.verticalHeader().setCascadingSectionResizes(True)
         self.table.verticalHeader().setStretchLastSection(False)
         self.gridLayout_2.addWidget(self.table, 2, 0, 1, 1)
-        self.gridLayout.addWidget(self.widget_select, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.widget_select, 0, 0, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QObject.connect(self.button_macro_reset, QtCore.SIGNAL("clicked()"), Form.action_reset_macro)
@@ -198,6 +208,7 @@ class Ui_Form(object):
         self.macro_progressbar.setFormat(QtGui.QApplication.translate("Form", "Macro progress: %p%", None, QtGui.QApplication.UnicodeUTF8))
         self.input_macro_halt.setText(QtGui.QApplication.translate("Form", "Stop macro", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("Form", "Execute macro steps", None, QtGui.QApplication.UnicodeUTF8))
+        self.macro_reset_fileindex.setText(QtGui.QApplication.translate("Form", "Reset detector fileindex", None, QtGui.QApplication.UnicodeUTF8))
         self.table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Form", "Sample name", None, QtGui.QApplication.UnicodeUTF8))
         self.table.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("Form", "Motor", None, QtGui.QApplication.UnicodeUTF8))
         self.table.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("Form", "Motor device", None, QtGui.QApplication.UnicodeUTF8))

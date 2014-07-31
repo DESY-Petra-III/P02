@@ -86,14 +86,14 @@ class StatusWidget(layout_status.Ui_Form, DefaultWidget):
         while not(self.STOP) and threads.THREAD_KEEP_ALIVE:
             
             try:
-                beamCurrentValue = float(self.globalKeywords.device.read_attribute("BeamCurrent").value)
+                beamCurrentValue = float(self.globalKeywords.read_attribute("BeamCurrent").value)
                 beamCurrentValue = round(beamCurrentValue, 3)
                 self.label_5.setText(str(beamCurrentValue))
             except:    
                 self.label_5.setText("ERROR")
                 
             try:
-                ionchamberValue = self.ionchamber.device.read_attribute("value").value
+                ionchamberValue = self.ionchamber.read_attribute("value").value
                 ionchamberValue = round(ionchamberValue, 3)
                 self.label_6.setText(str(ionchamberValue))
             except:    

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmpSiBBbj.ui'
+# Form implementation generated from reading ui file '/tmp/tmp4ye2ek.ui'
 #
-# Created: Wed Oct  2 14:28:51 2013
+# Created: Wed Jan 22 19:14:14 2014
 #      by: PyQt4 UI code generator 4.6.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -71,9 +71,13 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.button_new_scan.sizePolicy().hasHeightForWidth())
         self.button_new_scan.setSizePolicy(sizePolicy)
         self.button_new_scan.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.button_new_scan.setStyleSheet("QPushButton{background:#FFDF80}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_new_scan.setObjectName("button_new_scan")
         self.horizontalLayout_6.addWidget(self.button_new_scan)
         self.button_stop_scan = QtGui.QPushButton(self.scan_plot_controls)
+        self.button_stop_scan.setStyleSheet("QPushButton{background:purple;font-weight:bold;color:#fff;}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_stop_scan.setObjectName("button_stop_scan")
         self.horizontalLayout_6.addWidget(self.button_stop_scan)
         self.gridLayout_9.addLayout(self.horizontalLayout_6, 3, 0, 1, 1)
@@ -268,7 +272,7 @@ class Ui_Form(object):
         self.gridLayout_12.setSpacing(0)
         self.gridLayout_12.setObjectName("gridLayout_12")
         self.horizontalLayout_15 = QtGui.QHBoxLayout()
-        self.horizontalLayout_15.setSpacing(0)
+        self.horizontalLayout_15.setSpacing(5)
         self.horizontalLayout_15.setContentsMargins(-1, 0, -1, -1)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
         self.button_reset_selection = QtGui.QPushButton(self.gridWidget)
@@ -283,6 +287,9 @@ class Ui_Form(object):
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_15.addItem(spacerItem1)
         self.button_scan_start = QtGui.QPushButton(self.gridWidget)
+        self.button_scan_start.setEnabled(True)
+        self.button_scan_start.setStyleSheet("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_scan_start.setObjectName("button_scan_start")
         self.horizontalLayout_15.addWidget(self.button_scan_start)
         self.gridLayout_12.addLayout(self.horizontalLayout_15, 1, 0, 1, 1)
@@ -303,6 +310,9 @@ class Ui_Form(object):
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_16.addItem(spacerItem2)
         self.button_refresh_detector_image = QtGui.QPushButton(self.detector_image)
+        self.button_refresh_detector_image.setEnabled(True)
+        self.button_refresh_detector_image.setStyleSheet("QPushButton{background:#FFDF80}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_refresh_detector_image.setObjectName("button_refresh_detector_image")
         self.horizontalLayout_16.addWidget(self.button_refresh_detector_image)
         self.gridLayout_13.addLayout(self.horizontalLayout_16, 1, 0, 1, 1)

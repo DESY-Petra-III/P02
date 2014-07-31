@@ -9,6 +9,7 @@ Motor status is signalized by diode.
 from PyQt4 import QtGui
 import sys
 import signal
+import logging
  
 # Import local classes
 from Revolver.classes import devices, config, signals, threads
@@ -17,6 +18,7 @@ import gui_default_controls_widget as default_gui
 import gui_stacked_motors_controls_widget
 import gui_device_status_led_widget as led_widget
 import threading
+from taurus.qt.QtCore import Signal
 
 class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultControls):
     
@@ -35,6 +37,8 @@ class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultCont
     
     def __init_signals(self):
         self.connect(self.detectorStatus, signals.SIG_DEVICE_STATUS_CHANGED, self.action_enable_controls)
+        self.connect(self.detectorStatus, signals.SIG_DEVICE_STATUS_ERROR, self.action_enable_all_controls)
+        self.connect(self.detectorStatus, signals.SIG_DEVICE_STATUS_OK, self.action_enable_controls)
         
     def __main(self):
         self.detector_motors_controls.set_margin_to_zero()
@@ -42,9 +46,16 @@ class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultCont
         self.detector_input_values.layout().addWidget(self.detectorStatus, 0, 1)
     
     def action_enable_controls(self, flag=True):
+        if not self.detector.isDeviceError():
+            self.button_take_dark.setEnabled(flag)
+            self.button_take_shot.setEnabled(flag)
+            self.button_stop_acquisition.setEnabled(not(flag))
+            self.detector_input_values.setEnabled(flag)
+    
+    def action_enable_all_controls(self, flag=False):
         self.button_take_dark.setEnabled(flag)
         self.button_take_shot.setEnabled(flag)
-        self.button_stop_acquisition.setEnabled(not(flag))
+        self.button_stop_acquisition.setEnabled(flag)
         self.detector_input_values.setEnabled(flag)
     
     def action_stop_acquisition(self):
@@ -65,6 +76,7 @@ class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultCont
                 
         try:
             #self.detector.take_shot(devices.Shutter(config.DEVICE_SHUTTER), summed, postTrigger, sampleName, comment)
+            self.set_diode_laser_out()
             thread = threading.Thread(target=self.detector.take_shot, args=([devices.Shutter(config.DEVICE_SHUTTER), summed, postTrigger, sampleName, comment]))
             threads.add_thread(thread, self.widget_id)
             thread.setDaemon(True)
@@ -77,6 +89,7 @@ class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultCont
         
         try:
             # self.detector.take_dark(devices.Shutter(config.DEVICE_SHUTTER), summed)
+            self.set_diode_laser_out()
             thread = threading.Thread(target=self.detector.take_dark, args=([devices.Shutter(config.DEVICE_SHUTTER), summed]))
             threads.add_thread(thread, self.widget_id)
             thread.setDaemon(True)
@@ -84,7 +97,7 @@ class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultCont
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Detector dark shot", "Dark shot could not be taken")
 # MAIN PROGRAM #################################################################################
-
+"""
 if __name__ == '__main__':
     
     # create main window
@@ -104,3 +117,4 @@ if __name__ == '__main__':
     
     # execute application
     app.exec_()
+"""

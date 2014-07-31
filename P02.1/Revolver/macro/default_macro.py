@@ -3,7 +3,9 @@ Gui that represent widget to enter and run macro.
 This widget can contain three types of macro: motor, widget and time macro
 """
 from PyQt4 import QtGui, Qt
+from threading import Lock
 import logging
+from time import sleep
 
 from Revolver.gui_default_widget import DefaultWidget
 from Revolver.classes import config, devices, macro, dialogs, signals
@@ -29,6 +31,7 @@ class MacroControls(DefaultWidget):
         """
         Initialize all variables
         """
+        self.threadLock = Lock()
         pass
         
     def __init_signals(self):
@@ -46,6 +49,18 @@ class MacroControls(DefaultWidget):
         # set default motor model
         self.emit(Qt.SIGNAL("changeDefaultMotor"), config.DEVICE_MOTOR)
     
+    def action_show_settings(self):
+        """
+        Signal handler:
+        Override this function to show widget controls
+        """
+        logging.error("show me sssssome settings")
+    
+    def wait_lock_release(self):
+        #logging.error(self.threadLock.acquire())
+        while self.threadLock.locked():
+            sleep(0.1)
+     
     def action_start_logging(self):
         pass
     
@@ -67,6 +82,7 @@ class MacroControls(DefaultWidget):
         """
         self.widget_select.setEnabled(True)
         self.macro_steps_controls.hide()
+        self.macro_wait_controls.hide()
         self.macro_main_controls.show()
         self.emit(signals.SIG_MACRO_ENDED, self.macroType)
     
@@ -161,7 +177,7 @@ class MacroControls(DefaultWidget):
         if not firstMacroStep.takeDark:
             answer = dialogs.askWarnDialog(self, "Dark shot", "Do you want to take dark shot before macro start?")
             if answer:
-                darkShotMacro = macro.DarkShotMacro(firstMacroStep.summed)
+                darkShotMacro = macro.DarkShotMacro(firstMacroStep.summed, firstMacroStep.sampleName)
                 darkShotMacro.emit = self.emit_handler
                 return darkShotMacro
             else:

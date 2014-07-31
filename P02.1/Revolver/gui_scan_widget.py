@@ -384,7 +384,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
             fileSave = open(filename, 'w+')
             pickle.dump(regions, fileSave)
             fileSave.close()
-            logging.info("Regions selection was succesfully saved into file: %s", filename)
+            logging.info("Regions selection was successfully saved into file: %s", filename)
         
     def action_load_regions(self):
         """
@@ -400,7 +400,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
                 for region in regions["items"]:
                     self.__add_region(int(region["x0"]), int(region["y0"]), int(region["x1"]), int(region["y1"]), region["description"])
                      
-                logging.info("Regions selection was succesfully loaded from file: %s", filename)
+                logging.info("Regions selection was successfully loaded from file: %s", filename)
             except KeyError:
                 self.emit(signals.SIG_SHOW_ERROR, "Load error", "Uknown file format")
     
@@ -500,7 +500,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
             param.label = region["description"]
             
             curve = CurveItem(param)
-            curve = make.curve([], [], title=region["description"], color=color, marker=".")
+            curve = make.curve([], [], title=region["description"], color=color, marker=".", markerfacecolor=color, markeredgecolor=color)
             curve.set_readonly(True)
             self.scan_plot.plot.add_item(curve)
             
@@ -575,7 +575,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
                 
             if not(macro.STOP):
                 self.emit(signals.SIG_SET_PROGRESSBAR, self.scan_progressbar, 100)
-                logging.info("Scan succesfully ended")
+                logging.info("Scan successfully ended")
             
             shutter.close()
         except:
@@ -614,7 +614,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
             param = CurveParam()
             param.label = region["description"]
             curve = CurveItem(param)
-            curve = make.curve([], [], title=region["description"], color=color, marker=".")
+            curve = make.curve([], [], title=region["description"], color=color, marker=".", markerfacecolor=color, markeredgecolor=color)
             curve.set_readonly(True)
             self.scan_plot.plot.add_item(curve)
 
@@ -661,7 +661,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
                 stepTime = time()
                 xTime = stepTime - startTime
                 detector.take_scan_shot(summed)
-                motorPosition.append(self.defaultMotorDevice.device.read_attribute("Position").value)
+                motorPosition.append(self.defaultMotorDevice.read_attribute("Position").value)
                 for attr in scanAttr:
                     yAvg = float(detectorController.take_readout(attr['x0'], attr['y0'], attr['x1'], attr['y1']))
                     yAvg = random.randint(1, 100)
@@ -755,6 +755,7 @@ class ScanWidget(layout_scan.Ui_Form, DefaultWidget):
 if __name__ == '__main__':
     
     # create main window
+    config.DEVICE_ALLOW_RETRY = False
     app = QtGui.QApplication(sys.argv)
     
     # init widget

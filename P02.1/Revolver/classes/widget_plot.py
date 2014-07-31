@@ -5,9 +5,9 @@ from guiqwt.shapes import RectangleShape
 from PyQt4 import Qt
 # from libtiff import TIFF
 from numpy import zeros
+from guiqwt.fit import FitParam, guifit
 
 from Revolver.classes import devices, config, signals
-
 class plot_event_filter(Qt.QObject):
     """
     Event filter, that cathces events from guiqwt plot element.
@@ -105,6 +105,7 @@ class Widget_plot():
     def zoom_enabled(self, flag):
         """
         Set true/false if zoom tool should be enabled
+        @type flag: Bool
         """
         self.get_toolbar().children()[4].setEnabled(flag)
     
@@ -113,7 +114,7 @@ class Curve_plot(CurveDialog, Widget_plot):
     Curve plot dialog
     """
     
-    def __init__(self, wintitle='guiqwt plot', icon='guiqwt.svg', edit=False, toolbar=False, options=None, parent=None, panels=None):
+    def __init__(self, wintitle='guiqwt plot', icon='guiqwt.svg', edit=True, toolbar=False, options=None, parent=None, panels=None):
         """
         Class constructor:
         @type wintitle: String

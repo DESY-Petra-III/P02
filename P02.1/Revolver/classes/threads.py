@@ -7,7 +7,28 @@ Created on Oct 11, 2013
 import logging
 import threading
 from time import sleep
-from IPython.numutils import frange
+def frange(start, end=None, inc=None):
+    "A range function, that does accept float increments..."
+
+    if end == None:
+        end = start + 0.0
+        start = 0.0
+    else: start += 0.0 # force it to be a float
+
+    if inc == None:
+        inc = 1.0
+
+    count = int((end - start) / inc)
+    if start + count * inc != end:
+        # need to adjust the count.
+        # AFAIKT, it always comes up one short.
+        count += 1
+
+    L = [None,] * count
+    for i in xrange(count):
+        L[i] = start + i * inc
+
+    return L
 
 THREAD_KEEP_ALIVE = True
 THREAD_TIMEOUT = 0
@@ -15,6 +36,10 @@ runningThreads = set()
 widgetThreads = {}
 
 def thread_sleep(time, sleepFlags=[True]):
+    """
+    Threaded sleep loop, which could be terminated be setting sleepFlags[0] flag to zero
+    @type sleepFlags: Dictionary
+    """
     if time <= 1: sleep(time)
     else:
         time_range = frange(1, time, 1)
@@ -48,6 +73,7 @@ def stop_all_threads():
 def stop_widget_threads(widgetId):
     """
     Force threads from specified widget to be stopped
+    @type widgetId: int
     """
     global runningThreads
     if not widgetThreads.has_key(widgetId): return
@@ -59,12 +85,12 @@ def stop_widget_threads(widgetId):
                     thread._Thread__stop()
                 except:
                     pass
-    
-    
+        
 def add_thread(thread, widgetId=None):
     """
     Add thread into spool.
     Link thread to widget if widgetId was specified.
+    @type widgetId: int
     """
     runningThreads.add(thread)
     if widgetId:
@@ -78,6 +104,7 @@ def add_thread(thread, widgetId=None):
 def join_thread(thread):
     """
     Join selected thread
+    @type thread: thread
     """
     if thread and isinstance(thread, threading.thread):
         print thread.isAlive()

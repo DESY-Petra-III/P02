@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmpKSSHI_.ui'
+# Form implementation generated from reading ui file '/tmp/tmpO6YuZ6.ui'
 #
-# Created: Thu Oct 24 13:05:06 2013
+# Created: Wed Jan 22 19:14:09 2014
 #      by: PyQt4 UI code generator 4.6.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -76,12 +76,20 @@ class Ui_Form(object):
         spacerItem = QtGui.QSpacerItem(40, 0, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.controls.addItem(spacerItem)
         self.button_stop_acquisition = QtGui.QPushButton(Form)
+        self.button_stop_acquisition.setEnabled(True)
+        self.button_stop_acquisition.setStyleSheet("QPushButton{background:purple;font-weight:bold;color:#fff;}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_stop_acquisition.setObjectName("button_stop_acquisition")
         self.controls.addWidget(self.button_stop_acquisition)
         self.button_take_dark = QtGui.QPushButton(Form)
+        self.button_take_dark.setEnabled(True)
+        self.button_take_dark.setStyleSheet("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_take_dark.setObjectName("button_take_dark")
         self.controls.addWidget(self.button_take_dark)
         self.button_take_shot = QtGui.QPushButton(Form)
+        self.button_take_shot.setStyleSheet("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_take_shot.setObjectName("button_take_shot")
         self.controls.addWidget(self.button_take_shot)
         self.gridLayout.addLayout(self.controls, 2, 0, 1, 2)

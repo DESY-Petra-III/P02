@@ -128,6 +128,13 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QPushButton" name="button_stop_acquisition">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{background:purple;font-weight:bold;color:#fff;}
+QPushButton:disabled{ background:silver;color:grey }</string>
+       </property>
        <property name="text">
         <string>Stop acquisition</string>
        </property>
@@ -135,6 +142,13 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QPushButton" name="button_take_dark">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{background:#80FF9F}
+QPushButton:disabled{ background:silver;color:grey }</string>
+       </property>
        <property name="text">
         <string>Take dark</string>
        </property>
@@ -142,6 +156,10 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QPushButton" name="button_take_shot">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{background:#80FF9F}
+QPushButton:disabled{ background:silver;color:grey }</string>
+       </property>
        <property name="text">
         <string>Take shot</string>
        </property>

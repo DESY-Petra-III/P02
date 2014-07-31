@@ -21,7 +21,7 @@ class Beamline_laser(laser.Ui_Form, default_device.Beamline_device):
         self.__main()
         
     def __init_variables(self):
-        self.laser = devices.Laser(self.devicePath)
+        self.device = self.laser = devices.Laser(self.devicePath)
     
     def __init_signals(self):
         pass
@@ -42,7 +42,8 @@ class Beamline_laser(laser.Ui_Form, default_device.Beamline_device):
         self._is_block_state_changed(state)
         
     def check_state(self):
-        state = self.laser.device.read_attribute("Valve6").value
+        state = self.laser.read_attribute("Valve6").value
+        if self.check_device_error(): return state
         if not(self._is_block_state_changed(not(state))): return state
         
         self.device_button.blockSignals(True)

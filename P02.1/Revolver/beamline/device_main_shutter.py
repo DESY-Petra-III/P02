@@ -24,7 +24,7 @@ class Beamline_shutter(shutter.Ui_Form, default_device.Beamline_device):
         self.__main()
         
     def __init_variables(self):
-        self.shutter = devices.MainShutter(self.devicePath)
+        self.device = self.shutter = devices.MainShutter(self.devicePath)
         
     def __init_signals(self):
         pass
@@ -36,7 +36,12 @@ class Beamline_shutter(shutter.Ui_Form, default_device.Beamline_device):
         self.device_button.setCursor(QCursor(QtCore.Qt.ArrowCursor))
                 
     def check_state(self):
-        state = self.shutter.is_open()
+        try:
+            state = self.shutter.is_open()
+        except:
+            state = False
+        if self.check_device_error(): return state
+            
         if not(self._is_block_state_changed(not(state))): return state
         self.device_button.blockSignals(True)
         if state:
@@ -45,4 +50,5 @@ class Beamline_shutter(shutter.Ui_Form, default_device.Beamline_device):
             self.emit(signals.SIG_BUTTON_CHANGE_ICON, self.offImage)
         self.device_button.blockSignals(False)
         return state
+        
     

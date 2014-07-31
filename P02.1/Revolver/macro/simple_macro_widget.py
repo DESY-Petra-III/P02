@@ -10,7 +10,7 @@ import pickle
 import threading
 import time
 
-from Revolver.classes import devices, macro, threads, signals
+from Revolver.classes import devices, macro, threads, signals, config
 from Revolver.macro import default_macro, gui_logging_widget
 from Revolver.macro.UI import layout_simple_macro
 from Revolver import gui_default_widget
@@ -61,15 +61,17 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
                 values = pickle.load(macroFile)
                 macroFile.close()
                 
-            if values["type"] != self.macroType:
+                if values["type"] != self.macroType:
                     self.emit(signals.SIG_LOAD_MACRO, values["type"], values)
                     return
+            else:
+                return
             
         (self.steps, self.repeatSteps) = (values["steps"], values["repeatSteps"])
         self.repeat_macro.setValue(self.repeatSteps)
         self.action_repaint_macros()
         
-        logging.info("Macro was succesfully loaded")
+        logging.info("Macro was successfully loaded")
         self.generate_macro_steps()
         default_macro.MacroControls.action_load_macro(self)
         
@@ -88,9 +90,9 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
                 values = {"type":self.macroType, "steps":self.steps, "repeatSteps":self.repeatSteps}
                 pickle.dump(values, macroFile)
                 macroFile.close()
-                logging.info("Macro was succesfully saved into file: %s", filename)
+                logging.info("Macro was successfully saved into file: %s", filename)
         else:
-            QtGui.QMessageBox.question(self, 'Add macro warnign', "No macro to save !", QtGui.QMessageBox.Ok)
+            QtGui.QMessageBox.question(self, 'Add macro warning', "No macro to save !", QtGui.QMessageBox.Ok)
         default_macro.MacroControls.action_save_macro(self)
     
     def action_start_logging(self, *args, **kwargs):
@@ -99,17 +101,25 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
             self.logWidget.setFloating(True)
             self.logWidget.reset()
             params = []
+            deviceStatuses = []
+            detectorController = devices.DetectorController(config.DEVICE_DETECTOR_CONTROLLER)
             for devicePath in self.macroDevices:
                 device = devices.Motor(str(devicePath))
-                params.append({"device":device, "value":"Position", "description":"Motor %s position" % device.name}) 
+                params.append({"device":device, "value":"Position", "description":"%s" % device.name, "lock":self.threadLock})
+                params.append({"device":detectorController, "method":"take_filename", "description":"Filename", "lock":self.threadLock, "noGraph":True})
+                deviceStatuses.append( {"device":device, "params":[{"deviceValue":"Position", "description":"position"}]})
             graphOptions = {"title":"Motor position log", "xlabel":"Macro step", "ylabel":"Motor position"}
             
             logComment = "# motor device: %s" % (device.devicePath)
-            self.logWidget.start_log_signals(self, signals.SIG_MACRO_STEP_COMPLETED, params, graphOptions, logComment=logComment)
+            
+            self.logWidget.start_log_signals(self, signals.SIG_MACRO_STEP_COMPLETED, params, graphOptions, logComment=logComment, deviceStatuses=deviceStatuses)
             self.logWidget.set_kill_all_permissions(False)
             self.logWidget.show()
-    
+            
     def action_stop_logging(self, *args, **kwargs):
+        """
+        Stop logging values
+        """
         if self.logWidget:
             self.logWidget.stop()
         
@@ -130,10 +140,13 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
         thread = threading.Thread(target=self.execute_macro, args=([takeDark]))
             
         try:
+            if self.macro_reset_fileindex.isChecked(): devices.Detector(config.DEVICE_DETECTOR).set_file_index(1)
             threads.add_thread(thread)
             thread.start()
         except:
             self.window().emit(signals.SIG_SHOW_ERROR, "Macro error", "Macro step could not be executed")
+            self.emit(signals.SIG_ENABLE_CONTROLS)
+            return
         self.emit(signals.SIG_DISABLE_CONTROLS)
     
     def execute_macro(self, takeDark=None):
@@ -221,6 +234,7 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
             step = float(100 / float(len(self.steps)))
             
             for i in range(0, self.repeatSteps, 1):
+                self.threadLock.acquire()
                 self.emit(signals.SIG_SET_PROGRESSBAR, self.macro_progressbar, 0)
                 if not lastStepStart: lastStepStart = time.time()
                 for index, current_macro in enumerate(self.steps):
@@ -234,12 +248,13 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
                     if macro.STOP == False:
                         logging.warning("Macro " + str(index + 1) + " execution completed")
                         self.emit(signals.SIG_MACRO_STEP_COMPLETED)
+                    self.wait_lock_release()
                     self.emit(signals.SIG_SET_PROGRESSBAR, self.macro_progressbar, step * (index + 1))
                     current_macro.wait_seconds()
                 if macro.STOP == False:
                     logging.warn("All macro steps was executed")
                 else:
-                    logging.warn("Macro was cancelled !")
+                    logging.warn("Macro was canceled !")
                     return False
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Macro error", "Macro was not executed correctly.", self.get_exception())
@@ -282,6 +297,8 @@ class SimpleMotorMacro(layout_simple_macro.Ui_Form, default_macro.MacroControls)
     
 # MAIN PROGRAM #################################################################################
 if __name__ == '__main__':
+    
+    config.DEVICE_ALLOW_RETRY = False
     
     # create main window
     app = QtGui.QApplication(sys.argv)

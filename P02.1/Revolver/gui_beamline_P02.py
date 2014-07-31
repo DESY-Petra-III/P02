@@ -24,7 +24,7 @@ concat P02_DEVICES with DEVICE_SERVER_P02, produces
 real tango server paths to devices.
 config.DEVICE_SERVER_P02 + config.DEVICE_NAME = "tango://server_path/device_path"
 """
-P02_DEVICES = dict((x, config.DEVICE_SERVER_P02 + y) for x, y in config.DEVICE_NAMES.iteritems())
+P02_DEVICES = dict((x, config.DEVICE_SERVER_P02  + y) for x, y in config.DEVICE_NAMES.iteritems())
 
 class Beamline_P02(default_beamline.Beamline):
     
@@ -66,10 +66,9 @@ class Beamline_P02(default_beamline.Beamline):
         
         # put specified devices in beamline setup, they will appear left to right
         self.setup = [self.detectorPE, self.beamstop, self.diode, self.samplestage,
-                      self.pinhole2, self.slits2, self.absorber, self.laser,
-                      self.smallShutter, self.pinhole, self.slits1, self.ionchamber,
+                      self.pinhole2, self.pinhole, self.slits2, self.absorber, self.laser,
+                      self.smallShutter, self.slits1, self.ionchamber,
                       self.wall, self.mainShutter, self.beamX]
-        
         
         # define PE Detector controls
         detector = devices.Detector(P02_DEVICES["PE_DETECTOR"])
@@ -124,9 +123,9 @@ class Beamline_P02(default_beamline.Beamline):
         s2_Dx = devices.VirtualMotorDistance2D([s2_left, s2_right], "S2_DX")
         s2_Dy = devices.VirtualMotorDistance2D([s2_top, s2_bottom], "S2_DY")
         self.slits2Motors = [s2_Dx, s2_Dy,
-                        s2_Cx, s2_Cy,
-                        s2_left,s2_right,
-                       s2_top, s2_bottom]
+                            s2_Cx, s2_Cy,
+                            s2_left,s2_right,
+                            s2_top, s2_bottom]
         self.slits2Controls = gui_stacked_motors_controls_widget.StackedMotorControls(parent=self, motors=self.slits2Motors, title="Slits 2 motors")
         
         # define diode controls
@@ -162,9 +161,9 @@ class Beamline_P02(default_beamline.Beamline):
                          {"device":self.diode, "widget":self.diodeControls, "tabname":"Diode", "background":"155,224,223"},
                          {"device":self.samplestage, "widget":self.stageControls, "tabname":"Sample stage", "background":"133,133,237"},
                          {"device":self.pinhole2, "widget":self.pinhole2Controls, "tabname":"Pinhole 2", "background":"237,187,133"},
+                         {"device":self.pinhole, "widget":self.pinhole1Controls, "tabname":"Pinhole 1", "background":"237,187,133"},
                          {"device":self.slits2, "widget":self.slits2Controls, "tabname":"Slits 2", "background":"237,219,133"},
                          {"device":self.absorber, "widget":self.absorberControls, "tabname":"Absorber", "background":"171,155,224"},
-                         {"device":self.pinhole, "widget":self.pinhole1Controls, "tabname":"Pinhole 1", "background":"237,187,133"},
                          {"device":self.slits1, "widget":self.slits1Controls, "tabname":"Slits 1", "background":"237,219,133"},
                          {"device":self.ionchamber, "widget":self.ionChamberControls, "tabname":"Ion chamber", "background":"133,133,237"},
                          {"device":self.beamX, "widget":self.petraStatus, "tabname":"Petra current", "background":"244,180,180"}]
@@ -177,6 +176,7 @@ class Beamline_P02(default_beamline.Beamline):
         """
         for device in self.setup:
             self.connect(device, signals.SIG_BLOCK_BEAM, self.action_check_beam)
+            self.connect(device, signals.SIG_ENABLE_CONTROLS_INDEX, self.action_set_controls_enabled)
             device.set_beamline(self)
     
     def __main(self):
@@ -206,8 +206,8 @@ class Beamline_P02(default_beamline.Beamline):
         """
         Set expert mode for beamline P02
         First invoke default_beamline method: default_beamline.Beamline.action_set_expert_mode(self, flag)
-        If return value from this function is True, than expert mode could be changed (user enetered correct pin, clicked OK)
-        Than proceed with expoert mode settings for current beamline
+        If return value from this function is True, than expert mode could be changed (user entered correct pin, clicked OK)
+        Than proceed with expert mode settings for current beamline
         """
         if not default_beamline.Beamline.action_set_expert_mode(self, flag): return
         
@@ -216,7 +216,7 @@ class Beamline_P02(default_beamline.Beamline):
         slits2_expert_mode = self.slits2Motors[2:]
         
         # enable / disable tab index from the beamline controllers tab
-        self.beamline_device_controls.tabBar().setTabEnabled(1,flag)
+        self.action_set_controls_enabled(1,flag)
         
         # disable / enable expert mode motors depending on flag state (True / False)
         for hideMotor in slits1_expert_mode:
@@ -224,15 +224,15 @@ class Beamline_P02(default_beamline.Beamline):
         for hideMotor in slits2_expert_mode:
                 self.slits2Controls.set_motor_controls_enabled(hideMotor.devicePath, flag)
         
-        # emit signal that current beamline changed its mode succesfully       
+        # emit signal that current beamline changed its mode successfully       
         self.emit(signals.SIG_CHANGE_MODE, self.currentMode)
         
 # MAIN PROGRAM #################################################################################
 
 if __name__ == '__main__':
-    
+    from taurus.qt.qtgui.application import TaurusApplication
     # create main window
-    app = QApplication(sys.argv)
+    app = TaurusApplication(sys.argv)
     
     # init widget
     widget = Beamline_P02()

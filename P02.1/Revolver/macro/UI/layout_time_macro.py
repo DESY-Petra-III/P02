@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmp_18wOq.ui'
+# Form implementation generated from reading ui file '/tmp/tmpE2tyB5.ui'
 #
-# Created: Wed Oct 16 20:14:55 2013
+# Created: Wed Jan 22 19:14:32 2014
 #      by: PyQt4 UI code generator 4.6.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(533, 476)
+        Form.resize(533, 504)
         self.gridLayout = QtGui.QGridLayout(Form)
         self.gridLayout.setMargin(5)
         self.gridLayout.setSpacing(5)
@@ -253,6 +253,10 @@ class Ui_Form(object):
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.formLayout_3.setLayout(2, QtGui.QFormLayout.FieldRole, self.horizontalLayout)
+        self.macro_reset_fileindex = QtGui.QCheckBox(self.groupBox_2)
+        self.macro_reset_fileindex.setChecked(True)
+        self.macro_reset_fileindex.setObjectName("macro_reset_fileindex")
+        self.formLayout_3.setWidget(3, QtGui.QFormLayout.FieldRole, self.macro_reset_fileindex)
         self.verticalLayout.addWidget(self.groupBox_2)
         self.gridLayout_3.addLayout(self.verticalLayout, 0, 0, 1, 1)
         self.widget_select.addWidget(self.time_widget)
@@ -300,8 +304,9 @@ class Ui_Form(object):
         self.macro_main_controls = QtGui.QWidget(Form)
         self.macro_main_controls.setObjectName("macro_main_controls")
         self.gridLayout_4 = QtGui.QGridLayout(self.macro_main_controls)
-        self.gridLayout_4.setSpacing(0)
         self.gridLayout_4.setContentsMargins(0, 5, 0, 0)
+        self.gridLayout_4.setHorizontalSpacing(5)
+        self.gridLayout_4.setVerticalSpacing(0)
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.button_save_macro = QtGui.QPushButton(self.macro_main_controls)
         self.button_save_macro.setObjectName("button_save_macro")
@@ -312,6 +317,8 @@ class Ui_Form(object):
         spacerItem1 = QtGui.QSpacerItem(255, 24, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout_4.addItem(spacerItem1, 0, 3, 1, 1)
         self.button_run_macros = QtGui.QPushButton(self.macro_main_controls)
+        self.button_run_macros.setStyleSheet("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.button_run_macros.setObjectName("button_run_macros")
         self.gridLayout_4.addWidget(self.button_run_macros, 0, 4, 1, 1)
         self.button_macro_reset = QtGui.QPushButton(self.macro_main_controls)
@@ -373,7 +380,8 @@ class Ui_Form(object):
         self.macro_progressbar.setObjectName("macro_progressbar")
         self.horizontalLayout_3.addWidget(self.macro_progressbar)
         self.input_macro_halt = QtGui.QPushButton(self.macro_steps_controls)
-        self.input_macro_halt.setStyleSheet("background:purple;font-weight:bold;color:#fff")
+        self.input_macro_halt.setStyleSheet("QPushButton{background:purple;font-weight:bold;color:#fff;}\n"
+"QPushButton:disabled{ background:silver;color:grey }")
         self.input_macro_halt.setObjectName("input_macro_halt")
         self.horizontalLayout_3.addWidget(self.input_macro_halt)
         self.gridLayout_6.addLayout(self.horizontalLayout_3, 1, 0, 1, 2)
@@ -427,6 +435,7 @@ class Ui_Form(object):
         self.label_5.setText(QtGui.QApplication.translate("Form", "Number of iterations", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("Form", "Options", None, QtGui.QApplication.UnicodeUTF8))
         self.check_take_dark.setText(QtGui.QApplication.translate("Form", "Take dark before macro step", None, QtGui.QApplication.UnicodeUTF8))
+        self.macro_reset_fileindex.setText(QtGui.QApplication.translate("Form", "Reset detector fileindex", None, QtGui.QApplication.UnicodeUTF8))
         self.table_temperature_macro.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Form", "Sample name", None, QtGui.QApplication.UnicodeUTF8))
         self.table_temperature_macro.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("Form", "Hotblower", None, QtGui.QApplication.UnicodeUTF8))
         self.table_temperature_macro.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("Form", "Hotblower device", None, QtGui.QApplication.UnicodeUTF8))

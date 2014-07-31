@@ -10,10 +10,11 @@ import pickle
 import threading
 import time
 
-from Revolver.classes import devices, macro, dialogs, threads, signals
+from Revolver.classes import devices, macro, dialogs, threads, signals, config
 from Revolver.macro import default_macro, gui_logging_widget
 from Revolver.macro.UI import layout_temperature_macro
 from Revolver import gui_default_widget
+from copy import copy
 
 class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroControls):
     
@@ -37,10 +38,27 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
         self.table.setColumnHidden(5, True)
         self.table.horizontalHeader().setResizeMode(9, Qt.QHeaderView.Fixed)
         self.table.verticalHeader().setResizeMode(Qt.QHeaderView.Fixed)
+    
+    def action_show_settings(self):
+        """
+        Set logifle
+        """
+        settings = dialogs.SettingsDialog(self)
+        settings.toggle_elements_display(False, [settings.cryostreamer_label, settings.cryostreamer_settings])
+        settings.option_dark_timeout.setValue(macro.MACRO_DARK_WAIT)
+        settings.cryostreamer_min.setValue(config.SETTINGS_CRYOSTREAMER_TEMPERATURE_MIN)
+        settings.cryostreamer_max.setValue(config.SETTINGS_CRYOSTREAMER_TEMPERATURE_MAX)
+        settings.hotblower_min.setValue(config.SETTINGS_HOTBLOVER_TEMPERATURE_MIN)
+        settings.hotblower_max.setValue(config.SETTINGS_HOTBLOVER_TEMPERATURE_MAX)
+        settings.ramping_threshold.setValue(config.SETTINGS_RAMPING_ERROR_THRESHOLD)
+        settings.ramping_time_max.setValue(config.SETTINGS_RAMPING_MAXIMUM_TIME)
+        settings.stabilization_time_min.setValue(config.SETTINGS_STABILIZATION_TIME_MIN)
+        settings.stabilization_time_max.setValue(config.SETTINGS_STABILIZATION_TIME_MAX)
+        settings.exec_()
        
     def action_open_dialog_add_macro(self):
         dialogs.AddTemperatureMacroDialog(self).exec_()
-        
+    
     def action_reset_macro(self):
         """
         Signal handler:
@@ -67,10 +85,13 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
         thread = threading.Thread(target=self.execute_macro, args=([takeDark]))
             
         try:
+            if self.macro_reset_fileindex.isChecked(): devices.Detector(config.DEVICE_DETECTOR).set_file_index(1)
             threads.add_thread(thread)
             thread.start()
         except:
             self.window().emit(signals.SIG_SHOW_ERROR, "Macro error", "Macro step could not be executed")
+            self.emit(signals.SIG_ENABLE_CONTROLS)
+            return
         self.emit(signals.SIG_DISABLE_CONTROLS)
         
     def action_add_macro(self, macro):
@@ -191,7 +212,7 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
         self.error_threshold.setValue(self.threshold)
         self.action_repaint_macros()
         
-        logging.info("Macro was succesfully loaded from file: %s", filename)
+        logging.info("Macro was successfully loaded from file: %s", filename)
         # self.generate_macro_steps()
         # default_macro.MacroControls.action_load_macro(self)
         
@@ -210,46 +231,70 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
                 values = {"type":self.macroType, "steps":self.steps, "repeatSteps":self.repeatSteps, "threshold":self.threshold}
                 pickle.dump(values, macroFile)
                 macroFile.close()
-                logging.info("Macro was succesfully saved into file: %s", filename)
+                logging.info("Macro was successfully saved into file: %s", filename)
         else:
-            QtGui.QMessageBox.question(self, 'Add macro warnign', "No macro to save !", QtGui.QMessageBox.Ok)
+            QtGui.QMessageBox.question(self, 'Add macro warning', "No macro to save !", QtGui.QMessageBox.Ok)
         default_macro.MacroControls.action_save_macro(self)
     
     def action_start_logging(self, *args, **kwargs):
+        device = args[0]
+        device.start_profiling()
+        
         if self.logWidget:
             self.logWidget.setFloating(True)
             self.logWidget.reset()
-            device = args[0]
-            device.start_profiling()
+            deviceStatuses = []
             params = [{"device":device, "value":"temperature", "description":"Real temperature", "source":device.output},
                       {"device":device, "value":"movingAverage", "description":"Average temperature", "source":device.output},
-                      {"device":device, "value":"Setpoint", "description":"Setpoint temperature"}]
+                      {"device":device, "value":device.setpointValue, "description":"Setpoint temperature"}]
+            
+            deviceStatusesParams = [{"value":device.output["temperature"], "description":"Temperature:"},
+                      {"value":device.output["movingAverage"], "description":"Moving average:"},
+                      {"deviceValue":device.setpointValue, "description":"Setpoint:"},
+                      {"value":device.output["statusString"], "description":"Status:"}]
+            device_polling = copy(args[0])
+            deviceStatuses.append({"device":device_polling, "params":deviceStatusesParams})
+            
             graphOptions = {"title":"Hotblower temperature log", "xlabel":"Time [s]", "ylabel":"Temperature [C]"}
             logComment = "# Temperature device: %s" % (device.devicePath)
-            logComment += "# Error threshold: %.3f" % (self.threshold)
+            logComment += "\n# Error threshold: %.3f" % (self.threshold)
             
-            self.logWidget.start_log_polling(params, graphOptions, logComment=logComment)
+            self.logWidget.start_log_polling(params, graphOptions, logComment=logComment, deviceStatuses=deviceStatuses)
             self.logWidget.set_kill_all_permissions(False)
             self.logWidget.show()
+    
+        if self.logWidget2:
+            self.logWidget2.reset()
+            detectorController = devices.DetectorController(config.DEVICE_DETECTOR_CONTROLLER)
+            params = [{"device":device, "value":device.output["temperature"], "description":"Real temperature"},
+                      {"device":device, "value":device.output["movingAverage"], "description":"Average temperature"},
+                      {"device":device, "deviceValue":device.setpointValue, "description":"Setpoint temperature"},
+                      {"device":detectorController, "method":"take_filename", "description":"Filename", "lock":self.threadLock, "noGraph":True}]
+            logComment = "# Temperature device: %s" % (device.devicePath)
+            logComment += "\n# Error threshold: %.3f" % (self.threshold)
+            self.logWidget2.start_log_signals_no_graphics(self, signals.SIG_MACRO_STEP_COMPLETED, params, logComment=logComment)
+            self.logWidget2.set_kill_all_permissions(False)
     
     def action_stop_logging(self, *args, **kwargs):
         if self.logWidget:
             device = args[0]
             device.stop_profiling()
             self.logWidget.stop()
+        if self.logWidget2:
+            self.logWidget2.stop()
     
     def execute_macro(self, takeDark=None):
         """
         Init macro and start main macro loop
         """
         self.generate_macro_steps()
-        device = devices.Hotblower(self.steps[0].devicePath)
+        device = devices.TemperatureDevice(self.steps[0].devicePath)
         macro.STOP = False
         try:
             if takeDark: takeDark.run()
             if self.macro_steps():
                 self.emit(signals.SIG_SHOW_INFO, "Macro", "Macro was successfully executed")
-                device.halt(force=True)
+                if self.macro_return_to_ambient: device.halt(force=True)
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Macro error", "Macro was not executed correctly.", self.get_exception())
             device.halt(force=True)
@@ -261,7 +306,7 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
         Routine that executes all macro steps defined in table
         """
         try:
-            device = devices.Hotblower(self.steps[0].devicePath)
+            device = devices.TemperatureDevice(self.steps[0].devicePath)
             self.emit(signals._SIG_START_LOGGING, device)
             
             step = float(100 / float(len(self.steps)))
@@ -284,7 +329,7 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
                 if macro.STOP == False:
                     logging.warn("All macro steps was executed")
                 else:
-                    logging.warn("Macro was cancelled !")
+                    logging.warn("Macro was canceled !")
                     self.emit(signals._SIG_STOP_LOGGING, device)
                     return False
         except:
@@ -322,7 +367,7 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
             if(coll == 3): 
                 value = self.validate_input(collName, "float", value)
                 devicePath = str(self.table.item(row, 2).text())
-                device = devices.Hotblower(devicePath)
+                device = devices.TemperatureDevice(devicePath)
                 self.validate_device_minmax_value(value, device)
         except:
             item.setText("0")
@@ -333,16 +378,23 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
 if __name__ == '__main__':
     
     # create main window
+    config.DEVICE_ALLOW_RETRY = False
     app = QtGui.QApplication(sys.argv)
     win = gui_default_widget.DefaultMainWindow()
     win.setMinimumSize(1100, 500)
+    win.action_add_settings_menu()
     
     # init widget
     widget = TemperatureMacro()
+    widget.connect(win, signals.SIG_SHOW_SETTINGS, widget.action_show_settings)
     widget.logWidget = gui_logging_widget.LoggingWidget(win)
     win.addDockWidget(QtCore.Qt.DockWidgetArea(4), widget.logWidget)
     widget.logWidget.hide()
     
+    widget.logWidget2 = gui_logging_widget.LoggingWidget(win)
+    win.addDockWidget(QtCore.Qt.DockWidgetArea(4), widget.logWidget2)
+    widget.logWidget2.hide()
+        
     # connect signal from window "x" button to close the application correctly
     app.connect(app, signals.SIG_ABOUT_QUIT, win.close_widget)
     app.connect(app, signals.SIG_ABOUT_QUIT, widget.close_widget)

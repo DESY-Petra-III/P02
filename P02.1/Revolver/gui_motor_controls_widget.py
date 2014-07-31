@@ -9,12 +9,15 @@ Motor status is signalized by diode.
 from PyQt4 import QtGui, Qt
 import sys
 import signal
+import logging
  
 # Import local classes
 from UI import layout_motor_widget
 import gui_default_controls_widget as default_gui
 import gui_device_status_led_widget as led_widget
-from Revolver.classes import devices, config, signals
+from Revolver.classes import devices, config, signals, dialogs
+from taurus import Device
+from Revolver import motor_macro_sardana_executor
 
 class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
     """
@@ -43,14 +46,30 @@ class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
         self.connect(self, Qt.SIGNAL("changeMotor(String)"), self.action_change_motor)
         self.connect(self.motor_position, Qt.SIGNAL("valueChanged()"), self.action_read_motor_position)
         self.connect(self.ledStatus, signals.SIG_DEVICE_STATUS_CHANGED, self.action_enable_controls)
+        self.connect(self.ledStatus, signals.SIG_DEVICE_STATUS_ERROR, self.action_device_error)
+        self.connect(self.ledStatus, signals.SIG_DEVICE_STATUS_OK, self.action_device_ok)
+        self.connect(self.ledStatus, signals.SIG_DEVICE_WORKING, self.read_motor_position_and_set)
         
     def __main(self):
-        self.layout.insertWidget(0, self.ledStatus)
+        self.layout_horizontal.insertWidget(0, self.ledStatus)
         self.spinboxFilter = default_gui.EventSpinboxFilter()
         self.motor_position.installEventFilter(self.spinboxFilter)
         
+    
+    def action_show_sardana_macro(self):
+        macroExecutor = motor_macro_sardana_executor.motorMacroExecutor(self.defaultMotorDevice, self)
+        macroExecutor.set_kill_all_permissions(False)
+        macroExecutor.show()
+            
+    def action_device_error(self):
+        self.stackedWidget.setCurrentIndex(1)
+        
+    def action_device_ok(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.emit(Qt.SIGNAL("changeMotor(String)"), self.action_change_motor)
+        
     def action_change_motor_position_plus_double(self):
-        """
+        """motorAlias
         Change position by clicking the right double arrow button
         Position = Position + StepSize * 10
         """
@@ -148,12 +167,16 @@ class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
 # MAIN PROGRAM #################################################################################
 
 if __name__ == '__main__':
-    
+    from taurus.qt.qtgui.application import TaurusApplication
     # create main window
-    app = QtGui.QApplication(sys.argv)
+    app = TaurusApplication(sys.argv)
     
     # init widget
-    widget = MotorWidget()
+    #left = devices.Motor(config.DEVICE_SERVER + "p02/motor/exp.04")
+    #right = devices.Motor(config.DEVICE_SERVER + "p02/motor/exp.05")
+    #virtualMotor1 = devices.VirtualMotorDistance2D([left, right], "Dx")
+    
+    widget = MotorWidget(device=devices.Motor(config.DEVICE_SERVER + "p02/motor/exp.02"))
     
     # connect signal from window "x" button to close the application correctly
     app.connect(app, signals.SIG_ABOUT_QUIT, widget.close_widget)
