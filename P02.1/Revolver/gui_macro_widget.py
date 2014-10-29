@@ -25,6 +25,7 @@ class MacroWidget(layout_macro.Ui_Form, DefaultWidget):
         self.widgetSetup = [self.simpleMacroWidget, self.loopMacroWidget, self.timeMacroWidget]
     
     def __init_signals(self):
+        
         for widget in self.widgetSetup:
             self.connect(widget, signals.SIG_LOAD_MACRO, self.action_load_macro)
             self.connect(widget, signals.SIG_MACRO_STARTED, self.action_disable_controls)

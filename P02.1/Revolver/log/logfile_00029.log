@@ -1,7 +1,7 @@
 ############################ Log - Start ############################
-# Log initialized at: 06/06/14 17:43:15
-# motor device
-Time	motor/omsvme58_exp/39	Timestamp	Datetime
-
-# Log finished at: 06/06/14 17:43:24
-############################# Log - End #############################
+# Log initialized at: 09/03/14 11:33:06
+# Temperature device: tango://haspp02oh1:10000/p02/eurotherm/exp.01
+# Error threshold: 2.000
+Time	Real temperature	Average temperature	Setpoint temperature	Timestamp	Datetime
+0.000	22.900	22.900	22.000	1409736786.59	09/03/14 11:33:06
+1.161	22.900	22.900	22.900	1409736787.63	09/03/14 11:33:07

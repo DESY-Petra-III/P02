@@ -263,7 +263,10 @@ class DefaultWidget(QWidget):
         set default motor model
         @type motorPath: String
         """
-        self.defaultMotorDevice = devices.Motor(motorPath)
+        try:
+            self.defaultMotorDevice = devices.Motor(motorPath)
+        except:
+            pass
     
     def set_diode_laser_out(self):
         """

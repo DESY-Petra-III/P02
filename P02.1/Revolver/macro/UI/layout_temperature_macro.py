@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmp9F1XtR.ui'
+# Form implementation generated from reading ui file 'layout_temperature_macro.ui'
 #
-# Created: Tue Jan 28 17:16:49 2014
+# Created: Thu Jul 31 14:46:10 2014
 #      by: PyQt4 UI code generator 4.6.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(902, 663)
+        Form.resize(990, 678)
         self.gridLayout = QtGui.QGridLayout(Form)
         self.gridLayout.setMargin(5)
         self.gridLayout.setSpacing(5)
@@ -231,7 +231,7 @@ class Ui_Form(object):
         self.macro_progressbar.setFormat(QtGui.QApplication.translate("Form", "Macro progress: %p%", None, QtGui.QApplication.UnicodeUTF8))
         self.input_macro_halt.setText(QtGui.QApplication.translate("Form", "Stop macro", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("Form", "Execute macro steps", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Form", "Error threshold", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Form", "Stabilization error threshold", None, QtGui.QApplication.UnicodeUTF8))
         self.macro_reset_fileindex.setText(QtGui.QApplication.translate("Form", "Reset detector fileindex", None, QtGui.QApplication.UnicodeUTF8))
         self.macro_return_to_ambient.setText(QtGui.QApplication.translate("Form", "Return to ambient temperature", None, QtGui.QApplication.UnicodeUTF8))
         self.table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Form", "Sample name", None, QtGui.QApplication.UnicodeUTF8))

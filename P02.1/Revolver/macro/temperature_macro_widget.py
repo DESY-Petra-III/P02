@@ -26,6 +26,7 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
         self.steps = []
         self.threshold = float(self.error_threshold.value())
         self.repeatSteps = 1
+        #self.lastHaltingDevice = None
         
         self.connect(self.table, Qt.SIGNAL('highlight_row'), self.action_highlight_macro_position)
         
@@ -255,14 +256,14 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
             device_polling = copy(args[0])
             deviceStatuses.append({"device":device_polling, "params":deviceStatusesParams})
             
-            graphOptions = {"title":"Hotblower temperature log", "xlabel":"Time [s]", "ylabel":"Temperature [C]"}
+            graphOptions = {"title":"%s temperature log" % device.name, "xlabel":"Time [s]", "ylabel":"Temperature [C]"}
             logComment = "# Temperature device: %s" % (device.devicePath)
             logComment += "\n# Error threshold: %.3f" % (self.threshold)
             
             self.logWidget.start_log_polling(params, graphOptions, logComment=logComment, deviceStatuses=deviceStatuses)
             self.logWidget.set_kill_all_permissions(False)
             self.logWidget.show()
-    
+            
         if self.logWidget2:
             self.logWidget2.reset()
             detectorController = devices.DetectorController(config.DEVICE_DETECTOR_CONTROLLER)
@@ -276,9 +277,10 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
             self.logWidget2.set_kill_all_permissions(False)
     
     def action_stop_logging(self, *args, **kwargs):
+        device = args[0]
+        device.stop_profiling()
+
         if self.logWidget:
-            device = args[0]
-            device.stop_profiling()
             self.logWidget.stop()
         if self.logWidget2:
             self.logWidget2.stop()
@@ -287,17 +289,24 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
         """
         Init macro and start main macro loop
         """
+        
+        #if self.lastHaltingDevice: self.lastHaltingDevice.__stop_homing__()
         self.generate_macro_steps()
         device = devices.TemperatureDevice(self.steps[0].devicePath)
+        
         macro.STOP = False
         try:
             if takeDark: takeDark.run()
             if self.macro_steps():
                 self.emit(signals.SIG_SHOW_INFO, "Macro", "Macro was successfully executed")
-                if self.macro_return_to_ambient: device.halt(force=True)
+                if self.macro_return_to_ambient.checkState():
+                    #self.lastHaltingDevice = device
+                    device.halt(force=True, homing=True)
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Macro error", "Macro was not executed correctly.", self.get_exception())
-            device.halt(force=True)
+            if self.macro_return_to_ambient.checkState():
+                    #self.lastHaltingDevice = device
+                    device.halt(force=True, homing=True)
         
         self.emit(signals.SIG_ENABLE_CONTROLS)
     
@@ -331,6 +340,9 @@ class TemperatureMacro(layout_temperature_macro.Ui_Form, default_macro.MacroCont
                 else:
                     logging.warn("Macro was canceled !")
                     self.emit(signals._SIG_STOP_LOGGING, device)
+                    if self.macro_return_to_ambient.checkState():
+                        #self.lastHaltingDevice = device
+                        device.halt(force=True, homing=True)
                     return False
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Macro error", "Macro was not executed correctly.", self.get_exception())
@@ -383,7 +395,15 @@ if __name__ == '__main__':
     win = gui_default_widget.DefaultMainWindow()
     win.setMinimumSize(1100, 500)
     win.action_add_settings_menu()
-    
+    """
+    menuView = QtGui.QMenu(win.menubar)
+    actionSettingsUser = QtGui.QAction(win)
+    menuView.addAction(win.actionSettingsUser)
+    win.menubar.addActions([win.menuFile.menuAction(), menuView.menuAction()])
+    #self.actionSettingsUser.triggered.connect(lambda:self.emit(signals.SIG_SHOW_SETTINGS))
+    menuView.setTitle(QtGui.QApplication.translate("MainWindow", "View", None, QtGui.QApplication.UnicodeUTF8))
+    actionSettingsUser.setText("asdasd")
+    """
     # init widget
     widget = TemperatureMacro()
     widget.connect(win, signals.SIG_SHOW_SETTINGS, widget.action_show_settings)
@@ -406,4 +426,5 @@ if __name__ == '__main__':
     win.setCentralWidget(widget)
     win.show()
     # execute application
+    
     app.exec_()

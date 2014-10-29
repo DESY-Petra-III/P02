@@ -12,8 +12,10 @@ from time import sleep
 import logging
 import sys
 from taurus.qt.qtgui.extra_sardana import ExpDescriptionEditor
+import os
 
 # import global classes 
+import Revolver
 from Revolver.classes import threads, signals, config
 from Revolver.macro import taurus_sequencer
 from Revolver import gui_default_widget
@@ -23,6 +25,7 @@ DEFAULT_MODE = 0
 EXPERT_MODE = 1
 
 class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
+    
     
     EXPERT_MODE_PIN = str(2501)
     BEAM_HEIGHT = 7 
@@ -105,6 +108,12 @@ class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
         """
         self.controls_frame.setStyleSheet("#controls_frame{background-color:rgba("+color+",100%);}")
     
+    def action_open_revolver(self):
+        Thread(target=os.system, args=[("python %s/gui_revolver_app.py" % Revolver.__path__[0])]).start()
+    
+    def action_open_temperature_macro(self):
+        Thread(target=os.system, args=[("python %s/macro/temperature_macro_widget.py" % Revolver.__path__[0])]).start()
+    
     def action_open_sardana_macro(self):
         self.macroExecutor.show()
     
@@ -177,7 +186,6 @@ if __name__ == '__main__':
     
     # init widget
     widget = Beamline()
-    
     # connect signal from window "x" button to close the application correctly
     app.connect(app, signals.SIG_ABOUT_QUIT, widget.close_widget)
 

@@ -98,9 +98,11 @@ class LoggingWidget(QtGui.QDockWidget, DefaultWidget):
             valuesHeader += line["description"]
         self.action_log_init(valuesHeader, logComment)
         
+        if self.log_graph: self.log_output_profiling.removeWidget(self.log_graph)
         self.log_graph = gui_device_value_graph_controls_widget.Controls(deviceParams=deviceParams, graphOptions=graphParams)
         self.log_graph.input_values_number.setMaximum(1000000000)
         self.connect(self.log_graph, signals.SIG_LOG_POINT_DATA, self.action_log_point_data)
+        
         self.log_output_profiling.addWidget(self.log_graph)
         self.log_graph.action_start_plot(mode=gui_device_value_graph_controls_widget.MODE_POLLING)
         self.add_device_status_controller()
@@ -118,9 +120,11 @@ class LoggingWidget(QtGui.QDockWidget, DefaultWidget):
         self.action_log_init(valuesHeader, logComment)
         self.deviceParams = deviceParams
         
+        if self.log_graph: self.log_output_profiling.removeWidget(self.log_graph)
         self.log_graph = gui_device_value_graph_controls_widget.Controls(deviceParams=deviceParams, graphOptions=graphParams)
         self.log_graph.input_values_number.setMaximum(1000000000)
         self.connect(self.log_graph, signals.SIG_LOG_POINT_DATA, self.action_log_point_data)
+        
         self.log_output_profiling.addWidget(self.log_graph)
         self.log_graph.action_start_plot(mode=gui_device_value_graph_controls_widget.MODE_SIGNAL)
         self.log_graph.polling_controls.hide()
@@ -141,6 +145,7 @@ class LoggingWidget(QtGui.QDockWidget, DefaultWidget):
         self.action_log_init(valuesHeader, logComment)
         self.deviceParams = deviceParams
         
+        if self.log_graph: self.log_output_profiling.removeWidget(self.log_graph)
         self.log_graph = gui_device_value_graph_controls_widget.Controls(deviceParams=deviceParams, graphOptions=graphParams)
         self.log_graph.input_values_number.setMaximum(1000000000)
         self.connect(self.log_graph, signals.SIG_LOG_POINT_DATA, self.action_log_point_data)

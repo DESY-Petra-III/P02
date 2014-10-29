@@ -37,6 +37,7 @@ class DeviceValueStatusWidget(layout_status_label.Ui_Form, DeviceLedStatusWidget
         self.connect(self, signals._SIG_SET_LED_COLOR, self.set_status_color)
         self.connect(self, signals.SIG_DEVICE_STATUS_ERROR, self.set_status_error)
         self.connect(self, signals.SIG_DEVICE_STATUS_OK, self.status_poll_routine_start)
+        self.connect(self, Qt.SIGNAL("setStatusValue"), self.action_set_status_values)
         
     def __main(self):
         for index,param in enumerate(self.params):
@@ -64,6 +65,9 @@ class DeviceValueStatusWidget(layout_status_label.Ui_Form, DeviceLedStatusWidget
         thread = threading.Thread(target=self.__poll_status_check, args=())
         threads.add_thread(thread, self.widget_id)
         thread.start()
+    
+    def action_set_status_values(self,input,value):
+        input.setText(value)
         
     def __poll_status_check(self):
         while threads.THREAD_KEEP_ALIVE and not self.STOP_STATUS_CHECK and not self.STOP:
@@ -80,7 +84,7 @@ class DeviceValueStatusWidget(layout_status_label.Ui_Form, DeviceLedStatusWidget
                         yValue = "ERROR"
                 else:
                     yValue = self.device.read_attribute(param['deviceValue']).value
-                self.values[index].setText(str(yValue))
+                self.emit(Qt.SIGNAL("setStatusValue"), self.values[index], str(yValue))
             time.sleep(self.statusPollingTime)
         
         
@@ -96,7 +100,9 @@ if __name__ == '__main__':
     device = devices.TemperatureDevice(config.DEVICE_HOTBLOWER)
     params = [{"value":device.output["temperature"], "description":"Temperature:"},
               {"value":device.output["movingAverage"], "description":"Moving average:"},
-              {"deviceValue":device.setpointValue, "description":"Setpoint:"}]
+              {"deviceValue":device.setpointValue, "description":"Setpoint:"},
+              {"value":device.output["statusString"], "description":"Status:"},
+              ]
     '''
     device = devices.Motor(config.DEVICE_MOTOR)
     params = [{"deviceValue":"Position", "description":"Setpoint:"}]

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>633</width>
-    <height>417</height>
+    <width>909</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,12 +47,18 @@
       </property>
       <item row="1" column="0">
        <widget class="QTabWidget" name="beamline_device_controls">
+        <property name="minimumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true">#beamline_device_controls {padding:5px}</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="2" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <spacer name="horizontalSpacer_2">
@@ -132,7 +138,7 @@
       <property name="spacing">
        <number>5</number>
       </property>
-      <item row="0" column="6">
+      <item row="0" column="8">
        <widget class="QPushButton" name="button_expert_mode">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
@@ -141,7 +147,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="text">
-         <string/>
+         <string>Expert mode</string>
         </property>
         <property name="icon">
          <iconset>
@@ -157,13 +163,66 @@
        </widget>
       </item>
       <item row="0" column="5">
-       <widget class="QLabel" name="label">
+       <widget class="QPushButton" name="pushButton_2">
         <property name="text">
-         <string>Expert mode</string>
+         <string>Macro executor</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <activeoff>:/devices/icons/macro_mode.png</activeoff>
+         </iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>Meas. group editor</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <activeoff>:/devices/icons/mgrp.png</activeoff>
+         </iconset>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>9999999</width>
+          <height>999999</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Revolver</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <activeoff>:/devices/main.png</activeoff>
+         </iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="text">
+         <string>Temperature macro</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <activeoff>:/devices/temp.png</activeoff>
+         </iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -175,44 +234,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="0" column="4">
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <activeoff>:/devices/icons/macro_mode.png</activeoff>
-         </iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <activeoff>:/devices/icons/mgrp.png</activeoff>
-         </iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Sardana macro executor</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Measurement group editor</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -262,8 +283,8 @@
    <slot>action_set_expert_mode(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>602</x>
-     <y>22</y>
+     <x>903</x>
+     <y>27</y>
     </hint>
     <hint type="destinationlabel">
      <x>544</x>
@@ -278,11 +299,11 @@
    <slot>action_open_sardana_macro()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
-     <y>22</y>
+     <x>552</x>
+     <y>27</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-2</x>
+     <x>0</x>
      <y>13</y>
     </hint>
    </hints>
@@ -294,12 +315,44 @@
    <slot>action_open_mgrp_editor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>173</x>
-     <y>25</y>
+     <x>367</x>
+     <y>29</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-1</x>
+     <x>0</x>
      <y>43</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_open_temperature_macro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>-48</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_open_revolver()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>31</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>-68</y>
     </hint>
    </hints>
   </connection>
@@ -310,5 +363,7 @@
   <slot>action_set_expert_mode(bool)</slot>
   <slot>action_open_sardana_macro()</slot>
   <slot>action_open_mgrp_editor()</slot>
+  <slot>action_open_temperature_macro()</slot>
+  <slot>action_open_revolver()</slot>
  </slots>
 </ui>

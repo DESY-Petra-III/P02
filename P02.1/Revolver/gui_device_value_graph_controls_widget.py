@@ -57,6 +57,7 @@ class Controls(layout_device_value_graph_controls.Ui_Form, default_gui.DefaultCo
         
     def __main(self):
         self.action_check_settings()
+        self.graph.button_box.hide()
         self.graph_layout.addWidget(self.graph)
     
     def action_start_plot(self, mode=MODE_POLLING):

@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>674</width>
+    <width>767</width>
     <height>38</height>
    </rect>
   </property>
@@ -102,6 +102,9 @@
                   <height>16777215</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>Increase position by step size</string>
+                </property>
                 <property name="text">
                  <string>&gt;</string>
                 </property>
@@ -121,6 +124,9 @@
                   <height>16777215</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>Increase position by (step size * 10)</string>
+                </property>
                 <property name="text">
                  <string>&gt;&gt;</string>
                 </property>
@@ -133,6 +139,9 @@
                   <width>150</width>
                   <height>0</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>Set motor position</string>
                 </property>
                 <property name="decimals">
                  <number>5</number>
@@ -159,6 +168,9 @@
                   <height>16777215</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>Decrease position by step size</string>
+                </property>
                 <property name="text">
                  <string>&lt;</string>
                 </property>
@@ -177,6 +189,9 @@
                   <width>50</width>
                   <height>16777215</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>Decrease position by (step size * 10)</string>
                 </property>
                 <property name="text">
                  <string>&lt;&lt;</string>
@@ -235,12 +250,42 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string>Show macro window</string>
+             </property>
              <property name="text">
               <string/>
              </property>
              <property name="icon">
               <iconset>
                <activeoff>:/devices/icons/macro_mode.png</activeoff>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>19</width>
+               <height>19</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonSettings">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Show attributes editor</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <activeoff>:/devices/icons/settings.png</activeoff>
               </iconset>
              </property>
              <property name="iconSize">
@@ -373,8 +418,8 @@ QPushButton:disabled{ background:silver;color:grey }</string>
    <slot>action_stop_motor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>619</x>
-     <y>29</y>
+     <x>764</x>
+     <y>31</y>
     </hint>
     <hint type="destinationlabel">
      <x>535</x>
@@ -410,7 +455,23 @@ QPushButton:disabled{ background:silver;color:grey }</string>
     </hint>
     <hint type="destinationlabel">
      <x>562</x>
-     <y>40</y>
+     <y>37</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>action_show_settings_window()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>616</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>643</x>
+     <y>63</y>
     </hint>
    </hints>
   </connection>
@@ -428,5 +489,6 @@ QPushButton:disabled{ background:silver;color:grey }</string>
   <slot>action_change_step(double)</slot>
   <slot>action_stop_motor()</slot>
   <slot>action_show_sardana_macro()</slot>
+  <slot>action_show_settings_window()</slot>
  </slots>
 </ui>

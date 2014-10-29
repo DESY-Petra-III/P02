@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmphBibWC.ui'
+# Form implementation generated from reading ui file 'layout_motor_widget.ui'
 #
-# Created: Mon Jun 16 10:51:41 2014
+# Created: Wed Sep  3 17:30:13 2014
 #      by: PyQt4 UI code generator 4.6.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.setEnabled(True)
-        Form.resize(674, 38)
+        Form.resize(767, 38)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -118,6 +118,18 @@ class Ui_Form(object):
         self.pushButton_2.setIconSize(QtCore.QSize(19, 19))
         self.pushButton_2.setObjectName("pushButton_2")
         self.layout.addWidget(self.pushButton_2)
+        self.buttonSettings = QtGui.QPushButton(self.ok_page)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonSettings.sizePolicy().hasHeightForWidth())
+        self.buttonSettings.setSizePolicy(sizePolicy)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/devices/icons/settings.png"), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        self.buttonSettings.setIcon(icon1)
+        self.buttonSettings.setIconSize(QtCore.QSize(19, 19))
+        self.buttonSettings.setObjectName("buttonSettings")
+        self.layout.addWidget(self.buttonSettings)
         self.button_stop_all_moves = QtGui.QPushButton(self.ok_page)
         self.button_stop_all_moves.setEnabled(False)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
@@ -153,15 +165,23 @@ class Ui_Form(object):
         QtCore.QObject.connect(self.button_stop_all_moves, QtCore.SIGNAL("clicked()"), Form.action_stop_motor)
         QtCore.QObject.connect(self.step_size, QtCore.SIGNAL("valueChanged(double)"), Form.action_change_step)
         QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("clicked()"), Form.action_show_sardana_macro)
+        QtCore.QObject.connect(self.buttonSettings, QtCore.SIGNAL("clicked()"), Form.action_show_settings_window)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QtGui.QApplication.translate("Form", "Motor widget", None, QtGui.QApplication.UnicodeUTF8))
+        self.button_change_position_plus.setToolTip(QtGui.QApplication.translate("Form", "Increase position by step size", None, QtGui.QApplication.UnicodeUTF8))
         self.button_change_position_plus.setText(QtGui.QApplication.translate("Form", ">", None, QtGui.QApplication.UnicodeUTF8))
+        self.button_change_position_plus_double.setToolTip(QtGui.QApplication.translate("Form", "Increase position by (step size * 10)", None, QtGui.QApplication.UnicodeUTF8))
         self.button_change_position_plus_double.setText(QtGui.QApplication.translate("Form", ">>", None, QtGui.QApplication.UnicodeUTF8))
+        self.motor_position.setToolTip(QtGui.QApplication.translate("Form", "Set motor position", None, QtGui.QApplication.UnicodeUTF8))
+        self.button_change_position_minus.setToolTip(QtGui.QApplication.translate("Form", "Decrease position by step size", None, QtGui.QApplication.UnicodeUTF8))
         self.button_change_position_minus.setText(QtGui.QApplication.translate("Form", "<", None, QtGui.QApplication.UnicodeUTF8))
+        self.button_change_position_minus_double.setToolTip(QtGui.QApplication.translate("Form", "Decrease position by (step size * 10)", None, QtGui.QApplication.UnicodeUTF8))
         self.button_change_position_minus_double.setText(QtGui.QApplication.translate("Form", "<<", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Form", "step size:", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_2.setToolTip(QtGui.QApplication.translate("Form", "Show macro window", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonSettings.setToolTip(QtGui.QApplication.translate("Form", "Show attributes editor", None, QtGui.QApplication.UnicodeUTF8))
         self.button_stop_all_moves.setText(QtGui.QApplication.translate("Form", "Stop motor", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Form", "ERROR", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -6,7 +6,8 @@ Defines all macro types, that can be executed or saved as macro step
 from numpy import arange
 from time import sleep, time
 
-from Revolver.classes import devices, config
+
+from Revolver.classes import devices, config, threads
 
 # global flag: stop macro
 STOP = False
@@ -23,9 +24,9 @@ def macroRange(start, end, step):
     @rtype: list
     """
     if start <= end:
-        mrange = list(arange(start, end, step))
+        mrange = list(threads.frange(start, end, step))
     else:
-        mrange = list(reversed(arange(end, start, step)))
+        mrange = list(reversed(threads.frange(end, start, step)))
     if(mrange[-1] != end):
         mrange.append(end)
     if(mrange[0] != start):

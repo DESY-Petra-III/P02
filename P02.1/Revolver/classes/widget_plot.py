@@ -190,6 +190,8 @@ class Image_plot(ImageDialog, Widget_plot):
         self.plot.add_item(self.image)
         self.plot.select_item(self.image)
         self.get_contrast_panel().set_range(0, 1700)
+        try: self.button_box.hide() 
+        except: pass
         
     def loadImageFromDetector(self):
         """

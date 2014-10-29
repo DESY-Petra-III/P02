@@ -17,7 +17,9 @@ import gui_default_controls_widget as default_gui
 import gui_device_status_led_widget as led_widget
 from Revolver.classes import devices, config, signals, dialogs
 from taurus import Device
+from taurus.qt.qtgui.panel import TaurusAttrForm
 from Revolver import motor_macro_sardana_executor
+from time import sleep
 
 class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
     """
@@ -41,6 +43,8 @@ class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
     
     def __init_variables(self):
         self.ledStatus = led_widget.DeviceLedStatusWidget(self.defaultMotorDevice)
+        self.attributeTable = None
+        #self.attributeTable.setWindowTitle("Attributes for motor %s" % self.defaultMotorDevice.name)
         
     def __init_signals(self):
         self.connect(self, Qt.SIGNAL("changeMotor(String)"), self.action_change_motor)
@@ -54,13 +58,28 @@ class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
         self.layout_horizontal.insertWidget(0, self.ledStatus)
         self.spinboxFilter = default_gui.EventSpinboxFilter()
         self.motor_position.installEventFilter(self.spinboxFilter)
-        
-    
+      
     def action_show_sardana_macro(self):
         macroExecutor = motor_macro_sardana_executor.motorMacroExecutor(self.defaultMotorDevice, self)
         macroExecutor.set_kill_all_permissions(False)
         macroExecutor.show()
-            
+    
+    def action_show_settings_window(self):
+        #print self.attributeTable
+        attributeFilter = ["Position","PositionEncoder","SlewRate","SlewRateMin","SlewRateMax","BaseRate","Conversion",
+                           "Acceleration","StepBacklash","StepLimitMin","StepLimitMax","UnitBacklash","UnitLimitMin",
+                           "UnitLimitMax","SettleTime","State"]
+        if not self.attributeTable: self.attributeTable = dialogs.MotorAttributeDialog(self.defaultMotorDevice.devicePath, self, attributeFilter=attributeFilter)
+        self.attributeTable.exec_()
+
+    def close_widget(self):
+        self.attributeTable.close()
+        return default_gui.DefaultControls.close_widget(self)
+    
+    def closeEvent(self, event):
+        self.attributeTable.close()
+        return default_gui.DefaultControls.closeEvent(self, event)
+    
     def action_device_error(self):
         self.stackedWidget.setCurrentIndex(1)
         

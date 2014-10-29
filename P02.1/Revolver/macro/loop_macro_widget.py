@@ -28,7 +28,7 @@ class LoopMotorMacro(layout_loop_macro.Ui_Form, simple_macro_widget.SimpleMotorM
         self.connect(self, Qt.SIGNAL('changeLoopingMotor'), lambda loopMotor: self.macro_input_motor_loop.setText(loopMotor))
         attr = [self.macro_loop_start, self.macro_loop_end]
         self.connect(self.macro_input_motor_loop, Qt.SIGNAL('textChanged(QString)'), lambda inputQtObject: self.check_device_allowed_values(attr, devices.Motor(str(inputQtObject))))
-    
+        
     def action_reset_macro(self):
         """
         Signal handler:

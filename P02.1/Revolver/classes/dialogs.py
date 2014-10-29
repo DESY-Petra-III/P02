@@ -8,7 +8,7 @@ from PyQt4.QtGui import QMessageBox
 import sys
 import logging
 import math
-from PyQt4.QtGui import QInputDialog
+from PyQt4.QtGui import QInputDialog, QDialog, QGridLayout, QPushButton
 from taurus import Device
 
 # Import from local packages
@@ -20,6 +20,7 @@ from guiqwt.styles import CurveParam
 from guiqwt.curve import CurveItem
 from guiqwt.builder import make
 from taurus.qt.qtgui.container import TaurusWidget
+from taurus.qt.qtgui.resource.taurus_resource_utils import __init
 
 def getHSVcolors(N):
         """
@@ -272,7 +273,7 @@ class AddMacroDialog(QtGui.QDialog, add_macro_dialog.Ui_Dialog):
                     self.parent.emit(signals.SIG_SHOW_WARNING, "Input error", "Step is bigger than maximum allowed step")
                 if intervalStep == 0: 
                     self.parent.emit(signals.SIG_SHOW_WARNING, "Input error", "Step must be bigger than zero")
-        except:
+        except Exception, e:
             return
 
         try:
@@ -295,7 +296,7 @@ class AddMacroDialog(QtGui.QDialog, add_macro_dialog.Ui_Dialog):
 
 class AddTemperatureMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacroDialog):
     
-    def __init__(self, parent=None, defaultDevice=config.DEVICE_HOTBLOWER, defaultPath=config.PATH_HOTBLOWER_FILTER):
+    def __init__(self, parent=None, defaultDevice=config.DEVICE_HOTBLOWER, defaultPath=config.PATH_TEMPERATURE_DEVICE_FILTER):
         super(AddTemperatureMacroDialog, self).__init__(parent, setDefault=False)
         self.defaultPath = defaultPath
         self.defaultDevice = defaultDevice
@@ -322,9 +323,9 @@ class AddTemperatureMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacro
         filesafter = int(self.macro_input_filesafter.text())
         comment = str(self.macro_input_comment.text())
         position = self.macro_input_position.text()
-        intervalFrom = self.macro_value_from.text()
-        intervalTo = self.macro_value_to.text()
-        intervalStep = self.macro_value_step.text()
+        intervalFrom = float(self.macro_value_from.text().replace(',', '.'))
+        intervalTo = float(self.macro_value_to.text().replace(',', '.'))
+        intervalStep = float(self.macro_value_step.text().replace(',', '.'))
         wait_seconds = int(self.macro_wait_time.value())
         macro_wait_iterations = int(self.macro_wait_time_repeat.value())
         macro_wait_after = int(self.macro_wait_after.value())
@@ -345,72 +346,7 @@ class AddTemperatureMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacro
             return
 
         # try:
-        if self.positionDiscreete:
-            newMacro = macro.TemperatureMacro(device.name, device.devicePath,
-                                        sampleName, summed,
-                                        filesafter, position,
-                                        wait_seconds, macro_wait_iterations, macro_wait_after, takeDark, comment)
-            self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
-        else:
-            mrange = macro.macroRange(intervalFrom, intervalTo, intervalStep)
-            for position in mrange:
-                newMacro = macro.TemperatureMacro(device.name, device.devicePath,
-                                            sampleName, summed,
-                                            filesafter, position,
-                                            wait_seconds, macro_wait_iterations, macro_wait_after, takeDark, comment)
-                self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
-        # except:
-        #    logging.error("Temperature macro was not added: %s", sys.exc_info()[0])
-
-class AddCryostreamerMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacroDialog):
-    
-    def __init__(self, parent=None, defaultDevice=config.DEVICE_CRYOSTREAMER, defaultPath=config.PATH_CRYOSTREAMER_FILTER):
-        super(AddCryostreamerMacroDialog, self).__init__(parent, setDefault=False)
-        self.defaultPath = defaultDevice
-        self.defaultDevice = defaultDevice
-        self.macro_input_motor.setText(defaultDevice)
-      
-    def action_select_device(self):
-        SelectDeviceDialog(self, defaultPath=self.defaultPath).exec_()
-    
-    def action_check_device_restrictions(self, devicePath):
-        device = devices.Cryostreamer(str(devicePath))
-        attr = [self.macro_value_from, self.macro_value_to, self.macro_input_position]
-        self.parent.check_device_allowed_values(attr, device) 
-    
-    def action_add_macro(self):
-        """
-        Signal handler:
-        emit signal to parent widget and pass new macro step as parameter
-        """
-        sampleName = str(self.macro_input_sampleName.text())
-        summed = int(self.macro_input_summed.text())
-        filesafter = int(self.macro_input_filesafter.text())
-        comment = str(self.macro_input_comment.text())
-        position = float(self.macro_input_position.text())
-        intervalFrom = float(self.macro_value_from.text())
-        intervalTo = float(self.macro_value_to.text())
-        intervalStep = float(self.macro_value_step.text())
-        wait_seconds = int(self.macro_wait_time.value())
-        macro_wait_iterations = int(self.macro_wait_time_repeat.value())
-        macro_wait_after = int(self.macro_wait_after.value())
-        takeDark = self.check_take_dark.isChecked()
         
-        device = devices.Cryostreamer(str(self.macro_input_motor.text()))
-                
-        try:
-            sampleName = self.parent.validate_input("Sample name", "string", sampleName)
-            if self.positionDiscreete:
-                position = self.parent.validate_input("Position", "float", position)
-            else:
-                if intervalStep > math.fabs(intervalFrom - intervalTo): 
-                    self.parent.emit(signals.SIG_SHOW_WARNING, "Input error", "Step is bigger than maximum allowed step")
-                if intervalStep == 0: 
-                    self.parent.emit(signals.SIG_SHOW_WARNING, "Input error", "Step must be bigger than zero")
-        except:
-            return
-
-        # try:
         if self.positionDiscreete:
             newMacro = macro.TemperatureMacro(device.name, device.devicePath,
                                         sampleName, summed,
@@ -427,7 +363,7 @@ class AddCryostreamerMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacr
                 self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
         # except:
         #    logging.error("Temperature macro was not added: %s", sys.exc_info()[0])
-    
+
 class SelectDeviceDialog(QtGui.QDialog, select_device_dialog.Ui_Dialog):
     """
     Dialog that can select desired device from device list
@@ -477,7 +413,7 @@ class SelectDeviceDialog(QtGui.QDialog, select_device_dialog.Ui_Dialog):
             retDevice = str(selected[0].text(0))
             if self.exchange.has_key(retDevice):
                 retDevice = self.exchange[retDevice]
-            selectedMotor = config.DEVICE_SERVER + retDevice
+            selectedMotor = str(config.DEVICE_SERVER + retDevice).strip()
             if self.defaultSignal == "changeDefaultMotor":
                 config.DEVICE_MOTOR = selectedMotor
             self.parent.emit(Qt.SIGNAL(self.defaultSignal), selectedMotor)
@@ -611,3 +547,46 @@ class AboutUI(QtGui.QDialog, aboutUI.Ui_Dialog):
         self.layout().setSizeConstraint(Qt.QLayout.SetFixedSize)
         self.parent = parent
 """
+
+from taurus.qt.qtgui.panel import TaurusAttrForm
+class DeviceAttributeDialog(QtGui.QDialog, TaurusWidget):
+    
+    def __init__(self, devicePath, parent=None, attributeFilter=None):
+        self.devicePath = devicePath
+        
+        super(DeviceAttributeDialog, self).__init__()
+        form = TaurusAttrForm(self)
+        if attributeFilter:
+            def displayFilter(attribute):
+                if attribute.label in attributeFilter:
+                    return True
+            form.setViewFilters([displayFilter])
+        
+        form.setWindowTitle("Attributes for device @ %s" % devicePath)
+        self.addChild(form)
+        self.setFixedHeight(600)
+        self.setFixedWidth(600)
+        form.setFixedHeight(600)
+        form.setFixedWidth(600)
+        form.setModel(devicePath)
+        
+        self.mainForm = form
+        
+
+class MotorAttributeDialog(DeviceAttributeDialog):
+    
+    def __init__(self, devicePath, parent=None, attributeFilter=None):
+        super(MotorAttributeDialog, self).__init__(devicePath, parent, attributeFilter)
+        
+        encoderButton = QPushButton("Encoder")
+        self.connect(encoderButton, Qt.SIGNAL("clicked()"), self.openEncoderDialog)
+        self.mainForm.children()[1].children()[2].addButton(encoderButton,0)
+        
+    def openEncoderDialog(self):
+        attributes = ["Position","StepPositionController","StepPositionInternal","StepPosition","EncoderRawPosition",
+                      "HomePosition","FlagHomed","EncoderConversion","EncoderRatio","FlagUseEncoderPosition",
+                      "FlagClosedLoop","FlagInvertEncoderDirection","CorrectionGain","DeadBand",
+                      "SlewRateCorrection","SlipTolerance","WriteRead","State"]
+        encoderAttribute = DeviceAttributeDialog(self.devicePath, self.parent(), attributeFilter=attributes)
+        encoderAttribute.exec_()
+

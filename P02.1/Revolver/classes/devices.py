@@ -56,6 +56,14 @@ def get_running_device(devicePath):
             if device.devicePath == devicePath:
                 return device
 
+def get_all_running_devices(devicePath):
+    deviceList = []
+    if runningDevices:
+        for device in runningDevices:
+            if device.devicePath == devicePath:
+                deviceList.append(device)
+    return deviceList
+
 class TangoDevice(object):
     """
     Wrapper for basic Tango device.
@@ -148,6 +156,7 @@ class TangoDevice(object):
         """
         Add device to all runing devices set
         """
+        global runningDevices
         runningDevices.add(self)
     
     def is_connected(self):
@@ -260,8 +269,10 @@ class TangoDevice(object):
         return None
     
     def start_profiling(self):
+        if self.profiling: return False
         self.profiling = True
         logging.info("Profiling of device %s started" % self.devicePath)
+        return True
     
     def stop_profiling(self):
         self.profiling = False
@@ -524,7 +535,7 @@ class Laser(TangoDevice):
         super(Laser, self).__init__(devicePath)
     
     def halt(self):
-        """
+        """if self.profiling: return
         Close shutter
         """
         status = self.read_attribute("value").value
@@ -791,7 +802,10 @@ class DetectorController(TangoDevice):
         return {"data": numpy.asarray(readData), "width":dataWidth, "height":dataHeight, "filename": filename}
     
     def take_filename(self):
-        return ntpath.split(self.execute_command("WriteReadSocket", "processor.fileName"))[1]
+        try:
+            return ntpath.split(self.execute_command("WriteReadSocket", "processor.fileName"))[1]
+        except:
+            pass
     
     def take_readout(self, X0=0, Y0=0, X1=2047, Y1=2047):
         """
@@ -879,290 +893,9 @@ class Motor(TangoDevice):
     def current_value(self, value="Position"):
         return TangoDevice.current_value(self, value)
 
-class Hotblower(TangoDevice):
-    """
-    Class that define motor device
-    """
-    
-    HOMING_POINTS = 4
-        
-    def __init__(self, devicePath, threshold=2, initSelf=True):
-        """
-        Class constructor
-        @type devicePath: String
-        """
-        super(Hotblower, self).__init__(devicePath)
-        self.waitForHoming = False
-        self.rampingThreshold = config.SETTINGS_RAMPING_ERROR_THRESHOLD
-        self.ramping = False
-        
-        if initSelf:
-            self.maxValue = config.SETTINGS_HOTBLOVER_TEMPERATURE_MAX
-            self.minValue = config.SETTINGS_HOTBLOVER_TEMPERATURE_MIN
-            self.safeValue = config.SETTINGS_HOTBLOVER_TEMPERATURE_SAFE
-            self.threshold = threshold
-            self.idle = True
-            
-            self.setpointValue = "Setpoint"
-            self.readoutValue = "Temperature"
-            actualTemperature = self.read_attribute(self.readoutValue).value
-            self.output["movingAverage"] = [actualTemperature]
-            self.output["temperature"] = [actualTemperature]
-            self.output["statusString"] = ["Idle"]
-    
-    def __stop_stabilization__(self):
-        """
-        Set flag to False and stop stabilization wait loop
-        """
-        self.waitForStabilization = False
-    
-    def __stop_homing__(self):
-        self.waitForHoming = False
-    
-    def __set_idle(self, flag):
-        """
-        Set hotblower to idle position by flag
-        @type flag: bool
-        """
-        if flag: self.running_remove()
-        self.idle = flag
-            
-    def is_idle(self):
-        """
-        Return true if device is on stabilized temperature
-        @rtype: bool
-        """
-        if self.idle == True:
-            return True
-        else:
-            return False
-    
-    def is_stabilized(self):
-        """
-        Is device stabilized on setpoint temperature?
-        @rtype: bool 
-        """
-        actualTemperature = self.read_attribute(self.readoutValue).value
-        actualSetpoint = self.read_attribute(self.setpointValue).value
-        diffTemperature = abs(actualSetpoint - actualTemperature)
-        if diffTemperature <= self.threshold:
-            return True
-        else:
-            return False
-    
-    def check_idle(self):
-        """
-        Check if hotblower is working. 
-        If yes than raise exception.
-        """
-        if not(self.is_idle()):
-            raise Exception("Hotblower is running on setpoint")
-    
-    def halt(self, force=False, callBack=None):
-        """
-        Stop actual stabilization or ramping loop.
-        Set new setpoint to minimum value, dont wait to stabilization. 
-        @type force: bool
-        @type callBack: function
-        """
-        if force or not self.is_idle():
-            self.__stop_stabilization__()
-            attributes = [(self.setpointValue, self.safeValue)]
-            self.write_attributes(attributes)
-            logging.info("Hotblower halted, setpoint set to temperature %.5f", self.safeValue)
-        if callBack: callBack()
-    '''
-        
-    def halt(self, force=False, callBack=None):
-        """
-        Stop actual stabilization or ramping loop.
-        Set new setpoint to minimum value, dont wait to stabilization. 
-        @type force: bool
-        @type callBack: function
-        """
-        if force or not self.is_idle():
-            self.__stop_stabilization__()
-            logging.info("Hotblower halted, start homing to value %.5f", self.safeValue)
-            thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
-            threads.add_thread(thread)
-            thread.start()
-    
-    def __homing(self, callBack):
-        actualTemperature = self.read_attribute(self.readoutValue).value
-        oneHomingStep = (actualTemperature - self.safeValue) / self.HOMING_POINTS
-        actualHomingStep = actualTemperature - oneHomingStep
-        steps = self.HOMING_POINTS
-        while steps != 0 or self.waitForHoming or threads.THREAD_KEEP_ALIVE: 
-            actualTemperature = self.read_attribute(self.readoutValue).value
-            if actualHomingStep-self.rampingThreshold <= actualTemperature or actualHomingStep-self.rampingThreshold >= actualTemperature:
-                actualHomingStep = actualTemperature - oneHomingStep
-                steps -= 1
-            sleep(self.POLL_STATE_TIME)
-        logging.info("Homing ended")
-        if callBack: callBack()
-    '''
-    def start_profiling(self):
-        """
-        Start profiling of device
-        """
-        TangoDevice.start_profiling(self)
-        thread = threads.threading.Thread(target=self.__profiling_routine, args=([]))
-        threads.add_thread(thread)
-        thread.start()
-    
-    def __profiling_routine(self):
-        """
-        Profiling routine
-        put movingAverage and actual temperature into profiling output
-        """
-        #minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
-        measuredPoints = collections.deque(maxlen=60)
-        
-        while self.profiling and threads.THREAD_KEEP_ALIVE:
-            actualTemperature = self.read_attribute(self.readoutValue).value
-            actualSetpoint = self.read_attribute(self.setpointValue).value
-            measuredPoints.append(actualTemperature)
-            averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
-            self.output["movingAverage"][0] = averageStabilization
-            self.output["temperature"][0] = actualTemperature
-            if abs(abs(actualSetpoint) - abs(averageStabilization)) > config.SETTINGS_RAMPING_ERROR_THRESHOLD:
-                self.output["statusString"][0] = "Ramping"
-            else:
-                self.output["statusString"][0] = "Stabilizing"
-            sleep(self.POLL_STATE_TIME)
-        logging.info("Profiling of device %s ended" % self.devicePath)
-                
-    def wait_temperature_stabilized(self):
-        """
-        Wait in loop until hotblower was stabilized.
-        Stop stabilization routine with self.waitForStabilization flag
-        Wait until ramping threshold was reached, than start stabilization loop
-        @rtype: bool
-        """
-        self.__set_idle(False)
-        self.waitForStabilization = True
-        stabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
-        minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
-        maxStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MAX / self.POLL_STATE_TIME
-        maxRampingCount = config.SETTINGS_RAMPING_MAXIMUM_TIME / self.POLL_STATE_TIME
-        count = 0
-        actualSetpoint = self.read_attribute(self.setpointValue).value
-        measuredPoints = collections.deque(maxlen=60)
-        self.ramping = True
-        
-        while (self.ramping or (count < stabilizeCount and count < maxStabilizeCount) ) and threads.THREAD_KEEP_ALIVE and self.waitForStabilization:
-            
-            actualTemperature = self.read_attribute(self.readoutValue).value
-            measuredPoints.append(actualTemperature)
-            averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
-            
-            if self.ramping and count >= maxRampingCount:
-                return None
-                break
-            if self.ramping and abs(abs(actualSetpoint) - abs(averageStabilization)) <= config.SETTINGS_RAMPING_ERROR_THRESHOLD: 
-                logging.info("Ramping end")
-                count = 0
-                self.ramping = False
-            if not self.ramping and count >= minStabilizeCount - 1:
-                if abs(actualSetpoint - averageStabilization) <= self.threshold:
-                    logging.info("%s stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
-                    self.__set_idle(True)
-                    return True
-                else:
-                    stabilizeCount += 1
-            sleep(self.POLL_STATE_TIME)
-            count += 1
-        
-        if self.ramping == True:
-            logging.info("Device %s could not be ramped to temperature: %.5fC", self.devicePath, actualSetpoint)
-        if self.waitForStabilization:
-            logging.info("Device %s could not be stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
-        self.__set_idle(True)
-        return False
-        
-    def set_temperature(self, temperature, callback=None):
-        """
-        Set hotblower setpoint to new temperature
-        @type temperature: float
-        @type callback: fun
-        """
-        self.check_idle()
-        attributes = [(self.setpointValue, temperature)]
-        self.write_attributes(attributes)
-        while self.read_attribute(self.setpointValue).value != temperature:
-            sleep(0.1)
-        self.running_add()
-        return self.wait_temperature_stabilized()
-        
-    def current_value(self, value="Temperature"):
-        """
-        Return value defined in value parameter
-        @rtype: mixed
-        @type value: String
-        """
-        return TangoDevice.current_value(self, value)
-
-class Cryostreamer(Hotblower):
-    
-    def __init__(self, devicePath, threshold=2):
-        """
-        Class constructor
-        @type devicePath: String
-        """
-        super(Cryostreamer, self).__init__(devicePath, initSelf=False)
-        self.maxValue = config.SETTINGS_CRYOSTREAMER_TEMPERATURE_MAX
-        self.minValue = config.SETTINGS_CRYOSTREAMER_TEMPERATURE_MIN
-        self.safeValue = config.SETTINGS_CRYOSTREAMER_TEMPERATURE_SAFE
-        self.threshold = threshold
-        self.idle = True
-        
-        self.setpointValue = "SetTempLoop1"
-        self.readoutValue = "TempChannelA"
-        actualTemperature = self.read_attribute(self.readoutValue).value
-        self.output["movingAverage"] = [actualTemperature]
-        self.output["temperature"] = [actualTemperature]
-        self.output["statusString"] = ["Idle"]
-        
-    '''
-    def halt(self, force=False, callBack=None):
-        """
-        Stop actual stabilization or ramping loop.
-        Set new setpoint to minimum value, dont wait to stabilization. 
-        @type force: bool
-        @type callBack: function
-        """
-        if force or not self.is_idle():
-            self.__stop_stabilization__()
-            logging.info("Cryostreamer halted, start homing to value %.5f", self.safeValue)
-            thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
-            threads.add_thread(thread)
-            thread.start()
-    
-    def __homing(self, callBack):
-        actualTemperature = self.read_attribute(self.readoutValue).value
-        oneHomingStep = (self.safeValue - actualTemperature) / self.HOMING_POINTS
-        actualHomingStep = actualTemperature + oneHomingStep
-        steps = self.HOMING_POINTS
-        while steps != 0 or self.waitForHoming or threads.THREAD_KEEP_ALIVE: 
-            actualTemperature = self.read_attribute(self.readoutValue).value
-            if actualHomingStep+self.rampingThreshold <= actualTemperature or actualHomingStep+self.rampingThreshold >= actualTemperature:
-                actualHomingStep = actualTemperature + oneHomingStep
-                steps -= 1
-            sleep(self.POLL_STATE_TIME)
-        logging.info("Homing ended")
-        if callBack: callBack()
-    '''
-    def current_value(self, value="TempChannelA"):
-        """
-        Return value defined in value parameter
-        @rtype: mixed
-        @type value: String
-        """
-        return TangoDevice.current_value(self, value)
-
 class TemperatureDevice(TangoDevice):
     
-    HOMING_POINTS = 4
+    HOMING_POINTS = 10
         
     def __init__(self, devicePath, threshold=2, initSelf=True):
         """
@@ -1170,20 +903,26 @@ class TemperatureDevice(TangoDevice):
         @type devicePath: String
         """
         super(TemperatureDevice, self).__init__(devicePath)
-        self.waitForHoming = False
+        #self.waitForHoming = False
         self.rampingThreshold = config.SETTINGS_RAMPING_ERROR_THRESHOLD
         self.ramping = False
+        self.waitForStabilization = None
+        self.status = "Unknown"
+        self.settings = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]
         
         if initSelf:
             self.maxValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["MAX"]
             self.minValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["MIN"]
             self.safeValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["SAFE"]
+            #self.waitForHoming = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["settings"]["HOMING"]
+            
             self.threshold = threshold
             self.idle = True
             
             self.setpointValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["setpoint"]
             self.readoutValue = config.TEMPERATURE_DEVICE_SETTINGS[devicePath]["readout"]
             actualTemperature = self.read_attribute(self.readoutValue).value
+            
             self.output["movingAverage"] = [actualTemperature]
             self.output["temperature"] = [actualTemperature]
             self.output["statusString"] = ["Idle"]
@@ -1195,7 +934,13 @@ class TemperatureDevice(TangoDevice):
         self.waitForStabilization = False
     
     def __stop_homing__(self):
-        self.waitForHoming = False
+        self.settings["HOMING"] = False
+    
+    def __start_homing__(self):
+        self.settings["HOMING"] = True
+    
+    def isHoming(self):
+        return self.settings["HOMING"]
     
     def __set_idle(self, flag):
         """
@@ -1210,10 +955,10 @@ class TemperatureDevice(TangoDevice):
         Return true if device is on stabilized temperature
         @rtype: bool
         """
-        if self.idle == True:
-            return True
-        else:
-            return False
+        return self.idle
+    
+    def __postInit__(self):
+        return
     
     def is_stabilized(self):
         """
@@ -1235,7 +980,7 @@ class TemperatureDevice(TangoDevice):
         """
         if not(self.is_idle()):
             raise Exception("Hotblower is running on setpoint")
-    
+    '''
     def halt(self, force=False, callBack=None):
         """
         Stop actual stabilization or ramping loop.
@@ -1251,7 +996,7 @@ class TemperatureDevice(TangoDevice):
         if callBack: callBack()
     '''
         
-    def halt(self, force=False, callBack=None):
+    def halt(self, force=False, callBack=None, homing=False):
         """
         Stop actual stabilization or ramping loop.
         Set new setpoint to minimum value, dont wait to stabilization. 
@@ -1260,33 +1005,45 @@ class TemperatureDevice(TangoDevice):
         """
         if force or not self.is_idle():
             self.__stop_stabilization__()
-            logging.info("Hotblower halted, start homing to value %.5f", self.safeValue)
-            thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
-            threads.add_thread(thread)
-            thread.start()
+            if homing and not self.isHoming():
+                logging.info("%s halted, start homing to value %.5f" % (self.devicePath, self.safeValue))
+                thread = threads.threading.Thread(target=self.__homing, args=([callBack]))
+                threads.add_thread(thread)
+                thread.start()
     
     def __homing(self, callBack):
-        actualTemperature = self.read_attribute(self.readoutValue).value
-        oneHomingStep = (actualTemperature - self.safeValue) / self.HOMING_POINTS
-        actualHomingStep = actualTemperature - oneHomingStep
+        if self.isHoming(): return
+        self.running_add()
+        self.__start_homing__()
+        setPoint = self.read_attribute(self.readoutValue).value
         steps = self.HOMING_POINTS
-        while steps != 0 or self.waitForHoming or threads.THREAD_KEEP_ALIVE: 
-            actualTemperature = self.read_attribute(self.readoutValue).value
-            if actualHomingStep-self.rampingThreshold <= actualTemperature or actualHomingStep-self.rampingThreshold >= actualTemperature:
-                actualHomingStep = actualTemperature - oneHomingStep
-                steps -= 1
-            sleep(self.POLL_STATE_TIME)
-        logging.info("Homing ended")
+        oneHomingStep = (setPoint - self.safeValue) / self.HOMING_POINTS
+        tempSteps = []
+        while steps != 0:
+            tempSteps.append(setPoint - (oneHomingStep * steps))
+            steps -= 1
+        tempSteps.reverse()
+        
+        for i in tempSteps:
+            self.write_attributes([(self.setpointValue, i)])
+            while True:
+                actualTemperature = self.read_attribute(self.readoutValue).value
+                if not self.isHoming() or not threads.THREAD_KEEP_ALIVE: return
+                if i <= (actualTemperature + self.rampingThreshold) and i >= (actualTemperature - self.rampingThreshold): break
+                sleep(self.POLL_STATE_TIME)
+        
+        self.__stop_homing__() 
+        logging.info("Homing ended for device %s" % self.devicePath)
         if callBack: callBack()
-    '''
+        
     def start_profiling(self):
         """
         Start profiling of device
         """
-        TangoDevice.start_profiling(self)
-        thread = threads.threading.Thread(target=self.__profiling_routine, args=([]))
-        threads.add_thread(thread)
-        thread.start()
+        if TangoDevice.start_profiling(self):
+            thread = threads.threading.Thread(target=self.__profiling_routine)
+            threads.add_thread(thread)
+            thread.start()
     
     def __profiling_routine(self):
         """
@@ -1303,10 +1060,17 @@ class TemperatureDevice(TangoDevice):
             averageStabilization = reduce(lambda x, y: x + y, measuredPoints) / len(measuredPoints)
             self.output["movingAverage"][0] = averageStabilization
             self.output["temperature"][0] = actualTemperature
-            if abs(abs(actualSetpoint) - abs(averageStabilization)) > config.SETTINGS_RAMPING_ERROR_THRESHOLD:
+            '''if not self.waitForStabilization:
                 self.output["statusString"][0] = "Ramping"
-            else:
-                self.output["statusString"][0] = "Stabilizing"
+                if abs(abs(actualSetpoint) - abs(averageStabilization)) > config.SETTINGS_RAMPING_ERROR_THRESHOLD:
+                    self.output["statusString"][0] = "Ramping"
+                else:
+                    if abs(actualSetpoint - averageStabilization) <= self.threshold:
+                        self.output["statusString"][0] = "Stabilized"
+                    else:
+                        self.output["statusString"][0] = "Stabilizing"
+            else:'''
+            self.output["statusString"][0] = self.status
             sleep(self.POLL_STATE_TIME)
         logging.info("Profiling of device %s ended" % self.devicePath)
                 
@@ -1317,7 +1081,7 @@ class TemperatureDevice(TangoDevice):
         Wait until ramping threshold was reached, than start stabilization loop
         @rtype: bool
         """
-        self.__set_idle(False)
+        self.idle = False
         self.waitForStabilization = True
         stabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
         minStabilizeCount = config.SETTINGS_STABILIZATION_TIME_MIN / self.POLL_STATE_TIME
@@ -1327,6 +1091,7 @@ class TemperatureDevice(TangoDevice):
         actualSetpoint = self.read_attribute(self.setpointValue).value
         measuredPoints = collections.deque(maxlen=60)
         self.ramping = True
+        self.status = "Ramping"
         
         while (self.ramping or (count < stabilizeCount and count < maxStabilizeCount) ) and threads.THREAD_KEEP_ALIVE and self.waitForStabilization:
             
@@ -1336,18 +1101,22 @@ class TemperatureDevice(TangoDevice):
             
             if self.ramping and count >= maxRampingCount:
                 return None
+                self.waitForStabilization = False
                 break
-            if self.ramping and abs(abs(actualSetpoint) - abs(averageStabilization)) <= config.SETTINGS_RAMPING_ERROR_THRESHOLD: 
-                logging.info("Ramping end")
-                count = 0
-                self.ramping = False
-            if not self.ramping and count >= minStabilizeCount - 1:
-                if abs(actualSetpoint - averageStabilization) <= self.threshold:
-                    logging.info("%s stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
-                    self.__set_idle(True)
-                    return True
-                else:
-                    stabilizeCount += 1
+            if self.ramping:
+                if abs(abs(actualSetpoint) - abs(averageStabilization)) <= config.SETTINGS_RAMPING_ERROR_THRESHOLD: 
+                    logging.info("Ramping end")
+                    count = 0
+                    self.ramping = False
+                    self.status = "Stabilizing"
+            if not self.ramping and count >= minStabilizeCount - 1 and abs(actualSetpoint - averageStabilization) <= self.threshold:
+                logging.info("%s stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
+                self.idle = True
+                self.status = "Stabilized"
+                self.waitForStabilization = False
+                return True
+            else:
+                stabilizeCount += 1
             sleep(self.POLL_STATE_TIME)
             count += 1
         
@@ -1356,6 +1125,7 @@ class TemperatureDevice(TangoDevice):
         if self.waitForStabilization:
             logging.info("Device %s could not be stabilized on temperature: %.5fC", self.devicePath, actualSetpoint)
         self.__set_idle(True)
+        self.waitForStabilization = False
         return False
         
     def set_temperature(self, temperature, callback=None):
@@ -1365,6 +1135,7 @@ class TemperatureDevice(TangoDevice):
         @type callback: fun
         """
         self.check_idle()
+        self.__stop_homing__()
         attributes = [(self.setpointValue, temperature)]
         self.write_attributes(attributes)
         while self.read_attribute(self.setpointValue).value != temperature:
@@ -1372,12 +1143,13 @@ class TemperatureDevice(TangoDevice):
         self.running_add()
         return self.wait_temperature_stabilized()
         
-    def current_value(self, value="Temperature"):
+    def current_value(self, value=None):
         """
         Return value defined in value parameter
         @rtype: mixed
         @type value: String
         """
+        if not value: value = self.readoutValue
         return TangoDevice.current_value(self, value)
 
 class VirtualDevice(object):

@@ -9,7 +9,7 @@ SETTINGS_EXPERT_MODE_PASSWORD = str(2501)
 # define expert settings
 SETTINGS_HOTBLOVER_TEMPERATURE_MIN = 20
 SETTINGS_HOTBLOVER_TEMPERATURE_MAX = 750 
-SETTINGS_HOTBLOVER_TEMPERATURE_SAFE = 20
+SETTINGS_HOTBLOVER_TEMPERATURE_SAFE = 22
 SETTINGS_CRYOSTREAMER_TEMPERATURE_MIN = 80
 SETTINGS_CRYOSTREAMER_TEMPERATURE_MAX = 300
 SETTINGS_CRYOSTREAMER_TEMPERATURE_SAFE = 295 
@@ -35,7 +35,7 @@ DEVICE_SHUTTER_MAIN = DEVICE_SERVER + 'p02/shutter/1'
 
 #DEVICE_HOTBLOWER = DEVICE_SERVER_P02 + "p02/eurotherm2408/ch1a.01"
 DEVICE_HOTBLOWER = DEVICE_SERVER_P02 + "p02/eurotherm/exp.01"
-DEVICE_CRYOSTREAMER = DEVICE_SERVER_P02 + "p02/cryocontempctrl/elab.01"
+DEVICE_CRYOSTREAMER = DEVICE_SERVER + "p02/cryocontempctrl/elab.01"
 
 TEMPERATURE_DEVICE_SETTINGS = {
                         DEVICE_HOTBLOWER : {
@@ -44,7 +44,8 @@ TEMPERATURE_DEVICE_SETTINGS = {
                                             "settings":{
                                                         "MIN":SETTINGS_HOTBLOVER_TEMPERATURE_MIN, 
                                                         "MAX":SETTINGS_HOTBLOVER_TEMPERATURE_MAX, 
-                                                        "SAFE":SETTINGS_HOTBLOVER_TEMPERATURE_SAFE, 
+                                                        "SAFE":SETTINGS_HOTBLOVER_TEMPERATURE_SAFE,
+                                                        "HOMING":True,
                                                         }
                                             },
                         DEVICE_CRYOSTREAMER : {
@@ -53,14 +54,15 @@ TEMPERATURE_DEVICE_SETTINGS = {
                                             "settings":{
                                                         "MIN":SETTINGS_CRYOSTREAMER_TEMPERATURE_MIN, 
                                                         "MAX":SETTINGS_CRYOSTREAMER_TEMPERATURE_MAX, 
-                                                        "SAFE":SETTINGS_CRYOSTREAMER_TEMPERATURE_SAFE, 
+                                                        "SAFE":SETTINGS_CRYOSTREAMER_TEMPERATURE_SAFE,
+                                                        "HOMING":True,
                                                         }
                                             }
                      }
 
 # define device human names
-DEVICE_NAMES = {'HOTABLOWER':'p02/eurotherm2408/ch1a.01',
-                'CRYOSTREAMER':'p02/cryocontempctrl/elab.01',
+DEVICE_NAMES = {
+                
                 'DIODE':'p02/festocompairdistributor/eh1a.01',
                 'LASER':'p02/festocompairdistributor/eh1a.01',
                 'ABSORBER':'p02/festocompairdistributor/eh1a.01',
@@ -123,6 +125,7 @@ DEVICE_NAMES = {'HOTABLOWER':'p02/eurotherm2408/ch1a.01',
 PATH_MOTOR_FILTER = ["p02/motor/"]
 PATH_HOTBLOWER_FILTER = ["p02/eurotherm/","p02/eurotherm2408/"]
 PATH_CRYOSTREAMER_FILTER = ["p02/cryocontempctrl/"]
+PATH_TEMPERATURE_DEVICE_FILTER = ["p02/eurotherm/","p02/eurotherm2408/","p02/cryocontempctrl/"]
 
 # define log
 PATH_LOG_FOLDER = Revolver.__path__[0] + "/log"

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>902</width>
-    <height>663</height>
+    <width>990</width>
+    <height>678</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -283,7 +283,7 @@ QPushButton:disabled{ background:silver;color:grey }</string>
       <item row="0" column="3">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Error threshold</string>
+         <string>Stabilization error threshold</string>
         </property>
        </widget>
       </item>

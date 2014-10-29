@@ -7,6 +7,9 @@ Created on Oct 11, 2013
 import logging
 import threading
 from time import sleep
+import time
+from numpy import arange
+
 def frange(start, end=None, inc=None):
     "A range function, that does accept float increments..."
 
@@ -35,19 +38,21 @@ THREAD_TIMEOUT = 0
 runningThreads = set()
 widgetThreads = {}
 
-def thread_sleep(time, sleepFlags=[True]):
+def thread_sleep(interval, sleepFlags=[True]):
     """
     Threaded sleep loop, which could be terminated be setting sleepFlags[0] flag to zero
     @type sleepFlags: Dictionary
     """
-    if time <= 1: sleep(time)
+    if interval <= 1: 
+        sleep(interval)
     else:
-        time_range = frange(1, time, 1)
+        time_range = frange(1, interval, 1)
         for i in time_range:
-            if THREAD_KEEP_ALIVE and sleepFlags[0]:
+            if sleepFlags[0]:
                 sleep(1)
             else:
-                break
+                return
+        sleep(interval - i)
 
 def stop_all_threads():
     """
