@@ -47,7 +47,7 @@ class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
         #self.attributeTable.setWindowTitle("Attributes for motor %s" % self.defaultMotorDevice.name)
         
     def __init_signals(self):
-        self.connect(self, Qt.SIGNAL("changeMotor(String)"), self.action_change_motor)
+        self.connect(self, Qt.SIGNAL("changeMotor(QString)"), self.action_change_motor)
         self.connect(self.motor_position, Qt.SIGNAL("valueChanged()"), self.action_read_motor_position)
         self.connect(self.ledStatus, signals.SIG_DEVICE_STATUS_CHANGED, self.action_enable_controls)
         self.connect(self.ledStatus, signals.SIG_DEVICE_STATUS_ERROR, self.action_device_error)
@@ -85,7 +85,7 @@ class MotorWidget(layout_motor_widget.Ui_Form, default_gui.DefaultControls):
         
     def action_device_ok(self):
         self.stackedWidget.setCurrentIndex(0)
-        self.emit(Qt.SIGNAL("changeMotor(String)"), self.action_change_motor)
+        self.emit(Qt.SIGNAL("changeMotor(QString)"), self.action_change_motor)
         
     def action_change_motor_position_plus_double(self):
         """motorAlias

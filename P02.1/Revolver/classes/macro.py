@@ -217,8 +217,8 @@ class TemperatureMacro(Macro):
         """
         if not device: device = devices.TemperatureDevice(str(self.devicePath))
         device.threshold = threshold
-        #detector = devices.Detector(config.DEVICE_DETECTOR)
-        #shutter = devices.Shutter(config.DEVICE_SHUTTER)
+        detector = devices.Detector(config.DEVICE_DETECTOR)
+        shutter = devices.Shutter(config.DEVICE_SHUTTER)
         self.emit("macroOperation", "Setpoint changed to temperature %f (stabilizing)" % (float(self.temperature)))
         if device.set_temperature(self.temperature) is None:
             raise Exception("Macro error temperature could not be set")
@@ -229,15 +229,15 @@ class TemperatureMacro(Macro):
             if lastStepTook < MACRO_DARK_WAIT:
                 self.wait_seconds(MACRO_DARK_WAIT - lastStepTook)
             self.emit("macroOperation","Taking dark")
-        #    detector.take_dark(shutter, self.summed, filename=self.sampleName)
+            detector.take_dark(shutter, self.summed, filename=self.sampleName)
         if STOP: return
         self.emit("macroOperation","Taking shot")
         comment2 = "%s T_avg.: %.3f" % (device.name, device.output["movingAverage"][0])
-        #detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
+        detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
         if STOP: return
         if self.holdingCount > 0:
             for i in range(0, self.holdingCount):
                 self.wait_seconds(self.holdingTime)
                 self.emit("macroOperation", "Taking shot")
                 comment2 = "%s T_avg.: %.3f" % (device.name, device.output["movingAverage"][0])
-        #        detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)
+                detector.take_shot(shutter, int(self.summed), int(self.filesafter), self.sampleName, str(self.comment), comment2=comment2)

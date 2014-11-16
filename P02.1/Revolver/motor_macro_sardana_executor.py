@@ -15,7 +15,8 @@ from guiqwt.builder import make
 from taurus.qt.qtgui.container import TaurusMainWindow, TaurusWidget
 from taurus.qt.qtgui.extra_macroexecutor import dooroutput
 from taurus.core.util.codecs import CodecFactory
-from taurus.core.tango.sardana.macroserver import CHANGE_EVT_TYPES
+#from taurus.core.tango.sardana.macroserver import CHANGE_EVT_TYPES
+from sardana.taurus.core.tango.sardana.macroserver import CHANGE_EVT_TYPES
 from time import sleep
 
 

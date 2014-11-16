@@ -20,10 +20,10 @@ SETTINGS_RAMPING_ERROR_THRESHOLD = 2
 SETTINGS_TEST_MODE = False
 
 # define server
-#DEVICE_SERVER = 'tango://haspp02oh1:10000/'
+DEVICE_SERVER = 'tango://haspp02oh1:10000/'
 DEVICE_SERVER_P02 = 'tango://haspp02oh1:10000/'
-DEVICE_SERVER = 'tango://has6117b:10000/'
-DEVICE_MOTOR = DEVICE_SERVER + "p02/motor/exp.01"
+#DEVICE_SERVER = 'tango://has6117b:10000/'
+#DEVICE_MOTOR = DEVICE_SERVER + "p02/motor/exp.01"
 DEVICE_DETECTOR_CONTROLLER = DEVICE_SERVER_P02 + 'p02/pectrl/xrd.01'
 
 # define default devices
@@ -31,7 +31,7 @@ DEVICE_DETECTOR = DEVICE_SERVER + 'p02/pedetector/xrd.01'
 #DEVICE_DETECTOR_CONTROLLER = DEVICE_SERVER + 'p02/pectrl/xrd.01'
 DEVICE_SHUTTER = DEVICE_SERVER + 'p02/register/eh1a.out01'
 DEVICE_SHUTTER_MAIN = DEVICE_SERVER + 'p02/shutter/1'
-#DEVICE_MOTOR = DEVICE_SERVER + "p02/motor/eh1a.14"
+DEVICE_MOTOR = DEVICE_SERVER + "p02/motor/eh1a.14"
 
 #DEVICE_HOTBLOWER = DEVICE_SERVER_P02 + "p02/eurotherm2408/ch1a.01"
 DEVICE_HOTBLOWER = DEVICE_SERVER_P02 + "p02/eurotherm/exp.01"
@@ -144,4 +144,4 @@ DEVICE_RETRY_INTERVAL = 5
 # define flag which set if system should retry for disconnected device
 DEVICE_ALLOW_RETRY = True
 
-BL_DEFAULT_DOOR = "tango://has6117b:10000/p02/door/has6117b"
+BL_DEFAULT_DOOR = "tango://haspp02oh1:10000/p02/door/haspp02ch1a.01"

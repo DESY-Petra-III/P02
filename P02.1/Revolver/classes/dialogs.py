@@ -282,7 +282,7 @@ class AddMacroDialog(QtGui.QDialog, add_macro_dialog.Ui_Dialog):
                                             sampleName, summed,
                                             filesafter, position,
                                             macro_wait_secons, takeDark, comment)
-                self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
+                self.parent.emit(Qt.SIGNAL("addMacro"), newMacro)
             else:
                 mrange = macro.macroRange(intervalFrom, intervalTo, intervalStep)
                 for position in mrange:
@@ -290,7 +290,7 @@ class AddMacroDialog(QtGui.QDialog, add_macro_dialog.Ui_Dialog):
                                                 sampleName, summed,
                                                 filesafter, position,
                                                 macro_wait_secons, takeDark, comment)
-                    self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
+                    self.parent.emit(Qt.SIGNAL("addMacro"), newMacro)
         except:
             logging.error("Macro was not added: %s", sys.exc_info()[0])
 
@@ -352,7 +352,7 @@ class AddTemperatureMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacro
                                         sampleName, summed,
                                         filesafter, position,
                                         wait_seconds, macro_wait_iterations, macro_wait_after, takeDark, comment)
-            self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
+            self.parent.emit(Qt.SIGNAL("addMacro"), newMacro)
         else:
             mrange = macro.macroRange(intervalFrom, intervalTo, intervalStep)
             for position in mrange:
@@ -360,7 +360,7 @@ class AddTemperatureMacroDialog(add_temperature_macro_dialog.Ui_Dialog, AddMacro
                                             sampleName, summed,
                                             filesafter, position,
                                             wait_seconds, macro_wait_iterations, macro_wait_after, takeDark, comment)
-                self.parent.emit(Qt.SIGNAL("addMacro(macro)"), newMacro)
+                self.parent.emit(Qt.SIGNAL("addMacro"), newMacro)
         # except:
         #    logging.error("Temperature macro was not added: %s", sys.exc_info()[0])
 

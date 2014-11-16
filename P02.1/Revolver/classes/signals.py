@@ -40,11 +40,11 @@ SIG_MACRO_ENDED = SIGNAL("macroEnded(int)")
 # emit signal when want to load macro
 # int - macroType
 # value - unpickled data
-SIG_LOAD_MACRO = SIGNAL("loadMacro(int, value)")
+SIG_LOAD_MACRO = SIGNAL("loadMacro")
 SIG_MACRO_STEP_COMPLETED = SIGNAL("stepCompleted()")
 # emit private signal when add macro step
 # macro - classes.macro.*
-_SIG_ADD_MACRO = SIGNAL("addMacro(macro)")
+_SIG_ADD_MACRO = SIGNAL("addMacro")
 _SIG_START_LOGGING = SIGNAL("startLogging")
 _SIG_STOP_LOGGING = SIGNAL("stopLogging")
 
@@ -63,8 +63,8 @@ _SIG_SET_LED_COLOR = SIGNAL("setLedColor")
 ##############################################
 # Logging signals                            #
 ##############################################
-SIG_LOG_INIT = SIGNAL("logInit(String, String)")
-SIG_LOG_LINE = SIGNAL("logLine(String)")
+SIG_LOG_INIT = SIGNAL("logInit(QString, QString)")
+SIG_LOG_LINE = SIGNAL("logLine(QString)")
 SIG_LOG_DEVICE_PROFILING = SIGNAL("logProfiling")
 SIG_LOG_POINT_DATA = SIGNAL("logPointData")
 
