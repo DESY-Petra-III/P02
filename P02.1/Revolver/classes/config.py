@@ -146,4 +146,4 @@ DEVICE_RETRY_INTERVAL = 5
 # define flag which set if system should retry for disconnected device
 DEVICE_ALLOW_RETRY = True
 
-BL_DEFAULT_DOOR = "tango://haspp02oh1:10000/p02/door/haspp02ch1a.01"
+BL_DEFAULT_DOOR = "tango://haspp02ch1:10000/p02/door/haspp02ch1.01"

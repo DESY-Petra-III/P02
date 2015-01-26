@@ -48,7 +48,11 @@ class Beamline(beamline_default.Ui_Form, gui_default_widget.DefaultWidget):
         self.previousMode = DEFAULT_MODE
         self.currentMode = DEFAULT_MODE
         self.currentControlsId = None
-        self.mgrpEditor = ExpDescriptionEditor(door=config.BL_DEFAULT_DOOR)
+        try:
+            self.mgrpEditor = ExpDescriptionEditor(door=config.BL_DEFAULT_DOOR)
+        except Exception, e:
+            print "ExpDescriptionEditor ERROR:", e
+            
         self.macroExecutor = taurus_sequencer.TaurusSequencer(doorName=config.BL_DEFAULT_DOOR)
         self.macroExecutor.set_kill_all_permissions(False)
     
