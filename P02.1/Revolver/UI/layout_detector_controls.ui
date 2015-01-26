@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>695</width>
-    <height>251</height>
+    <width>892</width>
+    <height>293</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,6 +23,13 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
    </property>
+   <item row="0" column="0" colspan="2">
+    <layout class="QGridLayout" name="detector_motor_layout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+    </layout>
+   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QGroupBox" name="detector_input_values">
      <property name="styleSheet">
@@ -180,13 +187,6 @@ QPushButton:disabled{ background:silver;color:grey }</string>
      </property>
     </spacer>
    </item>
-   <item row="0" column="0" colspan="2">
-    <layout class="QGridLayout" name="detector_motor_layout">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-    </layout>
-   </item>
   </layout>
  </widget>
  <resources/>
@@ -198,8 +198,8 @@ QPushButton:disabled{ background:silver;color:grey }</string>
    <slot>action_take_dark_shot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>561</x>
-     <y>220</y>
+     <x>800</x>
+     <y>247</y>
     </hint>
     <hint type="destinationlabel">
      <x>504</x>
@@ -214,8 +214,8 @@ QPushButton:disabled{ background:silver;color:grey }</string>
    <slot>action_take_shot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>627</x>
-     <y>224</y>
+     <x>881</x>
+     <y>247</y>
     </hint>
     <hint type="destinationlabel">
      <x>296</x>
@@ -230,8 +230,8 @@ QPushButton:disabled{ background:silver;color:grey }</string>
    <slot>action_stop_acquisition()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>416</x>
-     <y>224</y>
+     <x>719</x>
+     <y>247</y>
     </hint>
     <hint type="destinationlabel">
      <x>88</x>

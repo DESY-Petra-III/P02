@@ -85,6 +85,7 @@ class TangoDevice(object):
         self.profiling = False
         self.deviceError = False
         self.defaultClass = self.__class__
+        self.enableControls = True
         
         try:
             self.__device_init()
@@ -510,6 +511,7 @@ class Diode(TangoDevice):
         """
         Put diode in
         """
+        return
         self.write_attributes([('Valve1', 1)])
         self.running_add()
         logging.warn("Diode in")
@@ -518,6 +520,7 @@ class Diode(TangoDevice):
         """
         Put diode out
         """
+        return
         self.write_attributes([('Valve1', 0)])
         self.running_remove()
         logging.warn("Diode out")
@@ -546,6 +549,7 @@ class Laser(TangoDevice):
         """
         Put laser in
         """
+        return
         self.write_attributes([('Valve6', 0)])
         self.running_add()
         logging.warn("Laser in")
@@ -554,6 +558,7 @@ class Laser(TangoDevice):
         """
         Put laser out
         """
+        return
         self.write_attributes([('Valve6', 1)])
         self.running_remove()
         logging.warn("Laser out")
@@ -1169,7 +1174,8 @@ class VirtualDevice(object):
         self.devices = devices
         self.deviceError = False
         self.defaultClass = self.__class__
-    
+        self.addToPosition = 0
+        
     def isDeviceError(self):
         for device in self.devices:
             if device.isDeviceError():
@@ -1312,9 +1318,9 @@ class VirtualMotorCenter2D(VirtualDevice):
         """
         Increase both motors by one value
         """
-        center_position = position - self.get_actual_position()
-        leftMotorPosition = self.leftMotor.current_value() + center_position
-        rightMotorPosition = self.rightMotor.current_value() + center_position
+        half_position = (self.get_actual_position() - position) / 2
+        leftMotorPosition = self.leftMotor.current_value() + half_position
+        rightMotorPosition = self.rightMotor.current_value() + half_position
         
         leftMinimum = self.leftMotor.read_attribute("UnitLimitMin").value
         rightMinimum = self.rightMotor.read_attribute("UnitLimitMin").value
@@ -1337,6 +1343,45 @@ class VirtualMotorCenter2D(VirtualDevice):
         if commandName == "GetPosition": return self.get_actual_position()
         return 0
     
+class VirtualMotorSum2D(VirtualMotorDistance2D):
+    """
+    Two virtually connected motors.
+    It's position represent distance between this two motors.
+    """
+    
+    def get_actual_position(self):
+        """
+        Get actual distance between left and right motor
+        """
+        leftMotorPosition = self.leftMotor.current_value()
+        rightMotorPosition = self.rightMotor.current_value()
+        if hasattr(self.addToPosition, '__call__'): add = self.addToPosition()
+        else: add = self.addToPosition
+        return leftMotorPosition + rightMotorPosition + add
+        
+    def move(self, position, callback=None, async=False):
+        """
+        Move left and right motor to opposite direction by specified distance
+        """
+        half_position = (self.get_actual_position() - position) / 2
+        leftMotorPosition = self.leftMotor.current_value() + half_position
+        rightMotorPosition = self.rightMotor.current_value() + half_position
+        
+        # check motor limits
+        leftMinimum = self.leftMotor.read_attribute("UnitLimitMin").value
+        rightMinimum = self.rightMotor.read_attribute("UnitLimitMin").value
+        leftMaximum = self.leftMotor.read_attribute("UnitLimitMax").value
+        rightMaximum = self.rightMotor.read_attribute("UnitLimitMax").value
+        
+        if(leftMotorPosition < leftMinimum or rightMotorPosition < rightMinimum):
+            raise Exception("Minimum motor position was exceeded")
+        if(leftMotorPosition > leftMaximum or rightMotorPosition > rightMaximum):
+            raise Exception("Maximum motor position was exceeded")
+        
+        self.leftMotor.move(leftMotorPosition, async=True)
+        self.rightMotor.move(rightMotorPosition, async=True)
+    
+
 class counter(TangoDevice):
     """
     Class that define Shutter device
@@ -1361,4 +1406,3 @@ class counter(TangoDevice):
             time.sleep(0.1)
             
         return self.device.Counts
-        

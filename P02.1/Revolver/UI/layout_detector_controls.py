@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/tmp/tmpO6YuZ6.ui'
+# Form implementation generated from reading ui file 'layout_detector_controls.ui'
 #
-# Created: Wed Jan 22 19:14:09 2014
-#      by: PyQt4 UI code generator 4.6.2
+# Created: Fri Jan 23 16:01:41 2015
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
 
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    _fromUtf8 = lambda s: s
+
 class Ui_Form(object):
     def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(695, 251)
+        Form.setObjectName(_fromUtf8("Form"))
+        Form.resize(892, 293)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -20,9 +25,13 @@ class Ui_Form(object):
         Form.setSizePolicy(sizePolicy)
         self.gridLayout = QtGui.QGridLayout(Form)
         self.gridLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
-        self.gridLayout.setObjectName("gridLayout")
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        self.detector_motor_layout = QtGui.QGridLayout()
+        self.detector_motor_layout.setSpacing(0)
+        self.detector_motor_layout.setObjectName(_fromUtf8("detector_motor_layout"))
+        self.gridLayout.addLayout(self.detector_motor_layout, 0, 0, 1, 2)
         self.detector_input_values = QtGui.QGroupBox(Form)
-        self.detector_input_values.setStyleSheet("QGroupBox {\n"
+        self.detector_input_values.setStyleSheet(_fromUtf8("QGroupBox {\n"
 "    border: 1px solid gray;\n"
 "    margin-top: 0.5em;\n"
 " font-weight:bold\n"
@@ -34,76 +43,72 @@ class Ui_Form(object):
 "    padding: 0 3px 0 3px;\n"
 " font-weight:bold\n"
 "   \n"
-"}")
-        self.detector_input_values.setObjectName("detector_input_values")
+"}"))
+        self.detector_input_values.setObjectName(_fromUtf8("detector_input_values"))
         self.gridLayout_3 = QtGui.QGridLayout(self.detector_input_values)
-        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.label = QtGui.QLabel(self.detector_input_values)
-        self.label.setObjectName("label")
+        self.label.setObjectName(_fromUtf8("label"))
         self.gridLayout_3.addWidget(self.label, 1, 0, 1, 1)
         self.sample_name = QtGui.QLineEdit(self.detector_input_values)
-        self.sample_name.setObjectName("sample_name")
+        self.sample_name.setObjectName(_fromUtf8("sample_name"))
         self.gridLayout_3.addWidget(self.sample_name, 1, 1, 1, 1)
         self.label_2 = QtGui.QLabel(self.detector_input_values)
-        self.label_2.setObjectName("label_2")
+        self.label_2.setObjectName(_fromUtf8("label_2"))
         self.gridLayout_3.addWidget(self.label_2, 2, 0, 1, 1)
         self.summed = QtGui.QSpinBox(self.detector_input_values)
         self.summed.setMaximum(9999999)
         self.summed.setProperty("value", 1)
-        self.summed.setObjectName("summed")
+        self.summed.setObjectName(_fromUtf8("summed"))
         self.gridLayout_3.addWidget(self.summed, 2, 1, 1, 1)
         self.label_3 = QtGui.QLabel(self.detector_input_values)
-        self.label_3.setObjectName("label_3")
+        self.label_3.setObjectName(_fromUtf8("label_3"))
         self.gridLayout_3.addWidget(self.label_3, 3, 0, 1, 1)
         self.post_trigger = QtGui.QSpinBox(self.detector_input_values)
         self.post_trigger.setMinimum(1)
         self.post_trigger.setMaximum(9999999)
-        self.post_trigger.setObjectName("post_trigger")
+        self.post_trigger.setObjectName(_fromUtf8("post_trigger"))
         self.gridLayout_3.addWidget(self.post_trigger, 3, 1, 1, 1)
         self.label_4 = QtGui.QLabel(self.detector_input_values)
-        self.label_4.setObjectName("label_4")
+        self.label_4.setObjectName(_fromUtf8("label_4"))
         self.gridLayout_3.addWidget(self.label_4, 4, 0, 1, 1)
         self.comment = QtGui.QLineEdit(self.detector_input_values)
-        self.comment.setObjectName("comment")
+        self.comment.setObjectName(_fromUtf8("comment"))
         self.gridLayout_3.addWidget(self.comment, 4, 1, 1, 1)
         self.label_5 = QtGui.QLabel(self.detector_input_values)
-        self.label_5.setObjectName("label_5")
+        self.label_5.setObjectName(_fromUtf8("label_5"))
         self.gridLayout_3.addWidget(self.label_5, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.detector_input_values, 1, 0, 1, 2)
         self.controls = QtGui.QHBoxLayout()
         self.controls.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
-        self.controls.setObjectName("controls")
+        self.controls.setObjectName(_fromUtf8("controls"))
         spacerItem = QtGui.QSpacerItem(40, 0, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.controls.addItem(spacerItem)
         self.button_stop_acquisition = QtGui.QPushButton(Form)
         self.button_stop_acquisition.setEnabled(True)
-        self.button_stop_acquisition.setStyleSheet("QPushButton{background:purple;font-weight:bold;color:#fff;}\n"
-"QPushButton:disabled{ background:silver;color:grey }")
-        self.button_stop_acquisition.setObjectName("button_stop_acquisition")
+        self.button_stop_acquisition.setStyleSheet(_fromUtf8("QPushButton{background:purple;font-weight:bold;color:#fff;}\n"
+"QPushButton:disabled{ background:silver;color:grey }"))
+        self.button_stop_acquisition.setObjectName(_fromUtf8("button_stop_acquisition"))
         self.controls.addWidget(self.button_stop_acquisition)
         self.button_take_dark = QtGui.QPushButton(Form)
         self.button_take_dark.setEnabled(True)
-        self.button_take_dark.setStyleSheet("QPushButton{background:#80FF9F}\n"
-"QPushButton:disabled{ background:silver;color:grey }")
-        self.button_take_dark.setObjectName("button_take_dark")
+        self.button_take_dark.setStyleSheet(_fromUtf8("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }"))
+        self.button_take_dark.setObjectName(_fromUtf8("button_take_dark"))
         self.controls.addWidget(self.button_take_dark)
         self.button_take_shot = QtGui.QPushButton(Form)
-        self.button_take_shot.setStyleSheet("QPushButton{background:#80FF9F}\n"
-"QPushButton:disabled{ background:silver;color:grey }")
-        self.button_take_shot.setObjectName("button_take_shot")
+        self.button_take_shot.setStyleSheet(_fromUtf8("QPushButton{background:#80FF9F}\n"
+"QPushButton:disabled{ background:silver;color:grey }"))
+        self.button_take_shot.setObjectName(_fromUtf8("button_take_shot"))
         self.controls.addWidget(self.button_take_shot)
         self.gridLayout.addLayout(self.controls, 2, 0, 1, 2)
         spacerItem1 = QtGui.QSpacerItem(20, 0, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem1, 3, 0, 1, 1)
-        self.detector_motor_layout = QtGui.QGridLayout()
-        self.detector_motor_layout.setSpacing(0)
-        self.detector_motor_layout.setObjectName("detector_motor_layout")
-        self.gridLayout.addLayout(self.detector_motor_layout, 0, 0, 1, 2)
 
         self.retranslateUi(Form)
-        QtCore.QObject.connect(self.button_take_dark, QtCore.SIGNAL("clicked()"), Form.action_take_dark_shot)
-        QtCore.QObject.connect(self.button_take_shot, QtCore.SIGNAL("clicked()"), Form.action_take_shot)
-        QtCore.QObject.connect(self.button_stop_acquisition, QtCore.SIGNAL("clicked()"), Form.action_stop_acquisition)
+        QtCore.QObject.connect(self.button_take_dark, QtCore.SIGNAL(_fromUtf8("clicked()")), Form.action_take_dark_shot)
+        QtCore.QObject.connect(self.button_take_shot, QtCore.SIGNAL(_fromUtf8("clicked()")), Form.action_take_shot)
+        QtCore.QObject.connect(self.button_stop_acquisition, QtCore.SIGNAL(_fromUtf8("clicked()")), Form.action_stop_acquisition)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):

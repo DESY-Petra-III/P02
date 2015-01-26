@@ -51,7 +51,7 @@ class TaurusSequencer(taurus_sequencer.Ui_Form, DefaultWidget, QtGui.QApplicatio
         
     def __main(self):
         self.mainDoor = devices.TangoDevice(self.doorName)
-        self.taurusSequencerWidget.setModel("tango://has6117b:10000/p02/macroserver/has6117b")
+        self.taurusSequencerWidget.setModel(config.MACROSERVER)
         self.taurusSequencerWidget.emit(Qt.SIGNAL('doorChanged'),self.doorName)
         self.graph_layout.addWidget(self.scan_plot)
     

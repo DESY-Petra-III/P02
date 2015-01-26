@@ -143,9 +143,10 @@ class Curve_plot(CurveDialog, Widget_plot):
         @type x: list
         @type y: list
         """
-        curve.set_data(x, y)
-        if isinstance(self.get_active_tool(), tools.SelectTool):
-            self.plot.do_autoscale()        
+        if x[0] is not None and y[0] is not None:
+            curve.set_data(x, y)
+            if isinstance(self.get_active_tool(), tools.SelectTool):
+                self.plot.do_autoscale()        
         
 class Image_plot(ImageDialog, Widget_plot):
     

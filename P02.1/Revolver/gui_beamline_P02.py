@@ -72,10 +72,14 @@ class Beamline_P02(default_beamline.Beamline):
         
         # define PE Detector controls
         detector = devices.Detector(P02_DEVICES["PE_DETECTOR"])
+        SDD = devices.VirtualMotorSum2D([devices.Motor(P02_DEVICES["PEX_LARGE"]), devices.Motor(P02_DEVICES["PEX"])], "SDD")
+        
         detectorMotors = [P02_DEVICES["PEX_LARGE"],
                        P02_DEVICES["PEX"],
                        P02_DEVICES["PEY"]]
-        self.detectorControls = gui_detector_controls_widget.DetectorControls(detectorDevice=detector, motorPaths=detectorMotors, parent=self)
+        self.detectorControls = gui_detector_controls_widget.DetectorControlsWithAttributes(detectorDevice=detector, sddMotor=SDD, motorPaths=detectorMotors, parent=self)
+        SDD.addToPosition = lambda: float(self.detectorControls.offset_input.value())
+        self.detectorControls.set_attributes(r=1024, lambdav=0.206, offset=1500, psize=0.2, e=60)
         
         # define beamstop controls
         self.beamstopMotors = [P02_DEVICES["BSTY"],
