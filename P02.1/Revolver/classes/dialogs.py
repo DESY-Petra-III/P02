@@ -10,6 +10,7 @@ import logging
 import math
 from PyQt4.QtGui import QInputDialog, QDialog, QGridLayout, QPushButton
 from taurus import Device
+from taurus.qt.qtgui.base import TaurusBaseComponent, TaurusBaseWidget
 
 # Import from local packages
 from UI import add_macro_dialog, select_device_dialog, add_temperature_macro_dialog
@@ -21,6 +22,7 @@ from guiqwt.curve import CurveItem
 from guiqwt.builder import make
 from taurus.qt.qtgui.container import TaurusWidget
 from taurus.qt.qtgui.resource.taurus_resource_utils import __init
+import time
 
 def getHSVcolors(N):
         """
@@ -390,6 +392,7 @@ class SelectDeviceDialog(QtGui.QDialog, select_device_dialog.Ui_Dialog):
         Set dialog properties
         initialize taurusDevTree with path
         """
+        self.taurusDevTree.setTangoHost("haspp02oh1:10000")
         for path in self.defaultPath:
             self.taurusDevTree.setModel(path)
         nodes = self.taurusDevTree.getAllNodes()

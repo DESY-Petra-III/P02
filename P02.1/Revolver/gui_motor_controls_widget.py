@@ -195,7 +195,7 @@ if __name__ == '__main__':
     #right = devices.Motor(config.DEVICE_SERVER + "p02/motor/exp.05")
     #virtualMotor1 = devices.VirtualMotorDistance2D([left, right], "Dx")
     
-    widget = MotorWidget(device=devices.Motor(config.DEVICE_SERVER + "p02/motor/exp.02"))
+    widget = MotorWidget(device=devices.Motor(config.DEVICE_SERVER + "p02/motor/eh1b.16"))
     
     # connect signal from window "x" button to close the application correctly
     app.connect(app, signals.SIG_ABOUT_QUIT, widget.close_widget)

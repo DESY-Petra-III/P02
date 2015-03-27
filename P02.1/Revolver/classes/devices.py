@@ -511,7 +511,6 @@ class Diode(TangoDevice):
         """
         Put diode in
         """
-        return
         self.write_attributes([('Valve1', 1)])
         self.running_add()
         logging.warn("Diode in")
@@ -520,7 +519,6 @@ class Diode(TangoDevice):
         """
         Put diode out
         """
-        return
         self.write_attributes([('Valve1', 0)])
         self.running_remove()
         logging.warn("Diode out")
@@ -549,8 +547,7 @@ class Laser(TangoDevice):
         """
         Put laser in
         """
-        return
-        self.write_attributes([('Valve6', 0)])
+        self.write_attributes([('Valve6', 1)])
         self.running_add()
         logging.warn("Laser in")
     
@@ -558,8 +555,7 @@ class Laser(TangoDevice):
         """
         Put laser out
         """
-        return
-        self.write_attributes([('Valve6', 1)])
+        self.write_attributes([('Valve6', 0)])
         self.running_remove()
         logging.warn("Laser out")
 

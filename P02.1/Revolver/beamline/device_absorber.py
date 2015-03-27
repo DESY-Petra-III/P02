@@ -48,3 +48,4 @@ class Beamline_absorber(absorber.Ui_Form, default_device.Beamline_device):
         self.device_button.blockSignals(False)
         
         return state
+

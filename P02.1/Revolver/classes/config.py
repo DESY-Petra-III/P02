@@ -37,7 +37,7 @@ DEVICE_MOTOR = DEVICE_SERVER + "p02/motor/eh1a.14"
 DEVICE_HOTBLOWER = DEVICE_SERVER_P02 + "p02/eurotherm/exp.01"
 DEVICE_CRYOSTREAMER = DEVICE_SERVER + "p02/cryocontempctrl/elab.01"
 
-MACROSERVER = DEVICE_SERVER_P02+"p02/macroserver/haspp02ch1a.01"
+MACROSERVER = "tango://haspp02ch1:10000/p02/macroserver/haspp02ch1.01"
 
 TEMPERATURE_DEVICE_SETTINGS = {
                         DEVICE_HOTBLOWER : {

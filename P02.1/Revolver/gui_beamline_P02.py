@@ -29,7 +29,7 @@ P02_DEVICES = dict((x, config.DEVICE_SERVER_P02  + y) for x, y in config.DEVICE_
 class Beamline_P02(default_beamline.Beamline):
     
     # window title for current beamline
-    BEAMLINE_TITLE = "Beamline P02"
+    BEAMLINE_TITLE = "Beamline P02.1"
     
     def __init__(self, parent=None):
         """

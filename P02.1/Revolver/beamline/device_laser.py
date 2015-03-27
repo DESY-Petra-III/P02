@@ -48,9 +48,9 @@ class Beamline_laser(laser.Ui_Form, default_device.Beamline_device):
         
         self.device_button.blockSignals(True)
         if state == 0:
-            self.device_button.setChecked(True)
-        elif state == 1:
             self.device_button.setChecked(False)
+        elif state == 1:
+            self.device_button.setChecked(True)
         self.device_button.blockSignals(False)
         
         return state
