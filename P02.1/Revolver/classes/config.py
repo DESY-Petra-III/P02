@@ -66,6 +66,7 @@ TEMPERATURE_DEVICE_SETTINGS = {
 DEVICE_NAMES = {
                 
                 'DIODE':'p02/festocompairdistributor/eh1a.01',
+                'DIODE_ADC':'p02/adc/eh1b.02',
                 'LASER':'p02/festocompairdistributor/eh1a.01',
                 'ABSORBER':'p02/festocompairdistributor/eh1a.01',
                 'PEX': 'p02/motor/eh1b.15',

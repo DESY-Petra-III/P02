@@ -19,7 +19,9 @@ import gui_stacked_motors_controls_widget
 import gui_device_status_led_widget as led_widget
 import threading
 from taurus.qt.QtCore import Signal
+from PyQt4.Qt import SIGNAL
 import math
+from classes.devices import Laser, Diode
 
 class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultControls):
     
@@ -97,6 +99,7 @@ class DetectorControls(layout_detector_controls.Ui_Form, default_gui.DefaultCont
             thread.start()
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Detector dark shot", "Dark shot could not be taken")
+            
             
 class DetectorControlsWithAttributes(layout_detector_controls_with_attributes.Ui_Form, DetectorControls):
     

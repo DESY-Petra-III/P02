@@ -575,6 +575,10 @@ class DeviceAttributeDialog(QtGui.QDialog, TaurusWidget):
         
         self.mainForm = form
         
+        closeButton = QPushButton("Close")
+        self.connect(closeButton, Qt.SIGNAL("clicked()"), self.close)
+        self.mainForm.children()[1].children()[2].addButton(closeButton,0)
+        
 
 class MotorAttributeDialog(DeviceAttributeDialog):
     

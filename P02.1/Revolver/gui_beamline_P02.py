@@ -24,7 +24,7 @@ concat P02_DEVICES with DEVICE_SERVER_P02, produces
 real tango server paths to devices.
 config.DEVICE_SERVER_P02 + config.DEVICE_NAME = "tango://server_path/device_path"
 """
-P02_DEVICES = dict((x, config.DEVICE_SERVER_P02  + y) for x, y in config.DEVICE_NAMES.iteritems())
+P02_DEVICES = dict((x, config.DEVICE_SERVER_P02 + y) for x, y in config.DEVICE_NAMES.iteritems())
 
 class Beamline_P02(default_beamline.Beamline):
     
@@ -54,6 +54,7 @@ class Beamline_P02(default_beamline.Beamline):
         self.pinhole = device_pinhole.Beamline_pinhole()
         self.pinhole2 = device_pinhole.Beamline_pinhole()
         self.ionchamber = device_ionchamber.Beamline_ionchamber()
+        self.diodeADC = device_diode.Beamline_diode(devicePath=P02_DEVICES["DIODE"])
         self.absorber = device_absorber.Beamline_absorber(devicePath=P02_DEVICES["ABSORBER"])
         self.detectorPE = device_detectorPE.Beamline_detectorPE()
         self.samplestage = device_samplestage.Beamline_samplestage()
@@ -65,7 +66,7 @@ class Beamline_P02(default_beamline.Beamline):
         self.beamstop = device_beamstop.Beamline_beamstop()
         
         # put specified devices in beamline setup, they will appear left to right
-        self.setup = [self.detectorPE, self.beamstop, self.diode, self.samplestage,
+        self.setup = [self.detectorPE, self.beamstop, self.diode, self.diodeADC, self.samplestage,
                       self.pinhole2, self.pinhole, self.slits2, self.absorber, self.laser,
                       self.smallShutter, self.slits1, self.ionchamber,
                       self.wall, self.mainShutter, self.beamX]
@@ -113,7 +114,7 @@ class Beamline_P02(default_beamline.Beamline):
         s1_Dy = devices.VirtualMotorDistance2D([s1_top, s1_bottom], "S1_DY")
         self.slits1Motors = [s1_Dx, s1_Dy,
                         s1_Cx, s1_Cy,
-                        s1_left,s1_right,
+                        s1_left, s1_right,
                        s1_top, s1_bottom]
         self.slits1Controls = gui_stacked_motors_controls_widget.StackedMotorControls(parent=self, motors=self.slits1Motors, title="Slits 1 motors")
         
@@ -128,14 +129,14 @@ class Beamline_P02(default_beamline.Beamline):
         s2_Dy = devices.VirtualMotorDistance2D([s2_top, s2_bottom], "S2_DY")
         self.slits2Motors = [s2_Dx, s2_Dy,
                             s2_Cx, s2_Cy,
-                            s2_left,s2_right,
+                            s2_left, s2_right,
                             s2_top, s2_bottom]
         self.slits2Controls = gui_stacked_motors_controls_widget.StackedMotorControls(parent=self, motors=self.slits2Motors, title="Slits 2 motors")
         
         # define diode controls
         diode = devices.Diode(P02_DEVICES["DIODE"])
         diode.start_profiling()
-        diodeParams = [{"device":diode, "value":"current", "description":"Diode current", "source": diode.output}]
+        diodeParams = [{"device":diode, "value":"current", "description":"Diode current [VFC]", "source": diode.output}]
         graphOptions = {"title":"Diode value", "xlabel":"Time", "ylabel":"Status"}
         self.diodeControls = gui_device_value_graph_controls_widget.Controls(parent=self, title="Diode status", deviceParams=diodeParams, graphOptions=graphOptions)
         
@@ -143,6 +144,12 @@ class Beamline_P02(default_beamline.Beamline):
         ionChamberParams = [{"devicePath":P02_DEVICES["IONCHAMBER"], "value":"Value", "description":"Ion chamber value"}]
         graphOptions = {"title":"Ion chamber status", "xlabel":"Time", "ylabel":"Status"}
         self.ionChamberControls = gui_device_value_graph_controls_widget.Controls(parent=self, title="Ion chamber status", deviceParams=ionChamberParams, graphOptions=graphOptions)
+        
+        # define ionchamber controls
+        diodeADC = [{"devicePath":P02_DEVICES["DIODE_ADC"], "value":"Value", "description":"Diode current [ADC]"}]
+        graphOptions = {"title":"Diode [ADC]", "xlabel":"Time", "ylabel":"Status"}
+        self.diodeADCControls = gui_device_value_graph_controls_widget.Controls(parent=self, title="Ion chamber status", deviceParams=diodeADC, graphOptions=graphOptions)
+        
         
         # define beam controls
         petraParams = [{"devicePath":P02_DEVICES["PETRA_CURRENT"], "value":"BeamCurrent", "description":"Petra current"}]
@@ -162,7 +169,8 @@ class Beamline_P02(default_beamline.Beamline):
         """
         self.controls = [{"device":self.detectorPE, "widget":self.detectorControls, "tabname":"Detector stage", "background":"186,224,155"},
                          {"device":self.beamstop, "widget":self.beamstopControls, "tabname":"Beamstop", "background":"155,224,176"},
-                         {"device":self.diode, "widget":self.diodeControls, "tabname":"Diode", "background":"155,224,223"},
+                         {"device":self.diode, "widget":self.diodeControls, "tabname":"Diode [VFC]", "background":"155,224,223"},
+                         {"device":self.diodeADC, "widget":self.diodeADCControls, "tabname":"Diode [ADC]", "background":"155,224,223"},
                          {"device":self.samplestage, "widget":self.stageControls, "tabname":"Sample stage", "background":"133,133,237"},
                          {"device":self.pinhole2, "widget":self.pinhole2Controls, "tabname":"Pinhole 2", "background":"237,187,133"},
                          {"device":self.pinhole, "widget":self.pinhole1Controls, "tabname":"Pinhole 1", "background":"237,187,133"},
@@ -193,6 +201,7 @@ class Beamline_P02(default_beamline.Beamline):
         self.petraStatus.action_start_plot()
         self.ionChamberControls.action_start_plot()
         self.diodeControls.action_start_plot()
+        self.diodeADCControls.action_start_plot()
                 
         for device in self.setup:
             self.bemaline_setup.addWidget(device)
@@ -220,7 +229,7 @@ class Beamline_P02(default_beamline.Beamline):
         slits2_expert_mode = self.slits2Motors[2:]
         
         # enable / disable tab index from the beamline controllers tab
-        self.action_set_controls_enabled(1,flag)
+        self.action_set_controls_enabled(1, flag)
         
         # disable / enable expert mode motors depending on flag state (True / False)
         for hideMotor in slits1_expert_mode:

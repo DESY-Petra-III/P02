@@ -273,8 +273,8 @@ class DefaultWidget(QWidget):
         Put laser and diode out
         """
         try:
-            devices.Laser(config.DEVICE_NAMES["LASER"]).put_out()
-            devices.Diode(config.DEVICE_NAMES["DIODE"]).put_out()
+            devices.Laser(config.DEVICE_SERVER+config.DEVICE_NAMES["LASER"]).put_out()
+            devices.Diode(config.DEVICE_SERVER+config.DEVICE_NAMES["DIODE"]).put_out()
         except:
             self.emit(SIGNAL("showError"), "Diode and laser action", "Diode and laser could not be put out.")
     

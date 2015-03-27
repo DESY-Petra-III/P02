@@ -63,7 +63,9 @@ if __name__ == '__main__':
     
     # create main window
     #config.DEVICE_ALLOW_RETRY = False
-    app = QtGui.QApplication(sys.argv)
+    from taurus.qt.qtgui.application import TaurusApplication
+    app = TaurusApplication(sys.argv)
+    #app = QtGui.QApplication(sys.argv)
     
     # init widget
     widget = revolver()

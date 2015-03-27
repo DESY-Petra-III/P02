@@ -34,7 +34,8 @@ class StatusWidget(layout_status.Ui_Form, DefaultWidget):
         try:
             self.globalKeywords = devices.TangoDevice("haspp02oh1:10000/petra/globals/keyword")
             self.ionchamber = devices.TangoDevice('haspp02oh1:10000/p02/adc/eh1b.01')
-            self.diode = devices.Diode("haspp02oh1:10000/p02/adc/eh1b.01")
+            #self.diode = devices.Diode("haspp02oh1:10000/p02/adc/eh1b.01")
+            self.diode = devices.TangoDevice("haspp02oh1:10000/p02/adc/eh1b.02")
             self.absorber = devices.Absorber("haspp02oh1:10000/p02/festocompairdistributor/eh1a.01")
         except:
             self.emit(signals.SIG_SHOW_ERROR, "Monitor error", "Monitor could not be initialized")
@@ -54,7 +55,7 @@ class StatusWidget(layout_status.Ui_Form, DefaultWidget):
         self.thread = threading.Thread(target=self.__check_routine)
         threads.add_thread(self.thread, self.widget_id)
         self.thread.start()
-        self.diode.start_profiling()
+        #self.diode.start_profiling()
         return DefaultWidget.showEvent(self, *args, **kwargs)
     
     def hideEvent(self, *args, **kwargs):
@@ -100,7 +101,8 @@ class StatusWidget(layout_status.Ui_Form, DefaultWidget):
                 self.label_6.setText("ERROR")
             
             try:
-                diodeValue = self.diode.output["current"][0]
+                #diodeValue = self.diode.output["current"][0]
+                diodeValue = round(self.diode.read_attribute("Value").value,3)
                 self.label_7.setText(str(diodeValue))
             except:
                 self.label_7.setText("ERROR")

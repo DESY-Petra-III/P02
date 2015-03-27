@@ -657,7 +657,6 @@ class Detector(TangoDevice):
         """
         self.check_idle()
         self.write_attributes([("FileIndex", int(fileIndex))])
-        
     
     def take_dark(self, Shutter, summed, filename=None):
         """
@@ -832,6 +831,7 @@ class Motor(TangoDevice):
         @type devicePath: String
         """
         super(Motor, self).__init__(devicePath)
+        self.currentPostion = self.current_value()
         
     def __postInit__(self):
         self.maxValue = self.read_attribute("UnitLimitMax").value
@@ -847,9 +847,13 @@ class Motor(TangoDevice):
     
     def is_idle(self):
         try:
-            if self.device.state() == DevState.MOVING:
+            cp = self.current_value()
+            
+            if self.device.state() == DevState.MOVING or self.currentPostion != cp:
+                self.currentPostion = cp
                 return False
             else:
+                self.currentPostion = cp
                 return True
         except:
             return None

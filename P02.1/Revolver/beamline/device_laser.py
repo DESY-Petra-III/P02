@@ -44,7 +44,7 @@ class Beamline_laser(laser.Ui_Form, default_device.Beamline_device):
     def check_state(self):
         state = self.laser.read_attribute("Valve6").value
         if self.check_device_error(): return state
-        if not(self._is_block_state_changed(not(state))): return state
+        if not(self._is_block_state_changed(state)): return state
         
         self.device_button.blockSignals(True)
         if state == 0:
